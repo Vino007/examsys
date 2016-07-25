@@ -1,0 +1,12 @@
+bin
+
+target
+.externalToolBuilders
+.settings
+
+.project
+
+.classpath
+
+doc
+.gradle
