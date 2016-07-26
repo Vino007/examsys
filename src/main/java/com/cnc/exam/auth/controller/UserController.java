@@ -220,7 +220,6 @@ public class UserController extends BaseController {
 			return resultMap;
 		}
 		Page<User> userPage = userService.findAll(buildPageRequest(1));
-		data = new HashMap<>();
 		data.put("page", userPage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "绑定成功");

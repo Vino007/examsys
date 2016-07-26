@@ -11,7 +11,7 @@
     <!-- 若已经登录，直接跳转登录界面 -->
      <shiro:authenticated>
     <script type="text/javascript">
-        window.location.href = 'pages/index.html';
+        window.location.href = 'index.html';
     </script>
     </shiro:authenticated>
 </head>
@@ -60,7 +60,7 @@
                     var dataStr = JSON.stringify(data);
                     sessionStorage.setItem('username', usr);
                     sessionStorage.setItem('data', dataStr);
-                    window.location.href = 'pages/index.html';
+                    window.location.href = 'index.html';
                 } else {
                     alert(data.msg);
                 }

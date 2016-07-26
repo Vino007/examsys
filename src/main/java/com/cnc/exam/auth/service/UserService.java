@@ -23,9 +23,7 @@ import com.cnc.exam.auth.exception.UserDuplicateException;
 import com.cnc.exam.base.service.BaseService;
 
 public interface UserService extends  BaseService<User, Long>{
-	//public List<Resource>findAllResources();
 	public User findByUsername(String username);
-//	public List<User> findUserByContidionAndPage(User user,Pageable pageable);
 	public Page<User> findUserByCondition(Map<String,Object> searchParams,Pageable pageable);
 	public Set<String> findAllRoleNamesByUsername(String username);
 	public Set<String> findAllPermissionsByUsername(String username);

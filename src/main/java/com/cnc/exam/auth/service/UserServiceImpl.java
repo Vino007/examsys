@@ -45,8 +45,6 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 	private PasswordHelper passwordHelper;
 
     private Specification<User> buildSpecification(final Map<String,Object> searchParams) {
-    	
-		
         Specification<User> spec = new Specification<User>(){           
 			@Override
 			public Predicate toPredicate(Root<User> root,
@@ -150,16 +148,13 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 		return permissions;
 	}
 	 /**
-     * �����û�
      * @param user
 	 * @throws UserDuplicateException 
      */
     
     public void saveWithCheckDuplicate(User user) throws UserDuplicateException{
-    	//У���Ƿ��û��ظ�
     	if(userRepository.findByUsername(user.getUsername())!=null)
     		throw new UserDuplicateException();
-        //��������
         passwordHelper.encryptPassword(user);
         user.setCreateTime(new Date());
         if(getCurrentUser()!=null)
@@ -179,7 +174,8 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 			user2.setLastLoginTime(user.getLastLoginTime());
 		}
 		if(user.getPassword()!=null){
-			user2.setPassword(user.getPassword());
+			//user2.setPassword();
+			 passwordHelper.encryptPassword(user);
 		}
 		if(user.getLoginTime()!=null){
 			user2.setLoginTime(user.getLoginTime());
@@ -187,7 +183,7 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 		
 	}
     /**
-     * �޸�����
+     * 
      * @param userId
      * @param newPassword
      */
@@ -195,7 +191,7 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
     public void changePassword(Long userId, String newPassword) {
         User user =userRepository.findOne(userId);
         user.setPassword(newPassword);
-        passwordHelper.encryptPassword(user);//��������м���,�޸ĺ�ȴ�flush�ͻ�־û�����ݿ�
+        passwordHelper.encryptPassword(user);
         
     }
 
@@ -244,14 +240,12 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 			throws UserDuplicateException {
 		if(null==users||0==users.size())
 			return;
-		//У���Ƿ��û��ظ�
 		for(User user:users){
     	if(userRepository.findByUsername(user.getUsername())!=null)
     		throw new UserDuplicateException();
     	if(user.getPassword()==null){
     		user.setPassword(Constants.DEFAULT_PASSWORD);
     	}
-        //��������
         passwordHelper.encryptPassword(user);
         user.setCreateTime(new Date());
         user.setCreatorName(getCurrentUser().getUsername());
