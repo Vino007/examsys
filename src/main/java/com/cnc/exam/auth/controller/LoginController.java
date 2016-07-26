@@ -100,7 +100,8 @@ public class LoginController extends BaseController {
 		data.put("menuPermissions", menuResourceJsons);
 		data.put("buttonPermissions", buttonResourceJsons);
 		resourceMap.put("success", true);
-		resourceMap.put("data",data );;
+		resourceMap.put("data",data );
+		resourceMap.put("msg","登录成功" );
 		return resourceMap;
 	}
 	
@@ -110,10 +111,8 @@ public class LoginController extends BaseController {
 	 * @return
 	 */
 	//@ResponseBody
-	@RequestMapping(value = "/login")
+	@RequestMapping(value = "/loginPage")
 	public String login() {
-		Map<String, Object> res = new HashMap<String, Object>();
-		res.put("success", true);
 		return "login";
 	}
 	

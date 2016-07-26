@@ -61,7 +61,7 @@ public class ResourceController extends BaseController{
 	 */
 	@RequiresPermissions("resource:menu")
 	@ResponseBody
-	@RequestMapping(value="/allResources",method=RequestMethod.GET)
+	@RequestMapping(value="/resourceTree",method=RequestMethod.GET)
 	public Map<String, Object> getAllResources(){	
 		List<Resource> resources=resourceService.findAll();
 		Map<String, Object> resultMap = new HashMap<>();
@@ -77,12 +77,7 @@ public class ResourceController extends BaseController{
 	@RequestMapping(value="/search",method=RequestMethod.GET)
 	public Map<String, Object> getRolesByCondition(Model model,Resource resource,@RequestParam(value="pageNumber",defaultValue="1")int pageNumber,ServletRequest request){
 		Map<String,Object> searchParams=Servlets.getParametersStartingWith(request, "search_");
-		Page<Resource> resourcePage=resourceService.findResourceByCondition(searchParams, buildPageRequest(pageNumber));
-		/*model.addAttribute("resources",resourcePage.getContent());
-		model.addAttribute("page", resourcePage);	
-		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
-		model.addAttribute("searchParamsMap", searchParams);*/
-		
+		Page<Resource> resourcePage=resourceService.findResourceByCondition(searchParams, buildPageRequest(pageNumber));		
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", resourcePage);
@@ -99,6 +94,7 @@ public class ResourceController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		try {
 			resourceService.saveWithCheckDuplicate(resource,curUser);
+			//让admin拥有所有权限
 			roleService.connectRoleAndResource(1l,resourceService.findByName(resource.getName()).getId() );//新建一个资源就绑定给超级角色admin，使得admin拥有所有权限
 		} catch (ResourceDuplicateException e) {
 			resultMap.put("successs", false);

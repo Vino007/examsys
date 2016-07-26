@@ -27,7 +27,7 @@ public class Role extends BaseEntity<Long> {
 	@Column(name="available")
 	private Boolean available=Boolean.TRUE;
 	
-	@JSONField(serialize=false)
+	//@JSONField(serialize=false)
 	@ManyToMany(targetEntity=Resource.class)
 	@JoinTable(name="t_role_resource",joinColumns=@JoinColumn(name="role_id"),inverseJoinColumns=@JoinColumn(name="resource_id"))
 	private Set<Resource> resources=new HashSet<Resource>();

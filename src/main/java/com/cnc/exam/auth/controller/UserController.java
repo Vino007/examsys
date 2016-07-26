@@ -77,17 +77,8 @@ public class UserController extends BaseController {
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
 		Page<User> userPage = userService.findUserByCondition(searchParams, buildPageRequest(pageNumber));
-		/*
-		 * model.addAttribute("users",userPage.getContent());
-		 * model.addAttribute("page", userPage);
-		 * model.addAttribute("searchParams",
-		 * Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
-		 * model.addAttribute("searchParamsMap", searchParams);
-		 */
-
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		//data.put("users", userPage.getContent());
 		data.put("page", userPage);
 		resultMap.put("data", data);
 		resultMap.put("successs", true);
@@ -111,7 +102,6 @@ public class UserController extends BaseController {
 			return resultMap;
 		}
 		Page<User> userPage = userService.findAll(buildPageRequest(1));
-		//data.put("users", userPage.getContent());
 		data.put("page", userPage);
 		resultMap.put("successs", true);
 		resultMap.put("data", data);
@@ -137,7 +127,6 @@ public class UserController extends BaseController {
 		Page<User> userPage = userService.findAll(buildPageRequest(1));
 
 		Map<String, Object> data = new HashMap<>();
-		//data.put("users", userPage.getContent());
 		data.put("page", userPage);
 		resultMap.put("data", data);
 
@@ -164,7 +153,6 @@ public class UserController extends BaseController {
 		Map<String, Object> data = new HashMap<>();
 		Page<User> userPage = userService.findAll(buildPageRequest(1));
 		data = new HashMap<>();
-		//data.put("users", userPage.getContent());
 		data.put("page", userPage);
 		resultMap.put("data", data);
 
@@ -198,7 +186,7 @@ public class UserController extends BaseController {
 	 */
 	@ResponseBody
 	@RequiresPermissions("user:bind")
-	@RequestMapping(value = "/prepareBind", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRoles", method = RequestMethod.GET)
 	public Map<String, Object> prepareBind(Model model, Long id) {
 
 		User user = userService.findOne(id);
@@ -233,7 +221,6 @@ public class UserController extends BaseController {
 		}
 		Page<User> userPage = userService.findAll(buildPageRequest(1));
 		data = new HashMap<>();
-		//data.put("users", userPage.getContent());
 		data.put("page", userPage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "绑定成功");

@@ -1,0 +1,54 @@
+.container-fluid, #sidebar, #header {
+    padding: 0;
+    margin: 0;
+}
+
+.container-fluid {
+    margin-top: 51px;
+}
+
+header {
+    background: rgb(60, 141, 188);
+}
+
+header .navbar-brand {
+    color: #ffffff;
+}
+
+#sidebar {
+    position: fixed;
+    height: 100%;
+    background: rgb(244, 244, 244);
+}
+
+.left-nav .left-nav-list li {
+    margin: 0px;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.left-nav-list li:first-child {
+    border-top: 1px solid #dbdbdb;
+}
+
+.left-nav-list li a {
+    color: rgb(144, 144, 144);
+}
+
+.left-nav-list .active {
+    background: rgb(249, 249, 249);
+}
+
+.left-nav-list .active a {
+    color: rgb(85, 85, 85);
+}
+
+.usr-info {
+    padding: 20px 15px;
+}
+
+#body-content {
+    border: none;
+    padding: 0 0 50px 0;
+    position: fixed;
+    height: 100%;
+}

@@ -43,10 +43,7 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 	private RoleRepository roleRepository;
 	@Autowired
 	private PasswordHelper passwordHelper;
-    
-    /**
-     * ������̬��ѯ�������.
-     */
+
     private Specification<User> buildSpecification(final Map<String,Object> searchParams) {
     	
 		
@@ -61,14 +58,14 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 				if(username!=null&&!"".equals(username)){
 					Predicate condition=cb.like(root.get("username").as(String.class),"%"+searchParams.get("username")+"%");
 					if(null==allCondition)
-						allCondition=cb.and(condition);//�˴���ʼ��allCondition,����cb.and(allCondition,condition)����д�����ᵼ�¿�ָ��
+						allCondition=cb.and(condition);
 					else
 						allCondition=cb.and(allCondition,condition);
 					}
 				if(userAlias!=null&&!"".equals(userAlias)){
 					Predicate condition=cb.like(root.get("userAlias").as(String.class),"%"+searchParams.get("userAlias")+"%");
 					if(null==allCondition)
-						allCondition=cb.and(condition);//�˴���ʼ��allCondition,����cb.and(allCondition,condition)����д�����ᵼ�¿�ָ��
+						allCondition=cb.and(condition);
 					else
 						allCondition=cb.and(allCondition,condition);
 					
@@ -84,14 +81,14 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 						Date createTimeEnd=format.parse(createTimeEndStr);
 						Predicate condition=cb.between(root.get("createTime").as(Date.class),createTimeStart, createTimeEnd);
 						if(null==allCondition)
-							allCondition=cb.and(condition);//�˴���ʼ��allCondition,����cb.and(allCondition,condition)����д�����ᵼ�¿�ָ��
+							allCondition=cb.and(condition);
 						else
 							allCondition=cb.and(allCondition,condition);
 						
 					} catch (ParseException e) {
 						e.printStackTrace();
 						Logger log =LoggerFactory.getLogger(this.getClass());
-						log.error("createTime ת��ʱ�����");
+						
 					}
 					
 				
