@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.cnc.exam.auth.entity.User;
+import com.cnc.exam.log.entity.LogsEntity;
 
 /**
  * criteria学习视频  http://www.jikexueyuan.com/course/1449.html
