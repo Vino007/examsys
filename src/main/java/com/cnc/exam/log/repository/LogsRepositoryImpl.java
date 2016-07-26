@@ -19,13 +19,6 @@ import org.springframework.data.domain.Pageable;
 import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.log.entity.LogsEntity;
 
-/**
- * criteria学习视频  http://www.jikexueyuan.com/course/1449.html
- * http://blog.csdn.net/dracotianlong/article/details/28445725
- * spring data会自动选择该实现类作为UserRepository的补充
- * @author Joker
- *
- */
 
 public class LogsRepositoryImpl {
 	@PersistenceContext
