@@ -52,8 +52,10 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
         for (Long id : ids) {
             courseCategory = courseCategoryRepository.findOne(id);
             List<Course> courses = courseCategory.getCourses();
-            for (Course course:courses){
-                courseRepository.findByCourseName(course.getCourseName()).setCourseCategory(null);
+            if(courses!=null){
+                for (Course course:courses){
+                    courseRepository.findByCourseName(course.getCourseName()).setCourseCategory(null);
+                }
             }
             courseCategory.getCourses().clear();
             courseCategoryRepository.delete(id);
@@ -63,8 +65,12 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
     @Override
     public void update(CourseCategory courseCategory) {
         CourseCategory courseCategory1 = courseCategoryRepository.findOne(courseCategory.getId());
-        if (courseCategory.getCoursecatName() != null && !courseCategory.getCoursecatName().equals("")) {
+        String name = courseCategory.getCoursecatName();
+        if (name != null && !name.trim().equals("") && courseCategoryRepository.findByCoursecatName(name)==null) {
             courseCategory1.setCoursecatName(courseCategory.getCoursecatName());
+        }
+        if(courseCategory.getDescription()!=null){
+            courseCategory1.setDescription(courseCategory.getDescription());
         }
     }
 
@@ -101,48 +107,21 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
      */
     private Specification<CourseCategory> buildSpecification(final Map<String, Object> searchParams) {
 
-
         Specification<CourseCategory> spec = new Specification<CourseCategory>() {
             @Override
             public Predicate toPredicate(Root<CourseCategory> root,
                                          CriteriaQuery<?> cq, CriteriaBuilder cb) {
                 Predicate allCondition = null;
                 String name = (String) searchParams.get("coursecatName");
-                String createTimeRange = (String) searchParams.get("createTimeRange");
                 if (name != null && !"".equals(name)) {
-                    Predicate condition = cb.like(root.get("coursecatName").as(String.class), "%" + searchParams.get("name") + "%");
+                    Predicate condition = cb.like(root.get("coursecatName").as(String.class), "%" + searchParams.get("coursecatName") + "%");
                     if (null == allCondition)
                         allCondition = cb.and(condition);//此处初始化allCondition,若按cb.and(allCondition,condition)这种写法，会导致空指针
                     else
                         allCondition = cb.and(allCondition, condition);
                 }
-
-
-                if (createTimeRange != null && !"".equals(createTimeRange)) {
-                    String createTimeStartStr = createTimeRange.split(" - ")[0] + ":00:00:00";
-                    String createTimeEndStr = createTimeRange.split(" - ")[1] + ":23:59:59";
-                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy:hh:mm:ss");
-                    System.out.println(createTimeStartStr);
-                    try {
-                        Date createTimeStart = format.parse(createTimeStartStr);
-                        Date createTimeEnd = format.parse(createTimeEndStr);
-                        Predicate condition = cb.between(root.get("createTime").as(Date.class), createTimeStart, createTimeEnd);
-                        if (null == allCondition)
-                            allCondition = cb.and(condition);//此处初始化allCondition,若按cb.and(allCondition,condition)这种写法，会导致空指针
-                        else
-                            allCondition = cb.and(allCondition, condition);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        Logger log = LoggerFactory.getLogger(this.getClass());
-                        log.error("createTime 转换时间出错");
-                    }
-
-
-                }
                 return allCondition;
             }
-
         };
         return spec;
     }

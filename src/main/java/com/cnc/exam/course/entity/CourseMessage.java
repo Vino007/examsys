@@ -1,5 +1,6 @@
 package com.cnc.exam.course.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.cnc.exam.base.entity.BaseEntity;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ public class CourseMessage extends BaseEntity<Long> {
     private Long userId;
     @Column(name = "mess_content",length = 255)
     private String messContent;
+    @JSONField(serialize = false)
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name="course_id")
     private Course course;

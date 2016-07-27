@@ -52,16 +52,19 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     public void delete(Long... ids) {
         for (Long id : ids) {
             Course c = courseRepository.findOne(id);
-            courseCategoryRepository.findOne(c.getCourseCategory().getId()).getCourses().remove(c);
-            c.setCourseCategory(null);
+            if(c.getCourseCategory()!=null){
+                courseCategoryRepository.findOne(c.getCourseCategory().getId()).getCourses().remove(c);
+                c.setCourseCategory(null);
+            }
             courseRepository.delete(id);
         }
     }
 
     @Override
-    public void update(Course course) {
+    public void update(Course course){
         Course course2 = courseRepository.findOne(course.getId());
-        if (course.getCourseName() != null && !course.getCourseName().trim().equals("")) {
+        String courseName = course.getCourseName();
+        if (courseName != null && !courseName.trim().equals("") && courseRepository.findByCourseName(courseName)==null) {
             course2.setCourseName(course.getCourseName());
         }
         if (course.getCourseType() != null) {
@@ -114,7 +117,10 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
 
     @Override
     public void setCourseCategory(Long courseId, Long categoryId) {
-        courseRepository.findOne(courseId).setCourseCategory(courseCategoryRepository.findOne(categoryId));
+        if(categoryId!=null)
+            courseRepository.findOne(courseId).setCourseCategory(courseCategoryRepository.findOne(categoryId));
+        else
+            courseRepository.findOne(courseId).setCourseCategory(null);
     }
 
     @Override
@@ -139,48 +145,30 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
         return courseRepository.findAll(buildSpecification(searchParams), pageable);
     }
 
-    /**
-     * 创建动态查询条件组合.
-     */
-    private Specification<Course> buildSpecification(final Map<String, Object> searchParams) {
-
-        Specification<Course> spec = new Specification<Course>() {
+    private Specification<Course> buildSpecification(final Map<String,Object> searchParams) {
+        Specification<Course> spec = new Specification<Course>(){
             @Override
             public Predicate toPredicate(Root<Course> root,
                                          CriteriaQuery<?> cq, CriteriaBuilder cb) {
                 Predicate allCondition = null;
                 String name = (String) searchParams.get("courseName");
-                String createTimeRange = (String) searchParams.get("createTimeRange");
+                Boolean isOnline=null;
+                if(searchParams.get("isOnline")!=null)
+                    isOnline=Boolean.valueOf((String) searchParams.get("isOnline"));
                 if (name != null && !"".equals(name)) {
-                    Predicate condition = cb.like(root.get("courseName").as(String.class), "%" + searchParams.get("name") + "%");
+                    Predicate condition = cb.like(root.get("courseName").as(String.class), "%" + searchParams.get("courseName") + "%");
                     if (null == allCondition)
                         allCondition = cb.and(condition);//此处初始化allCondition,若按cb.and(allCondition,condition)这种写法，会导致空指针
                     else
                         allCondition = cb.and(allCondition, condition);
                 }
-
-
-                if (createTimeRange != null && !"".equals(createTimeRange)) {
-                    String createTimeStartStr = createTimeRange.split(" - ")[0] + ":00:00:00";
-                    String createTimeEndStr = createTimeRange.split(" - ")[1] + ":23:59:59";
-                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy:hh:mm:ss");
-                    System.out.println(createTimeStartStr);
-                    try {
-                        Date createTimeStart = format.parse(createTimeStartStr);
-                        Date createTimeEnd = format.parse(createTimeEndStr);
-                        Predicate condition = cb.between(root.get("createTime").as(Date.class), createTimeStart, createTimeEnd);
-                        if (null == allCondition)
-                            allCondition = cb.and(condition);//此处初始化allCondition,若按cb.and(allCondition,condition)这种写法，会导致空指针
-                        else
-                            allCondition = cb.and(allCondition, condition);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        Logger log = LoggerFactory.getLogger(this.getClass());
-                        log.error("createTime 转换时间出错");
-                    }
-
-
+                //实体类基本类型需要使用包装器类
+                if(isOnline!=null){
+                    Predicate condition=cb.equal(root.get("isOnline").as(Boolean.class),isOnline);
+                    if(null==allCondition)
+                        allCondition=cb.and(condition);
+                    else
+                        allCondition=cb.and(allCondition,condition);
                 }
                 return allCondition;
             }

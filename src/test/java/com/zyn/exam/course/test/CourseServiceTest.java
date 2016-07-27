@@ -76,9 +76,9 @@ public class CourseServiceTest {
     @Test
     public void testAddCourseMsg() {
         CourseMessage cm = getCourseMessage();
-        cm.setMessContent("again msg");
+        cm.setMessContent("user comment");
         User user = getUser();
-        courseService.addCourseMessage(new Long(16), cm, user);
+        courseService.addCourseMessage(new Long(21), cm, user);
     }
 
     @Test
@@ -93,8 +93,8 @@ public class CourseServiceTest {
 
     @Test
     public void testAddCategoyr(){
-        courseService.setCourseCategory(new Long(16),new Long(1));
-        courseService.setCourseCategory(new Long(17),new Long(1));
+        courseService.setCourseCategory(new Long(21),new Long(4));
+        courseService.setCourseCategory(new Long(22),new Long(4));
 //        courseService.setCourseCategory(new Long(6),new Long(1));
 //        courseService.setCourseCategory(new Long(8),new Long(1));
     }
@@ -106,7 +106,7 @@ public class CourseServiceTest {
 
     @Test
     public void testDelete(){
-        courseService.delete(new Long(16));
+        courseService.delete(new Long(15), new Long(17),new Long(18),new Long(19),new Long(20));
     }
 
     public CourseMessage getCourseMessage() {
