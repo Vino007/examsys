@@ -43,13 +43,8 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 	private RoleRepository roleRepository;
 	@Autowired
 	private PasswordHelper passwordHelper;
-    
-    /**
-     * ������̬��ѯ�������.
-     */
+
     private Specification<User> buildSpecification(final Map<String,Object> searchParams) {
-    	
-		
         Specification<User> spec = new Specification<User>(){           
 			@Override
 			public Predicate toPredicate(Root<User> root,
@@ -61,14 +56,14 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 				if(username!=null&&!"".equals(username)){
 					Predicate condition=cb.like(root.get("username").as(String.class),"%"+searchParams.get("username")+"%");
 					if(null==allCondition)
-						allCondition=cb.and(condition);//�˴���ʼ��allCondition,����cb.and(allCondition,condition)����д�����ᵼ�¿�ָ��
+						allCondition=cb.and(condition);
 					else
 						allCondition=cb.and(allCondition,condition);
 					}
 				if(userAlias!=null&&!"".equals(userAlias)){
 					Predicate condition=cb.like(root.get("userAlias").as(String.class),"%"+searchParams.get("userAlias")+"%");
 					if(null==allCondition)
-						allCondition=cb.and(condition);//�˴���ʼ��allCondition,����cb.and(allCondition,condition)����д�����ᵼ�¿�ָ��
+						allCondition=cb.and(condition);
 					else
 						allCondition=cb.and(allCondition,condition);
 					
@@ -84,14 +79,14 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 						Date createTimeEnd=format.parse(createTimeEndStr);
 						Predicate condition=cb.between(root.get("createTime").as(Date.class),createTimeStart, createTimeEnd);
 						if(null==allCondition)
-							allCondition=cb.and(condition);//�˴���ʼ��allCondition,����cb.and(allCondition,condition)����д�����ᵼ�¿�ָ��
+							allCondition=cb.and(condition);
 						else
 							allCondition=cb.and(allCondition,condition);
 						
 					} catch (ParseException e) {
 						e.printStackTrace();
 						Logger log =LoggerFactory.getLogger(this.getClass());
-						log.error("createTime ת��ʱ�����");
+						
 					}
 					
 				
@@ -153,26 +148,23 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 		return permissions;
 	}
 	 /**
-     * �����û�
      * @param user
 	 * @throws UserDuplicateException 
      */
     
-    public void saveWithCheckDuplicate(User user) throws UserDuplicateException{
-    	//У���Ƿ��û��ظ�
+    public User saveWithCheckDuplicate(User user) throws UserDuplicateException{
     	if(userRepository.findByUsername(user.getUsername())!=null)
     		throw new UserDuplicateException();
-        //��������
         passwordHelper.encryptPassword(user);
         user.setCreateTime(new Date());
         if(getCurrentUser()!=null)
         user.setCreatorName(getCurrentUser().getUsername());
-        userRepository.save(user);
+        return userRepository.save(user);
     }
     @Override
 	public void update(User user){
 		User user2=userRepository.findOne(user.getId());
-		if(user.getUserAlias()!=null){
+		if(user.getUserAlias()!=null&&!"".equals(user.getUserAlias())){
 			user2.setUserAlias(user.getUserAlias());
 		}
 		if(user.getLocked()!=null){
@@ -181,8 +173,9 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 		if(user.getLastLoginTime()!=null){
 			user2.setLastLoginTime(user.getLastLoginTime());
 		}
-		if(user.getPassword()!=null){
-			user2.setPassword(user.getPassword());
+		if(user.getPassword()!=null&&!"".equals(user.getPassword())){
+			//user2.setPassword();
+			 passwordHelper.encryptPassword(user);
 		}
 		if(user.getLoginTime()!=null){
 			user2.setLoginTime(user.getLoginTime());
@@ -190,7 +183,7 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 		
 	}
     /**
-     * �޸�����
+     * 
      * @param userId
      * @param newPassword
      */
@@ -198,12 +191,13 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
     public void changePassword(Long userId, String newPassword) {
         User user =userRepository.findOne(userId);
         user.setPassword(newPassword);
-        passwordHelper.encryptPassword(user);//��������м���,�޸ĺ�ȴ�flush�ͻ�־û�����ݿ�
+        passwordHelper.encryptPassword(user);
         
     }
 
 	@Override
 	public void connectUserAndRole(Long userId, Long... roleId) {
+		if(roleId==null) return;
 		User user=userRepository.findOne(userId);
 		Set<Role> roles=user.getRoles();
 		for(Long id:roleId){
@@ -247,14 +241,12 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 			throws UserDuplicateException {
 		if(null==users||0==users.size())
 			return;
-		//У���Ƿ��û��ظ�
 		for(User user:users){
     	if(userRepository.findByUsername(user.getUsername())!=null)
     		throw new UserDuplicateException();
     	if(user.getPassword()==null){
     		user.setPassword(Constants.DEFAULT_PASSWORD);
     	}
-        //��������
         passwordHelper.encryptPassword(user);
         user.setCreateTime(new Date());
         user.setCreatorName(getCurrentUser().getUsername());

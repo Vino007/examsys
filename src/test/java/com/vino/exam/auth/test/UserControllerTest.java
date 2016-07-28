@@ -35,10 +35,8 @@ public class UserControllerTest {
 	private MockMvc mockMvc;
 
 	@Before
-	public void setup() {
-		
+	public void setup() {		
 		this.mockMvc = webAppContextSetup(this.wac).build();
-
 		emf = (EntityManagerFactory) wac.getBean("entityManagerFactory");
 		EntityManager em = emf.createEntityManager();
 		EntityManagerHolder emHolder = new EntityManagerHolder(em);

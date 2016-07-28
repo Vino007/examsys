@@ -53,7 +53,18 @@ public class ResourceController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", resourcePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
+		return resultMap;
+	}
+	@ResponseBody
+	@RequiresPermissions("resource:view")
+	@RequestMapping(value="/find",method=RequestMethod.GET)
+	public Map<String, Object> findResource(Model model,Long id){
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		data.put("resource", resourceService.findOne(id));
+		resultMap.put("data", data);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	/**
@@ -61,7 +72,7 @@ public class ResourceController extends BaseController{
 	 */
 	@RequiresPermissions("resource:menu")
 	@ResponseBody
-	@RequestMapping(value="/allResources",method=RequestMethod.GET)
+	@RequestMapping(value="/resourceTree",method=RequestMethod.GET)
 	public Map<String, Object> getAllResources(){	
 		List<Resource> resources=resourceService.findAll();
 		Map<String, Object> resultMap = new HashMap<>();
@@ -69,7 +80,7 @@ public class ResourceController extends BaseController{
 		List<Tree> tree=TreeUtils.fomatResourceToTree(resources);
 		data.put("tree", tree);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	@ResponseBody
@@ -77,17 +88,12 @@ public class ResourceController extends BaseController{
 	@RequestMapping(value="/search",method=RequestMethod.GET)
 	public Map<String, Object> getRolesByCondition(Model model,Resource resource,@RequestParam(value="pageNumber",defaultValue="1")int pageNumber,ServletRequest request){
 		Map<String,Object> searchParams=Servlets.getParametersStartingWith(request, "search_");
-		Page<Resource> resourcePage=resourceService.findResourceByCondition(searchParams, buildPageRequest(pageNumber));
-		/*model.addAttribute("resources",resourcePage.getContent());
-		model.addAttribute("page", resourcePage);	
-		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
-		model.addAttribute("searchParamsMap", searchParams);*/
-		
+		Page<Resource> resourcePage=resourceService.findResourceByCondition(searchParams, buildPageRequest(pageNumber));		
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", resourcePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	@ResponseBody
@@ -99,18 +105,17 @@ public class ResourceController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		try {
 			resourceService.saveWithCheckDuplicate(resource,curUser);
+			//让admin拥有所有权限
 			roleService.connectRoleAndResource(1l,resourceService.findByName(resource.getName()).getId() );//新建一个资源就绑定给超级角色admin，使得admin拥有所有权限
 		} catch (ResourceDuplicateException e) {
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			resultMap.put("msg", "用户名重复");
 			e.printStackTrace();
 			return resultMap;
 		}
-		Page<Resource> resourcePage=resourceService.findAll(buildPageRequest(1));
 	
-		data.put("page", resourcePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		resultMap.put("msg", "添加成功");
 		return resultMap;
 	}
@@ -123,16 +128,14 @@ public class ResourceController extends BaseController{
 		try {
 		resourceService.delete(deleteIds);
 		} catch (Exception e) {
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			resultMap.put("msg", "删除失败");
 			e.printStackTrace();
 			return resultMap;
 		}
-		Page<Resource> resourcePage=resourceService.findAll(buildPageRequest(1));
 
-		data.put("page", resourcePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		resultMap.put("msg", "删除成功");
 		return resultMap;
 		
@@ -142,26 +145,14 @@ public class ResourceController extends BaseController{
 	@RequestMapping(value="/update",method=RequestMethod.POST)	
 	public Map<String, Object> updateRole(Model model,Resource resource){
 		resourceService.update(resource);
-		Page<Resource> resourcePage=resourceService.findAll(buildPageRequest(1));
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		data.put("page", resourcePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		resultMap.put("msg", "更新成功");
 		return resultMap;
 		
 	}
 
-	@ResponseBody
-	@RequiresPermissions("resource:view")
-	@RequestMapping(value="/find",method=RequestMethod.GET)
-	public Map<String, Object> findResource(Model model,Long id){
-		Map<String, Object> resultMap = new HashMap<>();
-		Map<String, Object> data = new HashMap<>();
-		data.put("resource", resourceService.findOne(id));
-		resultMap.put("data", data);
-		resultMap.put("successs", true);
-		return resultMap;
-	}
+
 }

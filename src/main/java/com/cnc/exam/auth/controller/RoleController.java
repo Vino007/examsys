@@ -13,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.cnc.exam.auth.constant.Constants;
 import com.cnc.exam.auth.entity.Resource;
 import com.cnc.exam.auth.entity.Role;
@@ -47,10 +45,9 @@ public class RoleController extends BaseController{
 		Page<Role> rolePage=roleService.findAll(buildPageRequest(pageNumber));
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		//data.put("roles", rolePage.getContent());
 		data.put("page", rolePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	
@@ -59,18 +56,12 @@ public class RoleController extends BaseController{
 	@RequestMapping(value="/search",method=RequestMethod.GET)
 	public Map<String, Object> getRolesByCondition(Model model,Role role,@RequestParam(value="pageNumber",defaultValue="1")int pageNumber,ServletRequest request){
 		Map<String,Object> searchParams=Servlets.getParametersStartingWith(request, "search_");
-		log.info("搜索参数="+searchParams.toString());				
 		Page<Role> rolePage=roleService.findRoleByCondition(searchParams, buildPageRequest(pageNumber));
-	/*	model.addAttribute("roles",rolePage.getContent());
-		model.addAttribute("page", rolePage);	
-		model.addAttribute("searchParams", Servlets.encodeParameterStringWithPrefix(searchParams, "search_"));
-		model.addAttribute("searchParamsMap", searchParams);*/
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		//data.put("roles", rolePage.getContent());
 		data.put("page", rolePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	@ResponseBody
@@ -86,15 +77,12 @@ public class RoleController extends BaseController{
 		} catch (RoleDuplicateException e) {
 			model.addAttribute("roleDuplicate", "true");
 			e.printStackTrace();
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			resultMap.put("msg", "角色名重复");
 		}
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
-		//data.put("roles", rolePage.getContent());
-		data.put("page", rolePage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "添加成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;	
 	}
 	@ResponseBody
@@ -107,14 +95,11 @@ public class RoleController extends BaseController{
 		roleService.delete(deleteIds);
 		}catch(Exception e){
 			resultMap.put("msg", "删除失败");
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 		}
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
-		//data.put("roles", rolePage.getContent());
-		data.put("page", rolePage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "删除成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}
@@ -125,12 +110,9 @@ public class RoleController extends BaseController{
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		roleService.update(role);
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
-		//data.put("roles", rolePage.getContent());
-		data.put("page", rolePage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "更新成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}	
@@ -142,38 +124,19 @@ public class RoleController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("role", roleService.findOne(id));
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}
-	/**
-	 * 
-	 * @param model return availableRoles and role
-	 * @param id
-	 * @return 
-	 */
-	@ResponseBody
-	@RequiresPermissions("role:bind")
-	@RequestMapping(value="/prepareBind",method=RequestMethod.GET)
-	public Map<String, Object> prepareBind(Model model){
-		Map<String, Object> resultMap = new HashMap<>();
-		Map<String, Object> data = new HashMap<>();
 
-		List<Resource> resources=resourceService.findAll();
-		data.put("availableResources", resources);
-		resultMap.put("data", data);
-		resultMap.put("successs", true);
-		return resultMap;
-		
-	}
 	@RequiresPermissions("role:bind")
 	@ResponseBody
-	@RequestMapping(value="/json/getResources/{id}",method=RequestMethod.GET)
-	public Map<String, Object> getResourcesByRole(@PathVariable("id") Long roleId){
+	@RequestMapping(value="/getResourceTree",method=RequestMethod.GET)
+	public Map<String, Object> getResourcesByRole(Long id){
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		List<Resource> allResources=resourceService.findAll();
-		Role role=roleService.findOne(roleId);
+		Role role=roleService.findOne(id);
 		Set<Resource> checkedResources=role.getResources();
 		List<Resource> unCheckedResources=resourceService.findAll();
 		for(Resource res:checkedResources){
@@ -183,7 +146,7 @@ public class RoleController extends BaseController{
 		List<Tree> tree=TreeUtils.fomatResourceToTree(unCheckedResources,checkedResources);
 		data.put("tree", tree);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	
 		
@@ -199,15 +162,13 @@ public class RoleController extends BaseController{
 			roleService.connectRoleAndResource(roleId,resourceIds);
 		}catch(Exception e){
 			resultMap.put("msg", "绑定失败");
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			return resultMap;
 		}
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
-		//data.put("roles", rolePage.getContent());
-		data.put("page", rolePage);		
+	
 		resultMap.put("data", data);
 		resultMap.put("msg", "绑定成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}

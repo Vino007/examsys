@@ -96,10 +96,18 @@
     <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
-        <property name="loginUrl" value="${shiro.login.url}"/>
+       <!--  <property name="loginUrl" value="${shiro.login.url}"/> -->
+       <property name="loginUrl" value="/login"/>
         <property name="rememberMeParam" value="rememberMe"/><!--即rememberMe请求参数名，请求参数是boolean类型，true表示rememberMe。   -->
     </bean>
-     
+    
+    
+    <bean id="myFormAuthenticationFilter" class=" com.cnc.exam.auth.filter.MyFormAuthenticationFilter">
+      <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+       <property name="loginUrl" value="/login"/>
+        <property name="rememberMeParam" value="rememberMe"/>
+    </bean> 
     <bean id="monitorFilter" class="com.cnc.exam.auth.filter.MonitorAccessControlFilter"></bean> 
     	
     <!-- Shiro的Web过滤器 -->
@@ -107,13 +115,14 @@
  <!--  此处使用ShiroFilterFactoryBean来创建ShiroFilter过滤器；filters属性用于定义自己的过滤器，
     	即ini配置中的[filters]部分；filterChainDefinitions用于声明url和filter的关系，即ini配置中的[urls]部分。 -->
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="${shiro.login.url}"/><!-- 如果没有登录默会跳转到登录页面,设置loginUrl属性，默认是/login.jsp  -->
+        <property name="loginUrl" value="/loginPage"/><!-- 如果没有登录默会跳转到登录页面,设置loginUrl属性，默认是/login.jsp  -->
         <property name="unauthorizedUrl" value="${shiro.unauthorizedUrl}"/><!-- 没有权限的时候跳转页面 -->
         <property name="successUrl" value="/loginSuccess"></property> 
         <property name="filters">
             <util:map>
-                 <entry key="authc" value-ref="formAuthenticationFilter"/><!-- filters该属性用于定义自定义的过滤器 -->               
-                 <entry key="monitor" value-ref="monitorFilter"/> 
+               <!--   <entry key="authc" value-ref="formAuthenticationFilter"/> --><!-- filters该属性用于定义自定义的过滤器 -->               
+               <entry key="authc" value-ref="myFormAuthenticationFilter"/>
+               <entry key="monitor" value-ref="monitorFilter"/> 
             </util:map>
         </property>
        
