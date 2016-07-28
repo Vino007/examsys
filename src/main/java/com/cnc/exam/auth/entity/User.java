@@ -1,7 +1,9 @@
 package com.cnc.exam.auth.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,12 +13,14 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.cnc.exam.base.entity.BaseEntity;
+import com.cnc.exam.exam.entity.ExamUserMid;
 
 @Entity
 @Table(name = "t_user")
@@ -51,6 +55,10 @@ public class User extends BaseEntity<Long> {
 	@ManyToMany(targetEntity=Role.class,fetch=FetchType.EAGER)
 	@JoinTable(name="t_user_role",joinColumns=@JoinColumn(name="user_id"),inverseJoinColumns=@JoinColumn(name="role_id"))
 	private Set<Role> roles=new HashSet<Role>();
+	
+	@JSONField(serialize=false)
+	@OneToMany(mappedBy = "user")
+	private List<ExamUserMid> examUserMids=new ArrayList<>();
 	
 	public User(){}
 	public User(String username,String password,String alias){
@@ -133,6 +141,12 @@ public class User extends BaseEntity<Long> {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public List<ExamUserMid> getExamUserMids() {
+		return examUserMids;
+	}
+	public void setExamUserMids(List<ExamUserMid> examUserMids) {
+		this.examUserMids = examUserMids;
 	}
 
 	

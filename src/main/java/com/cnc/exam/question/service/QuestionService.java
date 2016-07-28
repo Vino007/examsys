@@ -12,4 +12,14 @@ public interface QuestionService extends BaseService<Question, Long>{
 	void update(Question question);
 
 	Page<Question> findQuestionByCondition(Map<String, Object> searchParams, Pageable pageable);
+	/**
+	 * 下线题目
+	 * @param id
+	 */
+	void offlineQuestion(Long id);
+	/**
+	 * 上线题目
+	 * @param id
+	 */
+	void onlineQuestion(Long id);
 }

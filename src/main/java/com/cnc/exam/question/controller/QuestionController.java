@@ -39,7 +39,7 @@ public class QuestionController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", questionPage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 
@@ -54,7 +54,7 @@ public class QuestionController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", questionPage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	@ResponseBody
@@ -65,7 +65,7 @@ public class QuestionController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("question", questionService.findOne(id));
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 
 	}
@@ -80,14 +80,14 @@ public class QuestionController extends BaseController{
 			questionService.save(question);
 
 		} catch (Exception e) {
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			resultMap.put("msg", "条件失败");
 			e.printStackTrace();
 			return resultMap;
 		}
 		Page<Question> questionPage = questionService.findAll(buildPageRequest(1));
 		data.put("page", questionPage);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		resultMap.put("data", data);
 		resultMap.put("msg", "添加成功");
 
@@ -99,10 +99,19 @@ public class QuestionController extends BaseController{
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public Map<String, Object> deleteQuestions(@RequestParam("deleteIds[]") Long[] deleteIds) {
 		Map<String, Object> resultMap = new HashMap<>();
+		
+		List<Question> questions=questionService.find(deleteIds);
+		for(Question q:questions){
+			if(q.getIsExam()){
+				resultMap.put("success", false);
+				resultMap.put("msg", "不能删除已经考过的题目，请重新选择");
+				return resultMap;
+			}
+		}
 		try {
 			questionService.delete(deleteIds);
 		} catch (Exception e) {
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			resultMap.put("msg", "删除失败");
 			e.printStackTrace();
 			return resultMap;
@@ -113,7 +122,7 @@ public class QuestionController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", questionPage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		resultMap.put("msg", "删除成功");
 		return resultMap;
 
@@ -125,11 +134,19 @@ public class QuestionController extends BaseController{
 	public Map<String, Object> updateQuestion(Question question) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
+		Question question2=questionService.findOne(question.getId());
+		
+		Boolean isExam=question2.getIsExam();
+		if(isExam){
+			resultMap.put("success", false);
+			resultMap.put("msg", "修改失败,该题目已经被考过，不能修改");
+			return resultMap;
+		}
 		try {
-			questionService.update(question);// 密码这里要做加密处理
+			questionService.update(question);
 		} catch (Exception e) {
-			resultMap.put("successs", false);
-			resultMap.put("msg", "更新失败");
+			resultMap.put("success", false);
+			resultMap.put("msg", "修改失败");
 			e.printStackTrace();
 			return resultMap;
 		}
@@ -137,10 +154,69 @@ public class QuestionController extends BaseController{
 		Page<Question> questionPage = questionService.findAll(buildPageRequest(1));		
 		data.put("page", questionPage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
-		resultMap.put("msg", "更新成功");
+		resultMap.put("success", true);
+		resultMap.put("msg", "修改成功");
 		return resultMap;
 
 	}
+	/**
+	 * 下线题目
+	 * @param id question的主键id
+	 * @return
+	 */
+	@ResponseBody
+//	@RequiresPermissions("question:update")
+	@RequestMapping(value = "/offline", method = RequestMethod.POST)
+	public Map<String, Object> offlineQuestion(Long id) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		
+		try {
+			questionService.offlineQuestion(id);
+		} catch (Exception e) {
+			resultMap.put("success", false);
+			resultMap.put("msg", "题目不存在,下线失败");
+			e.printStackTrace();
+			return resultMap;
+		}
+		
+		//Page<Question> questionPage = questionService.findAll(buildPageRequest(1));		
+		//data.put("page", questionPage);
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		resultMap.put("msg", "下线成功");
+		return resultMap;
+
+	}
+	/**
+	 * 上线题目
+	 * @param id question的主键id
+	 * @return
+	 */
+	@ResponseBody
+//	@RequiresPermissions("question:update")
+	@RequestMapping(value = "/online", method = RequestMethod.POST)
+	public Map<String, Object> onlineQuestion(Long id) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		
+		try {
+			questionService.onlineQuestion(id);
+		} catch (Exception e) {
+			resultMap.put("success", false);
+			resultMap.put("msg", "题目不存在,上线失败");
+			e.printStackTrace();
+			return resultMap;
+		}
+		
+		/*Page<Question> questionPage = questionService.findAll(buildPageRequest(1));		
+		data.put("page", questionPage);*/
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		resultMap.put("msg", "上线成功");
+		return resultMap;
+
+	}
+	
 	
 }

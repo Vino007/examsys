@@ -31,9 +31,10 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 	private QuestionRepository questionRepository;
 	@Override
 	public void update(Question obj) {
-		if(obj==null||obj.getId()==null)  return;
+		if(obj==null||obj.getId()==null)  throw new IllegalArgumentException("id异常");
 		
 		Question obj2=questionRepository.findOne(obj.getId());
+		if(obj2==null) throw new NullPointerException("该id对应的实体类不存在");
 			try {
 				@SuppressWarnings("unchecked")
 				Class<Question> clazz=(Class<Question>) Class.forName("com.cnc.exam.question.entity.Question");
@@ -41,7 +42,7 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 				for(Method m:methods){
 					 if(m.getName().substring(0, 3).equals("get")){					
 						Object value=m.invoke(obj);
-						if(value!=null){
+						if(value!=null&&!"".equals(value)){
 						Method setMethod=clazz.getDeclaredMethod("set"+m.getName().substring(3, 4).toUpperCase()+m.getName().substring(4),m.getReturnType());
 						setMethod.invoke(obj2, value);
 						}
@@ -80,23 +81,29 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 				CriteriaQuery<?> cq, CriteriaBuilder cb) {
 				Predicate allCondition = null;
 				String content=(String) searchParams.get("content");
-				Integer type=Integer.parseInt((String) searchParams.get("type")) ;
-				Boolean isOnline=(Boolean)searchParams.get("content");
+				Integer type=null;
+				Boolean isOnline=null;
+				if(searchParams.get("type")!=null)
+					type=Integer.parseInt((String) searchParams.get("type")) ;
+				if(searchParams.get("isOnline")!=null)					
+					isOnline=Boolean.valueOf((String) searchParams.get("isOnline"));
+				
 				if(content!=null&&!"".equals(content)){
 					Predicate condition=cb.like(root.get("content").as(String.class),"%"+searchParams.get("content")+"%");
 					if(null==allCondition)
 						allCondition=cb.and(condition);					
 					}
 				if(type!=null){
-					Predicate condition=cb.equal(root.get("type").as(Integer.class),searchParams.get("type"));
+					Predicate condition=cb.equal(root.get("type").as(Integer.class),type);
 					if(null==allCondition)
 						allCondition=cb.and(condition);
 					else
 						allCondition=cb.and(allCondition,condition);
 					
 					}
+				//实体类基本类型需要使用包装器类
 				if(isOnline!=null){
-					Predicate condition=cb.equal(root.get("isOnline").as(Boolean.class),searchParams.get("isOnline"));
+					Predicate condition=cb.equal(root.get("isOnline").as(Boolean.class),isOnline);
 					if(null==allCondition)
 						allCondition=cb.and(condition);
 					else
@@ -117,5 +124,29 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 	
 		return questionRepository.findAll(buildSpecification(searchParams), pageable);
 	}
+	@Override
+	public void offlineQuestion(Long id){
+		if(id==null) throw new NullPointerException() ;
+		if(id<0) throw new IllegalArgumentException("id不存在");
+		Question question=questionRepository.findOne(id);
+		if(question==null) throw new NullPointerException("该id对应的实体类不存在");
+		question.setIsOnline(false);
+		
+	}
+	@Override
+	public void onlineQuestion(Long id) {
+		if(id==null) throw new NullPointerException() ;
+		if(id<0) throw new IllegalArgumentException("id不存在");
+		Question question=questionRepository.findOne(id);
+		if(question==null) throw new NullPointerException("该id对应的实体类不存在");
+		question.setIsOnline(true);
+	}
+	@Override
+	public void delete(Long... ids) {
+	
+		super.delete(ids);
+		
+	}
+	
 	
 }

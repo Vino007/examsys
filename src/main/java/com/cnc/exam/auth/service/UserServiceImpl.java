@@ -152,19 +152,19 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 	 * @throws UserDuplicateException 
      */
     
-    public void saveWithCheckDuplicate(User user) throws UserDuplicateException{
+    public User saveWithCheckDuplicate(User user) throws UserDuplicateException{
     	if(userRepository.findByUsername(user.getUsername())!=null)
     		throw new UserDuplicateException();
         passwordHelper.encryptPassword(user);
         user.setCreateTime(new Date());
         if(getCurrentUser()!=null)
         user.setCreatorName(getCurrentUser().getUsername());
-        userRepository.save(user);
+        return userRepository.save(user);
     }
     @Override
 	public void update(User user){
 		User user2=userRepository.findOne(user.getId());
-		if(user.getUserAlias()!=null){
+		if(user.getUserAlias()!=null&&!"".equals(user.getUserAlias())){
 			user2.setUserAlias(user.getUserAlias());
 		}
 		if(user.getLocked()!=null){
@@ -173,7 +173,7 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 		if(user.getLastLoginTime()!=null){
 			user2.setLastLoginTime(user.getLastLoginTime());
 		}
-		if(user.getPassword()!=null){
+		if(user.getPassword()!=null&&!"".equals(user.getPassword())){
 			//user2.setPassword();
 			 passwordHelper.encryptPassword(user);
 		}
@@ -197,6 +197,7 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 
 	@Override
 	public void connectUserAndRole(Long userId, Long... roleId) {
+		if(roleId==null) return;
 		User user=userRepository.findOne(userId);
 		Set<Role> roles=user.getRoles();
 		for(Long id:roleId){

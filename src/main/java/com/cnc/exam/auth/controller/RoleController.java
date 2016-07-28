@@ -47,7 +47,7 @@ public class RoleController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", rolePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	
@@ -61,7 +61,7 @@ public class RoleController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", rolePage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	@ResponseBody
@@ -77,14 +77,12 @@ public class RoleController extends BaseController{
 		} catch (RoleDuplicateException e) {
 			model.addAttribute("roleDuplicate", "true");
 			e.printStackTrace();
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			resultMap.put("msg", "角色名重复");
 		}
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
-		data.put("page", rolePage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "添加成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;	
 	}
 	@ResponseBody
@@ -97,13 +95,11 @@ public class RoleController extends BaseController{
 		roleService.delete(deleteIds);
 		}catch(Exception e){
 			resultMap.put("msg", "删除失败");
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 		}
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
-		data.put("page", rolePage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "删除成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}
@@ -114,11 +110,9 @@ public class RoleController extends BaseController{
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		roleService.update(role);
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
-		data.put("page", rolePage);
 		resultMap.put("data", data);
 		resultMap.put("msg", "更新成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}	
@@ -130,30 +124,11 @@ public class RoleController extends BaseController{
 		Map<String, Object> data = new HashMap<>();
 		data.put("role", roleService.findOne(id));
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}
-	/**
-	 * 
-	 * @param model return availableRoles and role
-	 * @param id
-	 * @return 
-	 */
-	@ResponseBody
-	@RequiresPermissions("role:bind")
-	@RequestMapping(value="/prepareBind",method=RequestMethod.GET)
-	public Map<String, Object> prepareBind(Model model){
-		Map<String, Object> resultMap = new HashMap<>();
-		Map<String, Object> data = new HashMap<>();
 
-		List<Resource> resources=resourceService.findAll();
-		data.put("availableResources", resources);
-		resultMap.put("data", data);
-		resultMap.put("successs", true);
-		return resultMap;
-		
-	}
 	@RequiresPermissions("role:bind")
 	@ResponseBody
 	@RequestMapping(value="/getResourceTree",method=RequestMethod.GET)
@@ -171,7 +146,7 @@ public class RoleController extends BaseController{
 		List<Tree> tree=TreeUtils.fomatResourceToTree(unCheckedResources,checkedResources);
 		data.put("tree", tree);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	
 		
@@ -187,15 +162,13 @@ public class RoleController extends BaseController{
 			roleService.connectRoleAndResource(roleId,resourceIds);
 		}catch(Exception e){
 			resultMap.put("msg", "绑定失败");
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			return resultMap;
 		}
-		Page<Role> rolePage=roleService.findAll(buildPageRequest(1));
 	
-		data.put("page", rolePage);		
 		resultMap.put("data", data);
 		resultMap.put("msg", "绑定成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 		
 	}

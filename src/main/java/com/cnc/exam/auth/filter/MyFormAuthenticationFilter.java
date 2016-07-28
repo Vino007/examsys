@@ -28,6 +28,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.cnc.exam.auth.constant.Constants;
 import com.cnc.exam.auth.entity.Resource;
 import com.cnc.exam.auth.entity.User;
@@ -45,7 +46,7 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter{
 	protected boolean onLoginSuccess(AuthenticationToken token,
 			Subject subject, ServletRequest request, ServletResponse response)
 			throws Exception {
-		
+		JSON.DEFAULT_GENERATE_FEATURE |= SerializerFeature.DisableCircularReferenceDetect.getMask();
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		User curUser=userService.findByUsername((String)subject.getPrincipal());
