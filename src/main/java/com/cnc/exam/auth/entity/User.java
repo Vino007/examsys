@@ -21,6 +21,10 @@ import javax.persistence.TemporalType;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.cnc.exam.base.entity.BaseEntity;
 import com.cnc.exam.exam.entity.ExamUserMid;
+import javax.persistence.*;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.cnc.exam.base.entity.BaseEntity;
+import com.cnc.exam.department.entity.Department;
 
 @Entity
 @Table(name = "t_user")
@@ -45,9 +49,10 @@ public class User extends BaseEntity<Long> {
 	private String salt;
 	@Column(name = "locked")
 	private Boolean locked = Boolean.FALSE;
-	
-	@Column(name = "dept_id")
-	private Long departmentId;
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "dept_id")
+	private Department department;
 	@Column(name = "email",length=50)
 	private String email;
 	
@@ -130,12 +135,15 @@ public class User extends BaseEntity<Long> {
 	public void setLocked(Boolean locked) {
 		this.locked = locked;
 	}
-	public Long getDepartmentId() {
-		return departmentId;
+
+	public Department getDepartment() {
+		return department;
 	}
-	public void setDepartmentId(Long departmentId) {
-		this.departmentId = departmentId;
+
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
+
 	public String getEmail() {
 		return email;
 	}
