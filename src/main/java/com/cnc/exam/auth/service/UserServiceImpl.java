@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.cnc.exam.department.repository.DepartmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,8 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 	private RoleRepository roleRepository;
 	@Autowired
 	private PasswordHelper passwordHelper;
+	@Autowired
+	private DepartmentRepository departmentRepository;
     
     /**
      * ������̬��ѯ�������.
@@ -262,6 +265,13 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 		}
 	}
 
-	
+	@Override
+	public void connectUserAndDept(Long userId, Long deptId) {
+		if(deptId!=null)
+			userRepository.findOne(userId).setDepartment(departmentRepository.findOne(deptId));
+		else
+			userRepository.findOne(userId).setDepartment(null);
+	}
+
 
 }

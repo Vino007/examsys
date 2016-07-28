@@ -106,7 +106,7 @@ public class CourseController extends BaseController {
 
     @ResponseBody
 //    @RequiresPermissions("course:update")
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Map<String, Object> updateCourse(Model model, Course course) {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();

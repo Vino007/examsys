@@ -12,6 +12,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.cnc.exam.department.entity.Department;
+import com.cnc.exam.department.service.DepartmentService;
 import jxl.read.biff.BiffException;
 
 import org.apache.commons.io.FileUtils;
@@ -50,6 +52,8 @@ public class UserController extends BaseController {
 	private RoleService roleService;
 	@Autowired
 	private UserExcelService userExcelService;
+	@Autowired
+	private DepartmentService departmentService;
 
 	@ResponseBody
 	@RequiresPermissions("user:menu")
@@ -243,4 +247,30 @@ public class UserController extends BaseController {
 
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/preBindDept", method = RequestMethod.GET)
+	public Map<String, Object> prepareBindDept(Model model, Long id) {
+		User curUser = userService.findOne(id);
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		List<Department> departments = departmentService.findAll();
+		Department department = curUser.getDepartment();
+		data.put("currentDeptName", department == null ? null : department.getDeptName());
+		data.put("availableDepts", departments);
+		resultMap.put("data", data);
+		resultMap.put("successs", true);
+		return resultMap;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/bindDept", method = RequestMethod.GET)
+	public Map<String, Object> bindDept(Model model, Long userId, Long deptId) {
+		userService.connectUserAndDept(userId, deptId);
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		resultMap.put("data", data);
+		resultMap.put("msg", "部门绑定成功");
+		resultMap.put("success", true);
+		return resultMap;
+	}
 }
