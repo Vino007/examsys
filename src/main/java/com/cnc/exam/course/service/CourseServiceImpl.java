@@ -121,8 +121,14 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     public void setCourseCategory(Long courseId, Long categoryId) {
         if(categoryId!=null)
             courseRepository.findOne(courseId).setCourseCategory(courseCategoryRepository.findOne(categoryId));
-        else
-            courseRepository.findOne(courseId).setCourseCategory(null);
+        else{
+            Course course = courseRepository.findOne(courseId);
+            String cateName = course.getCourseCategory().getCoursecatName();
+            if(cateName!=null){
+                courseCategoryRepository.findByCoursecatName(cateName).getCourses().remove(course);
+            }
+            course.setCourseCategory(null);
+        }
     }
 
     @Override

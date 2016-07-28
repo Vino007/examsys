@@ -261,8 +261,14 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 	public void connectUserAndDept(Long userId, Long deptId) {
 		if(deptId!=null)
 			userRepository.findOne(userId).setDepartment(departmentRepository.findOne(deptId));
-		else
-			userRepository.findOne(userId).setDepartment(null);
+		else{
+			User user = userRepository.findOne(userId);
+			String deptName = user.getDepartment().getDeptName();
+			if(deptName!=null){
+				departmentRepository.findByDeptName(deptName).getUsers().remove(user);
+			}
+			user.setDepartment(null);
+		}
 	}
 
 

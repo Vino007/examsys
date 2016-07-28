@@ -131,12 +131,13 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user:update")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public Map<String, Object> updateUser( User user, 
-			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds) {
+			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds, Long deptId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
 			userService.update(user);// 密码这里要做加密处理
 			userService.clearAllUserAndRoleConnection(user.getId());
 			userService.connectUserAndRole(user.getId(), roleIds);
+			userService.connectUserAndDept(user.getId(), deptId);
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "更新失败");
