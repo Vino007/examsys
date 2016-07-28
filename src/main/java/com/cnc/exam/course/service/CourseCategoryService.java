@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by zhangyn on 2016/7/26.
  */
 public interface CourseCategoryService extends BaseService<CourseCategory,Long> {
-    void update(CourseCategory courseCategory);
+    void updateCategory(CourseCategory courseCategory) throws CourseCategoryDuplicateException;
 
     void saveWithCheckDuplicate(CourseCategory courseCategory, User user) throws CourseCategoryDuplicateException;
 

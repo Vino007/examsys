@@ -61,10 +61,12 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     }
 
     @Override
-    public void update(Course course){
+    public void updateCourse(Course course) throws CourseDuplicateException{
         Course course2 = courseRepository.findOne(course.getId());
         String courseName = course.getCourseName();
-        if (courseName != null && !courseName.trim().equals("") && courseRepository.findByCourseName(courseName)==null) {
+        if(courseRepository.findByCourseName(courseName)!=null&&!courseName.equals(course2.getCourseName()))
+            throw new CourseDuplicateException();
+        if (courseName != null && !courseName.trim().equals("")) {
             course2.setCourseName(course.getCourseName());
         }
         if (course.getCourseType() != null) {

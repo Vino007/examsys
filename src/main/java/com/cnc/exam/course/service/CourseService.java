@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface CourseService extends BaseService<Course, Long> {
 
-    void update(Course course);
+    void updateCourse(Course course) throws CourseDuplicateException;
 
     Course findByName(String name);
 

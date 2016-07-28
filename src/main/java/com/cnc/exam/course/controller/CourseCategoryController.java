@@ -103,7 +103,15 @@ public class CourseCategoryController extends BaseController{
     public Map<String, Object> updateCourseCate(Model model, CourseCategory category) {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
-        courseCategoryService.update(category);
+        try {
+            courseCategoryService.updateCategory(category);
+        } catch (CourseCategoryDuplicateException e) {
+            model.addAttribute("categoryDuplicate", "true");
+            e.printStackTrace();
+            resultMap.put("success", false);
+            resultMap.put("msg", "分类名已存在");
+            return resultMap;
+        }
         resultMap.put("data", data);
         resultMap.put("msg", "更新成功");
         resultMap.put("success", true);

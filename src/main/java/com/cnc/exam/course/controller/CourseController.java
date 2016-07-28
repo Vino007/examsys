@@ -106,11 +106,19 @@ public class CourseController extends BaseController {
 
     @ResponseBody
 //    @RequiresPermissions("course:update")
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
     public Map<String, Object> updateCourse(Model model, Course course) {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
-        courseService.update(course);
+        try {
+            courseService.updateCourse(course);
+        } catch (CourseDuplicateException e) {
+            model.addAttribute("courseDuplicate", "true");
+            e.printStackTrace();
+            resultMap.put("success", false);
+            resultMap.put("msg", "课程名已存在");
+            return resultMap;
+        }
         resultMap.put("data", data);
         resultMap.put("msg", "更新成功");
         resultMap.put("success", true);

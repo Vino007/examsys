@@ -31,7 +31,6 @@ public class Course extends BaseEntity<Long> {
     @JSONField(serialize = false)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
     private List<CourseMessage> courseMessages = new ArrayList<CourseMessage>();
-    @JSONField(serialize = false)
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coursecat_id")
     private CourseCategory courseCategory;

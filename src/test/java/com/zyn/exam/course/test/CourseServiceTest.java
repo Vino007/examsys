@@ -40,11 +40,6 @@ public class CourseServiceTest {
 
     @Test
     public void testUpdate() {
-        Course course = getCourse();
-        course.setId(new Long(9));
-        course.setObjectives("object update");
-        course.setCourseName("course update");
-        courseService.update(course);
     }
 
     @Test

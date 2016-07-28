@@ -40,9 +40,6 @@ public class CourseCategoryServiceTest {
 
     @Test
     public void testUpdate() {
-        CourseCategory courseCategory = courseCategoryService.findByName("cat_2");
-        courseCategory.setCoursecatName("cat_2_update");
-        courseCategoryService.update(courseCategory);
     }
 
     @Test

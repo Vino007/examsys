@@ -52,8 +52,8 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
         for (Long id : ids) {
             courseCategory = courseCategoryRepository.findOne(id);
             List<Course> courses = courseCategory.getCourses();
-            if(courses!=null){
-                for (Course course:courses){
+            if (courses != null) {
+                for (Course course : courses) {
                     courseRepository.findByCourseName(course.getCourseName()).setCourseCategory(null);
                 }
             }
@@ -63,13 +63,16 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
     }
 
     @Override
-    public void update(CourseCategory courseCategory) {
+    public void updateCategory(CourseCategory courseCategory) throws CourseCategoryDuplicateException {
         CourseCategory courseCategory1 = courseCategoryRepository.findOne(courseCategory.getId());
         String name = courseCategory.getCoursecatName();
-        if (name != null && !name.trim().equals("") && courseCategoryRepository.findByCoursecatName(name)==null) {
+        if (courseCategoryRepository.findByCoursecatName(name) != null && !name.equals(courseCategory1.getCoursecatName())) {
+            throw new CourseCategoryDuplicateException();
+        }
+        if (name != null && !name.trim().equals("")) {
             courseCategory1.setCoursecatName(courseCategory.getCoursecatName());
         }
-        if(courseCategory.getDescription()!=null){
+        if (courseCategory.getDescription() != null) {
             courseCategory1.setDescription(courseCategory.getDescription());
         }
     }
