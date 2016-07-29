@@ -281,6 +281,22 @@ public class ExamController extends BaseController{
 		return resultMap;
 
 	}
-	
+	/**
+	 * 查找试卷问题
+	 * @param id
+	 * @return
+	 *//*
+	@ResponseBody
+//	@RequiresPermissions("exam:view")
+	@RequestMapping(value = "/findQuestions", method = RequestMethod.GET)
+	public Map<String, Object> findQuestionById(Long id) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		data.put("exam", examService.findOne(id));
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		return resultMap;
+
+	}*/
 
 }

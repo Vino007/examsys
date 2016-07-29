@@ -165,7 +165,9 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 		}
 		exam.setQuestions(questions);
 	}
-
+	/**
+	 * 自动生成要覆盖之前的结果
+	 */
 	@Override
 	public void autoGenerateExam(Long examId) {
 		Exam exam = examRepository.findOne(examId);
