@@ -5,6 +5,7 @@ import com.cnc.exam.base.service.BaseService;
 import com.cnc.exam.course.entity.Course;
 import com.cnc.exam.course.entity.CourseMessage;
 import com.cnc.exam.course.exception.CourseDuplicateException;
+import com.cnc.exam.course.exception.DeleteWithMsgException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,9 +19,11 @@ public interface CourseService extends BaseService<Course, Long> {
 
     void updateCourse(Course course) throws CourseDuplicateException;
 
+    void deleteCourses(Long... ids) throws DeleteWithMsgException;
+
     Course findByName(String name);
 
-    void saveWithCheckDuplicate(Course resource, User user) throws CourseDuplicateException;
+    Course saveWithCheckDuplicate(Course resource, User user) throws CourseDuplicateException;
 
     void addCourseMessage(Long courseId, CourseMessage courseMessage, User user);
 

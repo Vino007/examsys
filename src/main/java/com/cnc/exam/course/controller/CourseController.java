@@ -8,6 +8,7 @@ import com.cnc.exam.course.entity.Course;
 import com.cnc.exam.course.entity.CourseCategory;
 import com.cnc.exam.course.entity.CourseMessage;
 import com.cnc.exam.course.exception.CourseDuplicateException;
+import com.cnc.exam.course.exception.DeleteWithMsgException;
 import com.cnc.exam.course.service.CourseCategoryService;
 import com.cnc.exam.course.service.CourseService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -67,12 +68,13 @@ public class CourseController extends BaseController {
     @ResponseBody
 //    @RequiresPermissions("course:create")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Map<String, Object> addCourse(Model model, Course course, HttpSession session) {
+    public Map<String, Object> addCourse(Model model, Course course, Long categoryId, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
         try {
-            courseService.saveWithCheckDuplicate(course, curUser);
+            course = courseService.saveWithCheckDuplicate(course, curUser);
+            courseService.setCourseCategory(course.getId(), categoryId);
         } catch (CourseDuplicateException e) {
             model.addAttribute("courseDuplicate", "true");
             e.printStackTrace();
@@ -93,10 +95,15 @@ public class CourseController extends BaseController {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
         try {
-            courseService.delete(deleteIds);
+            courseService.deleteCourses(deleteIds);
+        } catch(DeleteWithMsgException e){
+            resultMap.put("msg", "部分课程存在留言");
+            resultMap.put("success", false);
+            return resultMap;
         } catch (Exception e) {
             resultMap.put("msg", "删除失败");
             resultMap.put("success", false);
+            return resultMap;
         }
         resultMap.put("data", data);
         resultMap.put("msg", "删除成功");
@@ -162,6 +169,19 @@ public class CourseController extends BaseController {
         data.put("messages", messages);
         resultMap.put("data", data);
         resultMap.put("success", true);
+        return resultMap;
+    }
+
+    @ResponseBody
+//    @RequiresPermissions("course:msg")
+    @RequestMapping(value = "/getAllCat", method = RequestMethod.GET)
+    public Map<String, Object> getAllCategory(Model model) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
+        List<CourseCategory> categories = courseCategoryService.findAll();
+        data.put("availableCategories", categories);
+        resultMap.put("data", data);
+        resultMap.put("successs", true);
         return resultMap;
     }
 
