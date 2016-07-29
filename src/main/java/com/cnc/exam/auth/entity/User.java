@@ -50,9 +50,10 @@ public class User extends BaseEntity<Long> {
 	@Column(name = "locked")
 	private Boolean locked = Boolean.FALSE;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
 	@JoinColumn(name = "dept_id")
 	private Department department;
+	
 	@Column(name = "email",length=50)
 	private String email;
 	

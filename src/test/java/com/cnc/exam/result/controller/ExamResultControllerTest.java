@@ -51,7 +51,7 @@ public class ExamResultControllerTest {
 
 	@Test
 	public void testGet() throws Exception {
-		mockMvc.perform((get("/examresult/search?search_examId=1")))
+		mockMvc.perform((get("/examresult/search?search_deptId=2")))
 				.andExpect(status().isOk()).andDo(print());
 
 	}

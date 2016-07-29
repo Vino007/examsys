@@ -1,10 +1,19 @@
 package com.cnc.exam.result.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+
+import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.base.entity.BaseEntity;
+import com.cnc.exam.exam.entity.Exam;
 
 /**
  * 考试结果实体类
@@ -14,11 +23,13 @@ import com.cnc.exam.base.entity.BaseEntity;
 @Entity
 @Table(name = "t_exam_results")
 public class ExamResultEntity extends BaseEntity<Long>{
-	@Column(name = "user_id", length = 100)
-	private long userId;
+	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinColumn(name="user_id")
+	private User user;
 	
-	@Column(name = "exam_id", length = 100)
-	private long examId;
+	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@JoinColumn(name="exam_id")
+	private Exam exam;
 	
 	@Column(name = "score", length = 5)
 	private long score;
@@ -28,22 +39,6 @@ public class ExamResultEntity extends BaseEntity<Long>{
 	
 	@Column(name = "performance")
 	private String performance;//答题情况
-
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public long getExamId() {
-		return examId;
-	}
-
-	public void setExamId(long examId) {
-		this.examId = examId;
-	}
 
 	public long getScore() {
 		return score;
@@ -73,14 +68,37 @@ public class ExamResultEntity extends BaseEntity<Long>{
 		super();
 	}
 
-	public ExamResultEntity(long userId, long examId, long score, int isPass,
+	public ExamResultEntity(long score, int isPass,
 			String performance) {
 		super();
-		this.userId = userId;
-		this.examId = examId;
 		this.score = score;
 		this.isPass = isPass;
 		this.performance = performance;
 	}
-	
-}
+
+	public Exam getExam() {
+		return exam;
+	}
+
+	public void setExam(Exam exam) {
+		this.exam = exam;
+	}
+
+	public ExamResultEntity(User user, Exam exam, long score, int isPass,
+			String performance) {
+		super();
+		this.user = user;
+		this.exam = exam;
+		this.score = score;
+		this.isPass = isPass;
+		this.performance = performance;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	}
