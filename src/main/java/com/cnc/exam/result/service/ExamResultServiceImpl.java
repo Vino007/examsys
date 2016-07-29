@@ -1,10 +1,14 @@
 package com.cnc.exam.result.service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -137,5 +141,12 @@ public class ExamResultServiceImpl extends
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void saveToExcel(String path,Long...ids) throws FileNotFoundException{
+		List<User> users=userService.find(ids);
+		File file=new File(path);
+		createExcel(new FileOutputStream(file), users);
 	}
 }
