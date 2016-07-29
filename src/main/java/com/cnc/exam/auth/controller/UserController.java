@@ -83,13 +83,14 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user:create")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Map<String, Object> addUser( User user,
-			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds) {
+			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds, Long deptId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		try {
 			user=userService.saveWithCheckDuplicate(user);
 			//userService.clearAllUserAndRoleConnection();
 			userService.connectUserAndRole(user.getId(), roleIds);
+			userService.connectUserAndDept(user.getId(), deptId);
 		} catch (UserDuplicateException e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "用户名重复，请重新输入");
@@ -109,6 +110,7 @@ public class UserController extends BaseController {
 	public Map<String, Object> deleteUsers(@RequestParam("deleteIds[]") Long[] deleteIds) {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
+			userService.clearAllUsersAndDeptConnection(deleteIds);
 			userService.delete(deleteIds);
 		} catch (Exception e) {
 			resultMap.put("success", false);
