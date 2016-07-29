@@ -99,7 +99,7 @@ public class CourseCategoryController extends BaseController{
 
     @ResponseBody
 //    @RequiresPermissions("course:update")
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
     public Map<String, Object> updateCourseCate(Model model, CourseCategory category) {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();

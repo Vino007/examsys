@@ -3,6 +3,7 @@ package com.cnc.exam.course.service;
 import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.base.service.AbstractBaseServiceImpl;
 import com.cnc.exam.course.entity.Course;
+import com.cnc.exam.course.entity.CourseCategory;
 import com.cnc.exam.course.entity.CourseMessage;
 import com.cnc.exam.course.exception.CourseDuplicateException;
 import com.cnc.exam.course.exception.DeleteWithMsgException;
@@ -58,8 +59,8 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
             }
             if(c.getCourseCategory()!=null){
                 courseCategoryRepository.findOne(c.getCourseCategory().getId()).getCourses().remove(c);
-                c.setCourseCategory(null);
             }
+            c.setCourseCategory(null);
             courseRepository.delete(id);
         }
     }
@@ -132,9 +133,9 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
             courseRepository.findOne(courseId).setCourseCategory(courseCategoryRepository.findOne(categoryId));
         else{
             Course course = courseRepository.findOne(courseId);
-            String cateName = course.getCourseCategory().getCoursecatName();
-            if(cateName!=null){
-                courseCategoryRepository.findByCoursecatName(cateName).getCourses().remove(course);
+            CourseCategory courseCategory = course.getCourseCategory();
+            if(courseCategory!=null){
+                courseCategoryRepository.findByCoursecatName(courseCategory.getCoursecatName()).getCourses().remove(course);
             }
             course.setCourseCategory(null);
         }
