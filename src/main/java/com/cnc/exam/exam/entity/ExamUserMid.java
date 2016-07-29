@@ -23,7 +23,8 @@ public class ExamUserMid {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	private String status;//请假，免考
+	@JoinColumn(name = "status")
+	private Integer status=1;//0请假，1免考
 
 	public Long getId() {
 		return id;
@@ -49,11 +50,11 @@ public class ExamUserMid {
 		this.user = user;
 	}
 
-	public String getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	

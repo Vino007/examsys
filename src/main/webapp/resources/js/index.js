@@ -2,13 +2,13 @@
  * Created by chucc on 2016/7/21.
  */
 $(document).ready(function () {
-    $.ajax({
-        url:'mock/login.json',
-        type:'GET',
-        async:false
-    }).done(function (data) {
-        
-    });
+    // $.ajax({
+    //     url:'mock/login.json',
+    //     type:'GET',
+    //     async:false
+    // }).done(function (data) {
+    //
+    // });
     
     //user.json
     var usr = sessionStorage.getItem('username');

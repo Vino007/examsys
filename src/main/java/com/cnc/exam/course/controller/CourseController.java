@@ -218,4 +218,6 @@ public class CourseController extends BaseController {
         resultMap.put("success", true);
         return resultMap;
     }
+    
+
 }

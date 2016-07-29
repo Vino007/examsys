@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.base.service.AbstractBaseServiceImpl;
+import com.cnc.exam.course.entity.Course;
+import com.cnc.exam.course.repository.CourseRepository;
 import com.cnc.exam.question.entity.Question;
 import com.cnc.exam.question.repository.QuestionRepository;
 
@@ -29,6 +31,8 @@ import com.cnc.exam.question.repository.QuestionRepository;
 public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long> implements QuestionService{
 	@Autowired
 	private QuestionRepository questionRepository;
+	@Autowired
+	private CourseRepository courseRepository;
 	@Override
 	public void update(Question obj) {
 		if(obj==null||obj.getId()==null)  throw new IllegalArgumentException("id异常");
@@ -83,10 +87,13 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 				String content=(String) searchParams.get("content");
 				Integer type=null;
 				Boolean isOnline=null;
+				Long courseId=null;
 				if(searchParams.get("type")!=null)
 					type=Integer.parseInt((String) searchParams.get("type")) ;
 				if(searchParams.get("isOnline")!=null)					
 					isOnline=Boolean.valueOf((String) searchParams.get("isOnline"));
+				if(searchParams.get("courseId")!=null)					
+					courseId=Long.parseLong((String) searchParams.get("courseId"));
 				
 				if(content!=null&&!"".equals(content)){
 					Predicate condition=cb.like(root.get("content").as(String.class),"%"+searchParams.get("content")+"%");
@@ -95,6 +102,15 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 					}
 				if(type!=null){
 					Predicate condition=cb.equal(root.get("type").as(Integer.class),type);
+					if(null==allCondition)
+						allCondition=cb.and(condition);
+					else
+						allCondition=cb.and(allCondition,condition);
+					
+					}
+				
+				if(courseId!=null){
+					Predicate condition=cb.equal(root.get("course").get("id").as(Long.class),courseId);
 					if(null==allCondition)
 						allCondition=cb.and(condition);
 					else
@@ -148,5 +164,12 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 		
 	}
 	
-	
+	@Override
+	public void bindCourse(Long questionId,Long courseId){
+		Question question=questionRepository.findOne(questionId);
+		Course course=courseRepository.findOne(courseId);
+		if(course!=null)
+			question.setCourse(course);
+		
+	}
 }

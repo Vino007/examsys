@@ -22,4 +22,6 @@ public interface QuestionService extends BaseService<Question, Long>{
 	 * @param id
 	 */
 	void onlineQuestion(Long id);
+
+	void bindCourse(Long questionId, Long courseId);
 }

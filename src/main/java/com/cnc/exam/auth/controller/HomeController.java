@@ -45,6 +45,7 @@ public class HomeController extends BaseController{
 		Subject curUser=SecurityUtils.getSubject();
 		Session session=curUser.getSession();	
 		String username=(String) curUser.getPrincipal();
+		
 		User currentUser=userService.findByUsername(username);
 		session.setAttribute(Constants.CURRENT_USER, currentUser);//将当前用户放入session
 		session.setAttribute(Constants.CURRENT_USERNAME, username);

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+    <link rel="stylesheet" href="../../resources/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../resources/css/base.css">
+    <link rel="stylesheet" href="../../resources/css/index.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            <div class="form-inline">
+                <input class="form-control input-group" type="text" placeholder="用户名,别名 用','分隔">
+                <button id="search" class="btn btn-primary">搜索用户</button>
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="form-group">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#add">新增用户</button>
+                <button id="delete-multiple" class="btn btn-danger">删除用户</button>
+            </div>
+        </div>
+        <table id="user" class="table table-bordered table-striped">
+            <tr>
+                <th><input type="checkbox" name="check-all"></th>
+                <th>用户名</th>
+                <th>别名</th>
+                <th>角色</th>
+                <th>邮箱</th>
+                <th>创建时间</th>
+                <th>创建人</th>
+                <th>管理</th>
+            </tr>
+        </table>
+        <ul id="pagination" class="pagination"></ul>
+    </div>
+
+</div>
+
+<div class="modal fade" id="add">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    新增用户
+                </h4>
+            </div>
+            <form class="form-group add-form">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="control-label">角色：</label>
+                        <div class="form-inline roles-checkbox">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">用户名：</label>
+                        <input name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">密码：</label>
+                        <input name="password" type="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">邮箱：</label>
+                        <input name="email" type="email" class="form-control">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="submit" id="add-submit" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    编辑用户
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-group edit-form">
+                    <div class="form-group">
+                        <label class="control-label">用户名：</label>
+                        <input name="username" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">别名：</label>
+                        <input name="userAlias" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">角色：</label>
+                        <div class="form-inline roles-checkbox">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">邮箱：</label>
+                        <input name="email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">创建时间：</label>
+                        <input name="createTime" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">创建人：</label>
+                        <input name="creator" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">密码：</label>
+                        <input name="password" type="password" class="form-control">
+                    </div>
+                </form>
+                <div class="form-group">
+                    <button id="delete-single" class="btn btn-danger">删除用户</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" id="edit-submit" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../resources/js/jquery-2.2.4.min.js"></script>
+<script src="../../resources/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../resources/js/jquery.twbsPagination.min.js"></script>
+<script src="../../resources/js/share.js"></script>
+<script src="../../resources/js/user.js"></script>
+</body>
+</html>

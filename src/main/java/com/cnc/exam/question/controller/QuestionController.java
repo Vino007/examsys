@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cnc.exam.auth.constant.Constants;
 import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
+import com.cnc.exam.course.entity.Course;
+import com.cnc.exam.course.service.CourseService;
 import com.cnc.exam.question.entity.Question;
 import com.cnc.exam.question.service.QuestionService;
 
@@ -25,7 +27,8 @@ import com.cnc.exam.question.service.QuestionService;
 public class QuestionController extends BaseController{
 	@Autowired
 	private QuestionService questionService;
-	
+	@Autowired
+	private CourseService courseService;
 	@ResponseBody
 	//@RequiresPermissions("question:menu")
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -85,8 +88,6 @@ public class QuestionController extends BaseController{
 			e.printStackTrace();
 			return resultMap;
 		}
-		Page<Question> questionPage = questionService.findAll(buildPageRequest(1));
-		data.put("page", questionPage);
 		resultMap.put("success", true);
 		resultMap.put("data", data);
 		resultMap.put("msg", "添加成功");
@@ -117,10 +118,8 @@ public class QuestionController extends BaseController{
 			return resultMap;
 		}
 
-		Page<Question> questionPage = questionService.findAll(buildPageRequest(1));
 
 		Map<String, Object> data = new HashMap<>();
-		data.put("page", questionPage);
 		resultMap.put("data", data);
 		resultMap.put("success", true);
 		resultMap.put("msg", "删除成功");
@@ -131,7 +130,7 @@ public class QuestionController extends BaseController{
 	@ResponseBody
 //	@RequiresPermissions("question:update")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public Map<String, Object> updateQuestion(Question question) {
+	public Map<String, Object> updateQuestion(Question question,Long courseId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		Question question2=questionService.findOne(question.getId());
@@ -150,9 +149,10 @@ public class QuestionController extends BaseController{
 			e.printStackTrace();
 			return resultMap;
 		}
+		if(courseId!=null){
+			questionService.bindCourse(question.getId(), courseId);
+		}
 		
-		Page<Question> questionPage = questionService.findAll(buildPageRequest(1));		
-		data.put("page", questionPage);
 		resultMap.put("data", data);
 		resultMap.put("success", true);
 		resultMap.put("msg", "修改成功");
@@ -180,8 +180,6 @@ public class QuestionController extends BaseController{
 			return resultMap;
 		}
 		
-		//Page<Question> questionPage = questionService.findAll(buildPageRequest(1));		
-		//data.put("page", questionPage);
 		resultMap.put("data", data);
 		resultMap.put("success", true);
 		resultMap.put("msg", "下线成功");
@@ -209,8 +207,6 @@ public class QuestionController extends BaseController{
 			return resultMap;
 		}
 		
-		/*Page<Question> questionPage = questionService.findAll(buildPageRequest(1));		
-		data.put("page", questionPage);*/
 		resultMap.put("data", data);
 		resultMap.put("success", true);
 		resultMap.put("msg", "上线成功");

@@ -2,13 +2,18 @@ package com.cnc.exam.question.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.cnc.exam.base.entity.BaseEntity;
+import com.cnc.exam.course.entity.Course;
 import com.cnc.exam.exam.entity.Exam;
 
 @Entity
@@ -58,12 +63,15 @@ public class Question extends BaseEntity<Long>{
 	@Column(name="is_online")
 	private Boolean isOnline=Boolean.TRUE;
 	
-	@Column(name="course_id")
-	private Long courseId;
-	
+	//所属课程
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "course_id")
+	private Course course;
+	//使用过该考题的考试
 	@JSONField(serialize=false)
 	@ManyToMany(targetEntity=Exam.class,mappedBy="questions")
 	private List<Exam> exams=new ArrayList<Exam>();
+	
 	
 	public String getChoices() {
 		return choices;
@@ -114,12 +122,7 @@ public class Question extends BaseEntity<Long>{
 	public void setContentImgageUrl(String contentImgageUrl) {
 		this.contentImgageUrl = contentImgageUrl;
 	}
-	public Long getCourseId() {
-		return courseId;
-	}
-	public void setCourseId(Long courseId) {
-		this.courseId = courseId;
-	}
+	
 	public List<Exam> getExams() {
 		return exams;
 	}
@@ -131,6 +134,12 @@ public class Question extends BaseEntity<Long>{
 	}
 	public void setNO(String nO) {
 		NO = nO;
+	}
+	public Course getCourse() {
+		return course;
+	}
+	public void setCourse(Course course) {
+		this.course = course;
 	}
 	
 }

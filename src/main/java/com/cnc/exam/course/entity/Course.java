@@ -2,6 +2,8 @@ package com.cnc.exam.course.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.cnc.exam.base.entity.BaseEntity;
+import com.cnc.exam.exam.entity.Exam;
+import com.cnc.exam.question.entity.Question;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -34,7 +36,15 @@ public class Course extends BaseEntity<Long> {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "coursecat_id")
     private CourseCategory courseCategory;
-
+    //问题列表
+    @JSONField(serialize = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
+    private List<Question> questions=new ArrayList<>();
+    //考试列表
+    @JSONField(serialize = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
+    private List<Exam> exams=new ArrayList<>();
+    
     public CourseCategory getCourseCategory() {
         return courseCategory;
     }
@@ -106,5 +116,30 @@ public class Course extends BaseEntity<Long> {
     public void setOnline(Boolean online) {
         isOnline = online;
     }
+
+	public Boolean getIsOnline() {
+		return isOnline;
+	}
+
+	public void setIsOnline(Boolean isOnline) {
+		this.isOnline = isOnline;
+	}
+
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+
+	public List<Exam> getExams() {
+		return exams;
+	}
+
+	public void setExams(List<Exam> exams) {
+		this.exams = exams;
+	}
+    
 }
 

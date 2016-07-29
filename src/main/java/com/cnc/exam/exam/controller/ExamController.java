@@ -16,16 +16,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cnc.exam.auth.constant.Constants;
+import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
+import com.cnc.exam.common.MyPage;
+import com.cnc.exam.course.service.CourseService;
 import com.cnc.exam.exam.entity.Exam;
+import com.cnc.exam.exam.exception.UserAlreadyHasThisExamException;
 import com.cnc.exam.exam.service.ExamService;
 @Controller
 @RequestMapping("/exam")
 public class ExamController extends BaseController{
 	@Autowired
 	private ExamService examService;
-	
+	@Autowired
+	private CourseService courseService;
 	@ResponseBody
 	//@RequiresPermissions("exam:menu")
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -76,7 +81,9 @@ public class ExamController extends BaseController{
 	public Map<String, Object> addExam(Exam exam) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
+		
 		try {
+			exam.setCourse(courseService.findOne(exam.getCourse().getId()));
 			examService.save(exam);
 
 		} catch (Exception e) {
@@ -181,6 +188,96 @@ public class ExamController extends BaseController{
 		resultMap.put("data", data);
 		resultMap.put("success", true);
 		resultMap.put("msg", "生成成功");
+		return resultMap;
+
+	}
+	/**
+	 * 根据状态查询某场考试的用户
+	 * @param examId
+	 * @param status 若为null，则查询所有用户
+	 * @param pageNumber
+	 * @return
+	 */
+	@ResponseBody
+//	@RequiresPermissions("exam:view")
+	@RequestMapping(value = "/findUser", method = RequestMethod.GET)
+	public Map<String, Object> findUsersByStatus(Long examId,@RequestParam(required=false)Integer status,
+			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber) {
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		MyPage<User> userPage = examService.findUsersByStatus(examId,status,buildPageRequest(pageNumber));
+		data.put("page", userPage);
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		resultMap.put("msg", "查询成功");
+		return resultMap;
+
+	}
+	
+	@ResponseBody
+//	@RequiresPermissions("exam:view")
+	@RequestMapping(value = "/updateUserStatus", method = RequestMethod.POST)
+	public Map<String, Object> findUsersByStatus(Long examId,@RequestParam("userIds[]")Long[] userIds,Integer status) {
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try{
+			examService.updateUserStatus(examId, userIds, status);
+		}catch(Exception e){
+			resultMap.put("data", data);
+			resultMap.put("success", false);
+			resultMap.put("msg", "修改失败");
+		}
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		resultMap.put("msg", "修改成功");
+		return resultMap;
+
+	}
+	
+	@ResponseBody
+//	@RequiresPermissions("exam:view")
+	
+	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
+	public Map<String, Object> addUser(Long examId,@RequestParam("userIds[]")Long[] userIds) {
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try{
+			examService.addUser(examId, userIds);
+		}catch(UserAlreadyHasThisExamException e){
+			resultMap.put("data", data);
+			resultMap.put("success", false);
+			resultMap.put("msg", "请不要重复添加");
+		}catch(Exception e){
+			resultMap.put("data", data);
+			resultMap.put("success", false);
+			resultMap.put("msg", "添加失败");
+		}
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		resultMap.put("msg", "添加成功");
+		return resultMap;
+
+	}
+	@ResponseBody
+//	@RequiresPermissions("exam:view")
+	@RequestMapping(value = "/removeUser", method = RequestMethod.POST)
+	public Map<String, Object> removeUser(Long examId,@RequestParam("userIds[]")Long[] userIds) {
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try{
+			examService.removeUser(examId, userIds);
+		}catch(Exception e){
+			resultMap.put("data", data);
+			resultMap.put("success", false);
+			resultMap.put("msg", "移除失败");
+		}
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		resultMap.put("msg", "移除成功");
 		return resultMap;
 
 	}
