@@ -266,4 +266,17 @@ public class UserController extends BaseController {
 		resultMap.put("success", true);
 		return resultMap;
 	}
+
+	@ResponseBody
+//    @RequiresPermissions("course:msg")
+	@RequestMapping(value = "/getAllDept", method = RequestMethod.GET)
+	public Map<String, Object> getAllCategory(Model model) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		List<Department> departments = departmentService.findAll();
+		data.put("availableDepts", departments);
+		resultMap.put("data", data);
+		resultMap.put("successs", true);
+		return resultMap;
+	}
 }
