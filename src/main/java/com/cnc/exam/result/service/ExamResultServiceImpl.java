@@ -58,7 +58,23 @@ public class ExamResultServiceImpl extends
 				String userId = (String) searchParams.get("userId");
 				String isPass = (String) searchParams.get("isPass");
 				String deptId = (String) searchParams.get("deptId");
+				String userName = (String) searchParams.get("username");
+				String courName = (String) searchParams.get("coursename");
 				String createTimeRange=(String) searchParams.get("createTime");
+				if (userName != null && !"".equals(userName)) {
+					Predicate condition = cb.like(root.get("user").get("username").as(String.class), "%"+ searchParams.get("username") + "%");
+					if (null == allCondition)
+						allCondition = cb.and(condition);
+					else
+						allCondition = cb.and(allCondition, condition);
+				}
+				if (courName != null && !"".equals(courName)) {
+					Predicate condition = cb.like(root.get("exam").get("course").get("courseName").as(String.class), "%"+ searchParams.get("coursename") + "%");
+					if (null == allCondition)
+						allCondition = cb.and(condition);
+					else
+						allCondition = cb.and(allCondition, condition);
+				}
 				if (examId != null && !"".equals(examId)) {
 					Predicate condition = cb.like(root.get("exam").get("id").as(String.class), "%"+ searchParams.get("examId") + "%");
 					if (null == allCondition)

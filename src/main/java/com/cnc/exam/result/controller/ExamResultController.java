@@ -4,10 +4,14 @@ import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cnc.exam.auth.constant.Constants;
+import com.cnc.exam.auth.entity.User;
+import com.cnc.exam.auth.service.UserService;
 import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.log.utils.FastJsonTool;
@@ -31,6 +37,8 @@ public class ExamResultController extends BaseController {
 	@Autowired
 	private ExamResultService examResultService;
 	
+	@Autowired
+	private UserService userService;
 	@ResponseBody
 	@RequestMapping(value="/add",method=RequestMethod.GET)
 	public Map<String, Object> insertER(Model model, ExamResultEntity examResultEntity){
@@ -62,6 +70,25 @@ public class ExamResultController extends BaseController {
 	public Map<String, Object> getLogsByCondition(Model model, ExamResultEntity examResultEntity,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
+		Subject curUser=SecurityUtils.getSubject();
+		Session session=curUser.getSession();	
+		User currentUser = (User) session.getAttribute(Constants.CURRENT_USER);
+		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
+		int flag= 0 ;
+		for(String item : allPermission){
+			if("examresut:viewall".equals(item)){
+				flag = 1;
+			}
+		}
+		if(flag == 1){
+			
+		}else{
+			String userName = (String) searchParams.get("username");
+			if(searchParams.containsKey("username")){
+				searchParams.remove("username");
+			}
+			searchParams.put("username", currentUser.getUsername());
+		}
 		Page<ExamResultEntity> logsPage = examResultService.findERByCondition(searchParams, buildPageRequest(pageNumber));
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
