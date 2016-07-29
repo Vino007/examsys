@@ -74,4 +74,10 @@ public class ExamResultControllerTest {
 		String params = "deleteIds[]=1";
 		mockMvc.perform((get("/examresult/delete?"+params))).andExpect(status().isOk()).andDo(print());
 	}
+	
+	@Test
+	public void testDownload() throws Exception {
+		String params = "path=E:/temp.xls";
+		mockMvc.perform((get("/examresult/download?"+params))).andExpect(status().isOk()).andDo(print());
+	}
 }
