@@ -1,5 +1,6 @@
 package com.cnc.exam.result.controller;
 
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class ExamResultController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/update",method=RequestMethod.GET)	
-	public Map<String, Object> updateRole(Model model,ExamResultEntity er){
+	public Map<String, Object> updateExamResult(Model model,ExamResultEntity er){
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		examResultService.update(er);
@@ -109,6 +110,34 @@ public class ExamResultController extends BaseController {
 		resultMap.put("data", data);
 		resultMap.put("msg", "更新成功");
 		resultMap.put("successs", true);
+		return resultMap;
+	}
+	
+	/**
+	 * 导出成绩
+	 * @param model
+	 * @param er
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/download ",method=RequestMethod.GET)	
+	public Map<String, Object> downloadEaxmResult(Model model,@RequestParam("path")String path){
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try {
+			examResultService.saveToExcel(path);
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载成功");
+			resultMap.put("successs", true);
+		} catch (FileNotFoundException e) {
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载失败");
+			resultMap.put("successs", false);
+			e.printStackTrace();
+		}
+		
 		return resultMap;
 	}
 	

@@ -19,5 +19,5 @@ public interface ExamResultService extends BaseService<ExamResultEntity, Long>{
 
 	public void update(ExamResultEntity er);
 	
-	public void saveToExcel(String path,Long...ids) throws FileNotFoundException;
+	public void saveToExcel(String path) throws FileNotFoundException;
 }
