@@ -83,13 +83,14 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user:create")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Map<String, Object> addUser( User user,
-			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds) {
+			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds, Long deptId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		try {
 			user=userService.saveWithCheckDuplicate(user);
 			//userService.clearAllUserAndRoleConnection();
 			userService.connectUserAndRole(user.getId(), roleIds);
+			userService.connectUserAndDept(user.getId(), deptId);
 		} catch (UserDuplicateException e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "用户名重复，请重新输入");
@@ -109,6 +110,7 @@ public class UserController extends BaseController {
 	public Map<String, Object> deleteUsers(@RequestParam("deleteIds[]") Long[] deleteIds) {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
+			userService.clearAllUsersAndDeptConnection(deleteIds);
 			userService.delete(deleteIds);
 		} catch (Exception e) {
 			resultMap.put("success", false);
@@ -131,12 +133,13 @@ public class UserController extends BaseController {
 	@RequiresPermissions("user:update")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public Map<String, Object> updateUser( User user, 
-			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds) {
+			@RequestParam(value = "roleIds[]", required = false) Long[] roleIds, Long deptId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
 			userService.update(user);// 密码这里要做加密处理
 			userService.clearAllUserAndRoleConnection(user.getId());
 			userService.connectUserAndRole(user.getId(), roleIds);
+			userService.connectUserAndDept(user.getId(), deptId);
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "更新失败");
@@ -261,6 +264,19 @@ public class UserController extends BaseController {
 		resultMap.put("data", data);
 		resultMap.put("msg", "部门绑定成功");
 		resultMap.put("success", true);
+		return resultMap;
+	}
+
+	@ResponseBody
+//    @RequiresPermissions("course:msg")
+	@RequestMapping(value = "/getAllDept", method = RequestMethod.GET)
+	public Map<String, Object> getAllCategory(Model model) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		List<Department> departments = departmentService.findAll();
+		data.put("availableDepts", departments);
+		resultMap.put("data", data);
+		resultMap.put("successs", true);
 		return resultMap;
 	}
 }

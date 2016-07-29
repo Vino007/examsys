@@ -38,7 +38,7 @@ public class DepartmentServiceImpl extends AbstractBaseServiceImpl<Department, L
         for (Long id : ids) {
             department = departmentRepository.findOne(id);
             List<User> users = department.getUsers();
-            if (users != null) {
+            if (users.size() != 0) {
                 for (User user : users) {
                     userRepository.findByUsername(user.getUsername()).setDepartment(null);
                 }

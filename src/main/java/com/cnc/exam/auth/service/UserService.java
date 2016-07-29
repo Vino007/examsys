@@ -37,4 +37,5 @@ public interface UserService extends  BaseService<User, Long>{
 	public User saveWithCheckDuplicate(User user) throws UserDuplicateException;
 	public void saveWithCheckDuplicate(List<User> users)throws UserDuplicateException;
 	public void connectUserAndDept(Long userId, Long deptId);
+	public void clearAllUsersAndDeptConnection(Long... ids);
 }

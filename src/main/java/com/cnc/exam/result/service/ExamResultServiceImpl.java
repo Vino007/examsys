@@ -193,7 +193,7 @@ public class ExamResultServiceImpl extends
 		//添加字段内容
 		for(int i=0;i<list.size();i++){
 			sheet.addCell(new Label(0, i+1, list.get(i).getUser().getUsername()));
-			sheet.addCell(new Label(1, i+1, list.get(i).getExam().getCourseId()+""));
+			sheet.addCell(new Label(1, i+1, list.get(i).getExam().getCourse().getCourseName()+""));
 			sheet.addCell(new Label(2, i+1, list.get(i).getCreateTime().toString()));
 			sheet.addCell(new Label(2, i+1, list.get(i).getScore()+""));
 			switch(list.get(i).getIsPass()){

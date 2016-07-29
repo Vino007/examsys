@@ -3,8 +3,10 @@ package com.cnc.exam.course.service;
 import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.base.service.AbstractBaseServiceImpl;
 import com.cnc.exam.course.entity.Course;
+import com.cnc.exam.course.entity.CourseCategory;
 import com.cnc.exam.course.entity.CourseMessage;
 import com.cnc.exam.course.exception.CourseDuplicateException;
+import com.cnc.exam.course.exception.DeleteWithMsgException;
 import com.cnc.exam.course.repository.CourseCategoryRepository;
 import com.cnc.exam.course.repository.CourseMessageRepository;
 import com.cnc.exam.course.repository.CourseRepository;
@@ -49,13 +51,16 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     }
 
     @Override
-    public void delete(Long... ids) {
+    public void deleteCourses(Long... ids)throws DeleteWithMsgException{
         for (Long id : ids) {
             Course c = courseRepository.findOne(id);
+            if(c.getCourseMessages().size()!=0){
+                throw new DeleteWithMsgException();
+            }
             if(c.getCourseCategory()!=null){
                 courseCategoryRepository.findOne(c.getCourseCategory().getId()).getCourses().remove(c);
-                c.setCourseCategory(null);
             }
+            c.setCourseCategory(null);
             courseRepository.delete(id);
         }
     }
@@ -84,6 +89,9 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
         if (course.getOutline() != null) {
             course2.setOutline(course.getOutline());
         }
+        if (course.getOnline() != null){
+            course2.setOnline(course.getOnline());
+        }
     }
 
     @Override
@@ -92,15 +100,17 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     }
 
     @Override
-    public void saveWithCheckDuplicate(Course course, User user) throws CourseDuplicateException {
+    public Course saveWithCheckDuplicate(Course course, User user) throws CourseDuplicateException {
         if (courseRepository.findByCourseName(course.getCourseName()) != null)
             throw new CourseDuplicateException();
         else {
             course.setCreateTime(new Date());
             //创建人id
             course.setCreatorName(user.getUsername());
+            course.setCreatorId(user.getId());
             courseRepository.save(course);
         }
+        return course;
     }
 
     @Override
@@ -121,8 +131,14 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     public void setCourseCategory(Long courseId, Long categoryId) {
         if(categoryId!=null)
             courseRepository.findOne(courseId).setCourseCategory(courseCategoryRepository.findOne(categoryId));
-        else
-            courseRepository.findOne(courseId).setCourseCategory(null);
+        else{
+            Course course = courseRepository.findOne(courseId);
+            CourseCategory courseCategory = course.getCourseCategory();
+            if(courseCategory!=null){
+                courseCategoryRepository.findByCoursecatName(courseCategory.getCoursecatName()).getCourses().remove(course);
+            }
+            course.setCourseCategory(null);
+        }
     }
 
     @Override

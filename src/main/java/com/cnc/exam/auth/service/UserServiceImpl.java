@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.cnc.exam.department.entity.Department;
 import com.cnc.exam.department.repository.DepartmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -261,9 +262,25 @@ public class UserServiceImpl extends AbstractBaseServiceImpl<User, Long>  implem
 	public void connectUserAndDept(Long userId, Long deptId) {
 		if(deptId!=null)
 			userRepository.findOne(userId).setDepartment(departmentRepository.findOne(deptId));
-		else
-			userRepository.findOne(userId).setDepartment(null);
+		else{
+			User user = userRepository.findOne(userId);
+			Department department = user.getDepartment();
+			if(department!=null){
+				departmentRepository.findByDeptName(department.getDeptName()).getUsers().remove(user);
+			}
+			user.setDepartment(null);
+		}
 	}
 
+	@Override
+	public void clearAllUsersAndDeptConnection(Long... ids) {
+		for(Long id: ids){
+			User user = userRepository.findOne(id);
+			if(user.getDepartment()!=null){
+				departmentRepository.findOne(user.getDepartment().getId()).getUsers().remove(user);
+			}
+			user.setDepartment(null);
+		}
+	}
 
 }

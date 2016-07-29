@@ -52,7 +52,7 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
         for (Long id : ids) {
             courseCategory = courseCategoryRepository.findOne(id);
             List<Course> courses = courseCategory.getCourses();
-            if (courses != null) {
+            if (courses.size() != 0) {
                 for (Course course : courses) {
                     courseRepository.findByCourseName(course.getCourseName()).setCourseCategory(null);
                 }
