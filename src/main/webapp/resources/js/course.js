@@ -4,17 +4,17 @@
 $(document).ready(function () {
     var allCates = [];
     //url arguments
-    var courseFind = {'url': '/course/find', 'type': 'GET'},
-        courseSearch = {'url': '/course/search', 'type': 'GET'},
-        courseAdd = {'url': '/course/add', 'type': 'POST'},
-        courseDelete = {'url': '/course/delete', 'type': 'POST'},
-        courseUpdate = {'url': '/course/update', 'type': 'POST'},
-        courseAddMsg = {'url': '/course/addMsg', 'type': 'POST'},
-        courseShowMsg = {'url': '/course/showMsg', 'type': 'GET'},
-        coursePreSetCate = {'url': '/course/preSetCate', 'type': 'GET'},
-        courseSetCate = {'url': '/course/setCate', 'type': 'GET'},
-        courseSetOffLine = {'url': '/course/setOffLine', 'type': 'POST'},
-        courseSetOnLine = {'url': '/course/setOnLine', 'type': 'POST'};
+    var courseFind = {'url': 'course/find', 'type': 'GET'},
+        courseSearch = {'url': 'course/search', 'type': 'GET'},
+        courseAdd = {'url': 'course/add', 'type': 'POST'},
+        courseDelete = {'url': 'course/delete', 'type': 'POST'},
+        courseUpdate = {'url': 'course/update', 'type': 'POST'},
+        courseAddMsg = {'url': 'course/addMsg', 'type': 'POST'},
+        courseShowMsg = {'url': 'course/showMsg', 'type': 'GET'},
+        coursePreSetCate = {'url': 'course/preSetCate', 'type': 'GET'},
+        courseSetCate = {'url': 'course/setCate', 'type': 'GET'},
+        courseSetOffLine = {'url': 'course/setOffLine', 'type': 'POST'},
+        courseSetOnLine = {'url': 'course/setOnLine', 'type': 'POST'};
 
     // courseSearch = {'url': '../mock/courseSearch.json', 'type': 'GET'};
     // coursePreSetCate = {'url': '../mock/coursePreSetCate.json', 'type': 'GET'};
