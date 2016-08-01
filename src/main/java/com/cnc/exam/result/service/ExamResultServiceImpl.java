@@ -54,6 +54,7 @@ public class ExamResultServiceImpl extends
 			public Predicate toPredicate(Root<ExamResultEntity> root,
 					CriteriaQuery<?> cq, CriteriaBuilder cb) {
 				Predicate allCondition = null;
+				String score = (String) searchParams.get("score");
 				String examId = (String) searchParams.get("examId");
 				String userId = (String) searchParams.get("userId");
 				String isPass = (String) searchParams.get("isPass");
@@ -92,6 +93,13 @@ public class ExamResultServiceImpl extends
 				}
 				if (isPass != null && !"".equals(isPass)) {
 					Predicate condition = cb.like(root.get("isPass").as(String.class), "%"+ searchParams.get("isPass") + "%");
+					if (null == allCondition)
+						allCondition = cb.and(condition);
+					else
+						allCondition = cb.and(allCondition, condition);
+				}
+				if (score != null && !"".equals(score)) {
+					Predicate condition = cb.like(root.get("score").as(String.class), "%"+ searchParams.get("score") + "%");
 					if (null == allCondition)
 						allCondition = cb.and(condition);
 					else

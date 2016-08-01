@@ -39,6 +39,7 @@ public class ExamResultController extends BaseController {
 	
 	@Autowired
 	private UserService userService;
+	
 	@ResponseBody
 	@RequestMapping(value="/add",method=RequestMethod.GET)
 	public Map<String, Object> insertER(Model model, ExamResultEntity examResultEntity){
@@ -70,16 +71,20 @@ public class ExamResultController extends BaseController {
 	public Map<String, Object> getLogsByCondition(Model model, ExamResultEntity examResultEntity,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
-		Subject curUser=SecurityUtils.getSubject();
+		int flag= 1 ;
+		/*Subject curUser=SecurityUtils.getSubject();
 		Session session=curUser.getSession();	
 		User currentUser = (User) session.getAttribute(Constants.CURRENT_USER);
+		if(null==currentUser){
+			return null;
+		}
 		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
-		int flag= 0 ;
+		
 		for(String item : allPermission){
 			if("examresut:viewall".equals(item)){
 				flag = 1;
 			}
-		}
+		}*/
 		if(flag == 1){
 			
 		}else{
@@ -87,7 +92,7 @@ public class ExamResultController extends BaseController {
 			if(searchParams.containsKey("username")){
 				searchParams.remove("username");
 			}
-			searchParams.put("username", currentUser.getUsername());
+			//searchParams.put("username", currentUser.getUsername());
 		}
 		Page<ExamResultEntity> logsPage = examResultService.findERByCondition(searchParams, buildPageRequest(pageNumber));
 		Map<String, Object> resultMap = new HashMap<>();
