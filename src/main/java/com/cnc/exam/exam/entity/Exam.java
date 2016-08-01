@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.cnc.exam.base.entity.BaseEntity;
 import com.cnc.exam.course.entity.Course;
@@ -26,12 +28,12 @@ import com.cnc.exam.question.entity.Question;
 @Table(name="t_exam")
 public class Exam extends BaseEntity<Long>{
 	@Column(name="no",length=20)
-	private String NO;//考试编号
+	private String no;//考试编号
 	
-	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Column(name="start_time")
 	private Date startTime;//考试开始时间
-	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	@Column(name="end_time")
 	private Date endTime;//考试结束时间
 	
@@ -130,12 +132,12 @@ public class Exam extends BaseEntity<Long>{
 		this.examUserMids = examUserMids;
 	}
 
-	public String getNO() {
-		return NO;
+	public String getNo() {
+		return no;
 	}
 
-	public void setNO(String nO) {
-		NO = nO;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public Course getCourse() {

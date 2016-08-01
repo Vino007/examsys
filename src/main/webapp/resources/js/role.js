@@ -4,14 +4,14 @@
 $(document).ready(function () {
     var allRoles = [];
     //url arguments
-    var roleAll = {'url': '/role/all', 'type': 'GET'},
-        roleFind = {'url': '/role/find', 'type': 'GET'},
-        roleSearch = {'url': '/role/search', 'type': 'GET'},
-        roleAdd = {'url': '/role/add', 'type': 'POST'},
-        roleDelete = {'url': '/role/delete', 'type': 'POST'},
-        roleUpdate = {'url': '/role/update', 'type': 'POST'},
-        roleGetResourceTree = {'url': '/role/getResourceTree', 'type': 'GET'},
-        roleBind = {'url': '/role/bind', 'type': 'POST'};
+    var roleAll = {'url': 'role/all', 'type': 'GET'},
+        roleFind = {'url': 'role/find', 'type': 'GET'},
+        roleSearch = {'url': 'role/search', 'type': 'GET'},
+        roleAdd = {'url': 'role/add', 'type': 'POST'},
+        roleDelete = {'url': 'role/delete', 'type': 'POST'},
+        roleUpdate = {'url': 'role/update', 'type': 'POST'},
+        roleGetResourceTree = {'url': 'role/getResourceTree', 'type': 'GET'},
+        roleBind = {'url': 'role/bind', 'type': 'POST'};
 
     // roleAll = {'url': '../mock/roleAll.json', 'type': 'GET'};
     // roleSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};

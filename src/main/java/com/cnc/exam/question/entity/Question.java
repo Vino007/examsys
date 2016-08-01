@@ -21,7 +21,7 @@ import com.cnc.exam.exam.entity.Exam;
 public class Question extends BaseEntity<Long>{
 	
 	@Column(name="no",length=20)
-	private String NO;//题目编号
+	private String no;//题目编号
 	/**
 	 * 题干内容
 	 */
@@ -129,17 +129,19 @@ public class Question extends BaseEntity<Long>{
 	public void setExams(List<Exam> exams) {
 		this.exams = exams;
 	}
-	public String getNO() {
-		return NO;
-	}
-	public void setNO(String nO) {
-		NO = nO;
-	}
+	
 	public Course getCourse() {
 		return course;
 	}
 	public void setCourse(Course course) {
 		this.course = course;
 	}
+	public String getNo() {
+		return no;
+	}
+	public void setNo(String no) {
+		this.no = no;
+	}
+	
 	
 }

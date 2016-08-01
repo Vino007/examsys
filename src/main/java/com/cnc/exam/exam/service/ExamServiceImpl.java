@@ -46,7 +46,7 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 	private UserRepository userRepository;
 	@Autowired
 	private ExamUserMidRepository examUserMidRepository;
-
+	
 	@Override
 	public void update(Exam obj) {
 		if (obj == null || obj.getId() == null)
@@ -104,30 +104,23 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 			public Predicate toPredicate(Root<Exam> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
 				Predicate allCondition = null;
 
-				String NO = (String) searchParams.get("NO");
-				String courseName = (String) searchParams.get("courseName");
-				Integer status = null;
-				if (searchParams.get("status") != null)
-					status = Integer.parseInt((String) searchParams.get("status"));
+				String no = (String) searchParams.get("no");
+			
+				Integer passLine = null;
+				if (searchParams.get("passLine") != null)
+					passLine = Integer.parseInt((String) searchParams.get("passLine"));
+				
 
-				if (NO != null && !"".equals(NO)) {
-					Predicate condition = cb.like(root.get("content").as(String.class),
-							"%" + searchParams.get("content") + "%");
+				if (no != null && !"".equals(no)) {
+					Predicate condition = cb.like(root.get("no").as(String.class),
+							"%" + searchParams.get("no") + "%");
 					if (null == allCondition)
 						allCondition = cb.and(condition);
-
 				}
 
-				if (courseName != null && "".equals(courseName)) {
-					Predicate condition = cb.equal(root.get("courseName").as(String.class), "%" + courseName + "%");
-					if (null == allCondition)
-						allCondition = cb.and(condition);
-					else
-						allCondition = cb.and(allCondition, condition);
-
-				}
-				if (status != null) {
-					Predicate condition = cb.equal(root.get("status").as(Integer.class), status);
+				
+				if (passLine != null) {
+					Predicate condition = cb.equal(root.get("passLine").as(Integer.class), passLine);
 					if (null == allCondition)
 						allCondition = cb.and(condition);
 					else

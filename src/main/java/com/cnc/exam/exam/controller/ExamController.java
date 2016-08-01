@@ -78,12 +78,14 @@ public class ExamController extends BaseController{
 	@ResponseBody
 //	@RequiresPermissions("exam:create")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public Map<String, Object> addExam(Exam exam) {
+	public Map<String, Object> addExam(Exam exam,Long courseId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		
 		try {
-			exam.setCourse(courseService.findOne(exam.getCourse().getId()));
+			if(courseId!=null&&courseService.findOne(courseId)!=null){
+				exam.setCourse(courseService.findOne(courseId));
+			}			
 			examService.save(exam);
 
 		} catch (Exception e) {
@@ -92,8 +94,6 @@ public class ExamController extends BaseController{
 			e.printStackTrace();
 			return resultMap;
 		}
-		Page<Exam> examPage = examService.findAll(buildPageRequest(1));
-		data.put("page", examPage);
 		resultMap.put("success", true);
 		resultMap.put("data", data);
 		resultMap.put("msg", "添加成功");
@@ -122,14 +122,21 @@ public class ExamController extends BaseController{
 		return resultMap;
 
 	}
-
+	/**
+	 * 当courseId不存在的时候会更新失败
+	 * @param exam
+	 * @param courseId
+	 * @return
+	 */
 	@ResponseBody
 //	@RequiresPermissions("exam:update")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public Map<String, Object> updateExam(Exam exam) {
+	public Map<String, Object> updateExam(Exam exam,Long courseId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		
+		if(courseId!=null){
+			exam.setCourse(courseService.findOne(courseId));
+		}
 		try {
 			examService.update(exam);
 		} catch (Exception e) {

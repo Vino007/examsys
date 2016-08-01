@@ -4,15 +4,15 @@
 $(document).ready(function () {
     var allRoles = [];
     //url arguments
-    var userAll = {'url': '/user/all', 'type': 'GET'},
-        userFind = {'url': '/user/find', 'type': 'GET'},
-        userSearch = {'url': '/user/search', 'type': 'GET'},
-        userAdd = {'url': '/user/add', 'type': 'POST'},
-        userDelete = {'url': '/user/delete', 'type': 'POST'},
-        userUpdate = {'url': '/user/update', 'type': 'POST'},
-        userGetAllRoles = {'url': '/user/getAllRoles', 'type': 'GET'},
-        userGetRoles = {'url': '/user/getRoles', 'type': 'GET'},
-        userBind = {'url': '/user/bind', 'type': 'POST'};
+    var userAll = {'url': 'user/all', 'type': 'GET'},
+        userFind = {'url': 'user/find', 'type': 'GET'},
+        userSearch = {'url': 'user/search', 'type': 'GET'},
+        userAdd = {'url': 'user/add', 'type': 'POST'},
+        userDelete = {'url': 'user/delete', 'type': 'POST'},
+        userUpdate = {'url': 'user/update', 'type': 'POST'},
+        userGetAllRoles = {'url': 'user/getAllRoles', 'type': 'GET'},
+        userGetRoles = {'url': 'user/getRoles', 'type': 'GET'},
+        userBind = {'url': 'user/bind', 'type': 'POST'};
 
     // userAll = {'url': '../mock/userpage.json', 'type': 'GET'};
     // userSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
