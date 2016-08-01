@@ -22,8 +22,8 @@ public class Course extends BaseEntity<Long> {
     private String outline;
     @Column(name = "objectives", length = 255)
     private String objectives;
-    @Column(name = "teacher")
-    private Long teacher;
+    @Column(name = "teacher", length = 30)
+    private String teacher;
     @Column(name = "online_data", length = 255)
     private String onlineData;
     @Column(name = "is_online")
@@ -83,11 +83,11 @@ public class Course extends BaseEntity<Long> {
         this.objectives = objectives;
     }
 
-    public Long getTeacher() {
+    public String getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(Long teacher) {
+    public void setTeacher(String teacher) {
         this.teacher = teacher;
     }
 
