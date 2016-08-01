@@ -22,6 +22,11 @@ public interface QuestionService extends BaseService<Question, Long>{
 	 * @param id
 	 */
 	void onlineQuestion(Long id);
-
+	/**
+	 * 绑定课程
+	 * @param questionId
+	 * @param courseId
+	 */
 	void bindCourse(Long questionId, Long courseId);
+	
 }

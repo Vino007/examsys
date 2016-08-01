@@ -27,6 +27,8 @@ import com.cnc.exam.auth.repository.UserRepository;
 import com.cnc.exam.base.service.AbstractBaseServiceImpl;
 import com.cnc.exam.common.MyPage;
 import com.cnc.exam.course.entity.Course;
+import com.cnc.exam.entity.json.ExamJson;
+import com.cnc.exam.entity.json.UserJson;
 import com.cnc.exam.exam.entity.Exam;
 import com.cnc.exam.exam.entity.ExamUserMid;
 import com.cnc.exam.exam.entity.UserStatusConstants;
@@ -35,6 +37,8 @@ import com.cnc.exam.exam.repository.ExamRepository;
 import com.cnc.exam.exam.repository.ExamUserMidRepository;
 import com.cnc.exam.question.entity.Question;
 import com.cnc.exam.question.repository.QuestionRepository;
+import com.cnc.exam.result.entity.ExamResultEntity;
+import com.cnc.exam.result.repository.ExamResultRepository;
 
 @Service("examService")
 public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> implements ExamService {
@@ -46,7 +50,8 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 	private UserRepository userRepository;
 	@Autowired
 	private ExamUserMidRepository examUserMidRepository;
-	
+	@Autowired
+	private ExamResultRepository examResultRepository;
 	@Override
 	public void update(Exam obj) {
 		if (obj == null || obj.getId() == null)
@@ -222,7 +227,7 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 	}
 
 	@Override
-	public MyPage<User> findUsersByStatus(final Long examId, final Integer status, Pageable pageable) {
+	public MyPage<UserJson> findUsersByStatus(final Long examId, final Integer status, Pageable pageable) {
 		//查询
 		Specification<ExamUserMid> spec = new Specification<ExamUserMid>() {
 			@Override
@@ -244,12 +249,20 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 		Page<ExamUserMid> midPage = examUserMidRepository.findAll(spec, pageable);
 		
 		//构造数据
-		List<User> users = new ArrayList<>();
+		List<UserJson> userJsons = new ArrayList<>();
 		for (ExamUserMid mid : midPage.getContent()) {
-			users.add(mid.getUser());
+			User user=mid.getUser();
+			UserJson userJson=new UserJson();
+			userJson.setUsername(user.getUsername());
+			userJson.setUserAlias(user.getUserAlias());
+			userJson.setEmail(user.getEmail());
+			userJson.setStatus(mid.getStatus());
+			userJson.setDepartment(user.getDepartment());
+			userJson.setId(user.getId());
+			userJsons.add(userJson);
 		}
-		MyPage<User> userPage = new MyPage<>();
-		userPage.setContent(users);
+		MyPage<UserJson> userPage = new MyPage<>();
+		userPage.setContent(userJsons);
 		userPage.setTotalPages(midPage.getTotalPages());
 		userPage.setTotalElements(midPage.getTotalElements());
 		userPage.setSize(midPage.getSize());
@@ -258,4 +271,72 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 
 	}
 
+	@Override
+	public ExamResultEntity judgeExam(Long userId,Long examId, String[] performances,boolean isMock) {
+		Exam exam=examRepository.findOne(examId);
+		User user=userRepository.findOne(userId);
+		List<Question> questions=exam.getQuestions();
+		List<Integer> judgeResult=new ArrayList<>();
+		int rightQuestionCount=0;
+		String performance="";//用户的回答
+		String answerIsRight="";//回答的正确情况
+		for(int i=0;i<performances.length;i++){
+			performance+=performances[i]+"$;";
+			if(performances[i].equals(questions.get(i).getAnswer())){//答案正确，存1
+				judgeResult.add(1);
+				rightQuestionCount++;
+				answerIsRight+="1;";
+			}else{//答案错误，存0
+				judgeResult.add(0);
+				answerIsRight+="0;";
+			}
+		}
+		//分数计算
+		double score=(100.0/questions.size())*rightQuestionCount;
+		score=Math.rint(score);
+		int isPass=0;
+		if(score>=60) isPass=1;
+		
+		ExamResultEntity examResultEntity=new ExamResultEntity(user, exam, (int)score, isPass, performance,answerIsRight);
+		if(!isMock)
+			examResultRepository.save(examResultEntity);
+		
+		return examResultEntity;
+	}
+
+	@Override
+	public MyPage<ExamJson> findExamByUser(final Long userId, Pageable pageable) {
+		//查询
+		Specification<ExamUserMid> spec = new Specification<ExamUserMid>() {
+			@Override
+			public Predicate toPredicate(Root<ExamUserMid> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+				Predicate allCondition = cb.equal(root.get("user").get("id").as(Long.class), userId);
+
+	
+				return allCondition;
+			}
+
+		};
+		Page<ExamUserMid> midPage = examUserMidRepository.findAll(spec, pageable);
+		List<ExamJson> examJsons=new ArrayList<>();
+		for(ExamUserMid mid:midPage.getContent()){
+			ExamJson examJson=new ExamJson();
+			Exam exam=mid.getExam();
+			examJson.setExam(exam);
+			examJson.setStatus(mid.getStatus());
+			examJsons.add(examJson);
+		}
+		
+		MyPage<ExamJson> examPage = new MyPage<>();
+		examPage.setContent(examJsons);
+		examPage.setTotalPages(midPage.getTotalPages());
+		examPage.setTotalElements(midPage.getTotalElements());
+		examPage.setSize(midPage.getSize());
+
+		return examPage;
+
+	}
+
+	
+	
 }

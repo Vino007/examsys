@@ -47,7 +47,11 @@ public class Exam extends BaseEntity<Long>{
 	private Integer questionNumber;//题目数量
 	
 	@Column(name="exam_url",length=200)
-	private String examUrl;//考试链接
+	private String examUrl;//正式考试链接
+	
+	//模拟考链接
+	@Column(name="mock_exam_url",length=200)
+	private String mockExamUrl;
 	
 	//所属课程
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -146,6 +150,14 @@ public class Exam extends BaseEntity<Long>{
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	public String getMockExamUrl() {
+		return mockExamUrl;
+	}
+
+	public void setMockExamUrl(String mockExamUrl) {
+		this.mockExamUrl = mockExamUrl;
 	}
 	
 	

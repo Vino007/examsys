@@ -32,19 +32,22 @@ public class ExamResultEntity extends BaseEntity<Long>{
 	private Exam exam;
 	
 	@Column(name = "score", length = 5)
-	private long score;
+	private Integer score;
 	
 	@Column(name = "is_pass", length = 2)
 	private int isPass;
 	
 	@Column(name = "performance")
-	private String performance;//答题情况
+	private String performance;//用户的回答  格式 ： A$;B$;
 
-	public long getScore() {
+	@Column(name = "answer_is_right")
+	private String answerIsRight;//用户每个回答的正确与否,格式：1;0;1;0;0;0;
+
+	public Integer getScore() {
 		return score;
 	}
 
-	public void setScore(long score) {
+	public void setScore(Integer score) {
 		this.score = score;
 	}
 
@@ -68,7 +71,7 @@ public class ExamResultEntity extends BaseEntity<Long>{
 		super();
 	}
 
-	public ExamResultEntity(long score, int isPass,
+	public ExamResultEntity(Integer score, int isPass,
 			String performance) {
 		super();
 		this.score = score;
@@ -84,14 +87,15 @@ public class ExamResultEntity extends BaseEntity<Long>{
 		this.exam = exam;
 	}
 
-	public ExamResultEntity(User user, Exam exam, long score, int isPass,
-			String performance) {
+	public ExamResultEntity(User user, Exam exam, Integer score, int isPass,
+			String performance,String answerIsRight) {
 		super();
 		this.user = user;
 		this.exam = exam;
 		this.score = score;
 		this.isPass = isPass;
 		this.performance = performance;
+		this.answerIsRight=answerIsRight;
 	}
 
 	public User getUser() {
@@ -101,4 +105,14 @@ public class ExamResultEntity extends BaseEntity<Long>{
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public String getAnswerIsRight() {
+		return answerIsRight;
 	}
+
+	public void setAnswerIsRight(String answerIsRight) {
+		this.answerIsRight = answerIsRight;
+	}
+	
+	}
+
