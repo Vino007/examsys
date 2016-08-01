@@ -1,11 +1,14 @@
 package com.cnc.exam.course.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.cnc.exam.auth.entity.Role;
 import com.cnc.exam.base.entity.BaseEntity;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by zhangyn on 2016/7/26.
@@ -21,6 +24,18 @@ public class CourseCategory extends BaseEntity<Long> {
     @JSONField(serialize = false)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "courseCategory")
     private List<Course> courses = new ArrayList<Course>();
+
+    @JSONField(serialize=false)
+    @ManyToMany(mappedBy="categories",targetEntity=Role.class)
+    private Set<Role> roles=new HashSet<Role>();
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public List<Course> getCourses() {
         return courses;

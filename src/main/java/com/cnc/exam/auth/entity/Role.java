@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.cnc.exam.base.entity.BaseEntity;
+import com.cnc.exam.course.entity.CourseCategory;
 
 @Entity
 @Table(name="t_role")
@@ -33,8 +34,11 @@ public class Role extends BaseEntity<Long> {
 	@JSONField(serialize=false)
 	@ManyToMany(targetEntity=User.class,mappedBy="roles")
 	private Set<User> users=new HashSet<User>();
-	
-	
+
+	@ManyToMany(targetEntity=CourseCategory.class)
+	@JoinTable(name="t_role_category",joinColumns=@JoinColumn(name="role_id"),inverseJoinColumns=@JoinColumn(name="category_id"))
+	private Set<CourseCategory> categories=new HashSet<CourseCategory>();
+
 	public Role() {
 	}
 	
@@ -43,7 +47,12 @@ public class Role extends BaseEntity<Long> {
 		this.name = name;
 	}
 
-
+	public Set<CourseCategory> getCategories() {
+		return categories;
+	}
+	public void setCategories(Set<CourseCategory> categories) {
+		this.categories = categories;
+	}
 	public Set<User> getUsers() {
 		return users;
 	}
