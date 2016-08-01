@@ -4,7 +4,7 @@
 $(document).ready(function () {
     var allRoles = [];
     //url arguments
-    var userAll = {'url': 'user/all', 'type': 'GET'},
+    var userAll = {'url': 'exam/user/all', 'type': 'GET'},
         userFind = {'url': 'user/find', 'type': 'GET'},
         userSearch = {'url': 'user/search', 'type': 'GET'},
         userAdd = {'url': 'user/add', 'type': 'POST'},

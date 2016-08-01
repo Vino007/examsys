@@ -173,4 +173,32 @@ public class ExamResultController extends BaseController {
 		return resultMap;
 	}
 	
+	/**
+	 * 导出成绩
+	 * @param model
+	 * @param er
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/downloadspecial ",method=RequestMethod.GET)	
+	public Map<String, Object> downloadSpecialEaxmResult(Model model,@RequestParam("path")String path,@RequestParam("ids[]")String[] ids){
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try {
+			examResultService.saveToExcel(path,ids);
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载成功");
+			resultMap.put("successs", true);
+		} catch (FileNotFoundException e) {
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载失败");
+			resultMap.put("successs", false);
+			e.printStackTrace();
+		}
+		
+		return resultMap;
+	}
+	
 }

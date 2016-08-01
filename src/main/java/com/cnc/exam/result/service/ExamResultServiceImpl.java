@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -182,6 +183,21 @@ public class ExamResultServiceImpl extends
 		createExcel(new FileOutputStream(file), eres);
 	}
 	
+	@Override
+	public void saveToExcel(String path,String[] ids) throws FileNotFoundException{
+		List<ExamResultEntity> eres=new ArrayList<>();
+		int idsLength = ids.length;
+		if(idsLength==0){
+			return ;
+		}
+		for(int i=0;i<idsLength;i++){
+			ExamResultEntity ere = examResultRepository.findOne(Long.parseLong(ids[i]));
+			eres.add(ere);
+		}
+		File file=new File(path);
+		createExcel(new FileOutputStream(file), eres);
+	}
+	
 	private void createExcel(OutputStream os,List<ExamResultEntity> list){
 		String[] heads={"用户名","课程名称","考试成绩","通过情况"};
 		// 创建工作区
@@ -202,7 +218,6 @@ public class ExamResultServiceImpl extends
 		for(int i=0;i<list.size();i++){
 			sheet.addCell(new Label(0, i+1, list.get(i).getUser().getUsername()));
 			sheet.addCell(new Label(1, i+1, list.get(i).getExam().getCourse().getCourseName()+""));
-			sheet.addCell(new Label(2, i+1, list.get(i).getCreateTime().toString()));
 			sheet.addCell(new Label(2, i+1, list.get(i).getScore()+""));
 			switch(list.get(i).getIsPass()){
 				case 0:{
