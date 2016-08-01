@@ -23,8 +23,8 @@ public class LogsServiceTest {
 	private LogsService logsService;
 	@Test
 	public void test() {
-		LogsEntity logsEntity = new LogsEntity(1, 1+"", 1, 1+"", new Timestamp(new Date().getTime()));
-		logsService.save(logsEntity);
+		/*LogsEntity logsEntity = new LogsEntity(1, 1+"", 1, 1+"", new Timestamp(new Date().getTime()));
+		logsService.save(logsEntity);*/
 	}
 
 }
