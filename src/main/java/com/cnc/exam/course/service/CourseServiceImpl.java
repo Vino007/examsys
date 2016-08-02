@@ -10,6 +10,8 @@ import com.cnc.exam.course.exception.DeleteWithMsgException;
 import com.cnc.exam.course.repository.CourseCategoryRepository;
 import com.cnc.exam.course.repository.CourseMessageRepository;
 import com.cnc.exam.course.repository.CourseRepository;
+import com.cnc.exam.question.entity.Question;
+import com.cnc.exam.question.repository.QuestionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,8 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     private CourseMessageRepository courseMessageRepository;
     @Autowired
     private CourseCategoryRepository courseCategoryRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
 
     public CourseRepository getCourseRepository() {
         return courseRepository;
@@ -56,6 +60,10 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
             Course c = courseRepository.findOne(id);
             if(c.getCourseMessages().size()!=0 || c.getExams().size()!=0){
                 throw new DeleteWithMsgException();
+            }
+            List<Question> questions = c.getQuestions();
+            for (Question q:questions) {
+                questionRepository.delete(q.getId());
             }
             if(c.getCourseCategory()!=null){
                 courseCategoryRepository.findOne(c.getCourseCategory().getId()).getCourses().remove(c);

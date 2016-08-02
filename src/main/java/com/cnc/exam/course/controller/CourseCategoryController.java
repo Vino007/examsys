@@ -2,12 +2,15 @@ package com.cnc.exam.course.controller;
 
 import com.cnc.exam.auth.constant.Constants;
 import com.cnc.exam.auth.entity.User;
+import com.cnc.exam.auth.service.UserService;
 import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.course.entity.Course;
 import com.cnc.exam.course.entity.CourseCategory;
 import com.cnc.exam.course.exception.CourseCategoryDuplicateException;
 import com.cnc.exam.course.service.CourseCategoryService;
+import com.cnc.exam.log.entity.LogsEntity;
+import com.cnc.exam.log.service.LogsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +36,10 @@ import java.util.Map;
 public class CourseCategoryController extends BaseController{
     @Autowired
     private CourseCategoryService courseCategoryService;
+    @Autowired
+    private LogsService logsService;
+    @Autowired
+    private UserService userService;
 
     @ResponseBody
 //    @RequiresPermissions("coursecat:menu")
@@ -63,6 +72,9 @@ public class CourseCategoryController extends BaseController{
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Map<String, Object> addCourseCate(Model model, CourseCategory category, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
+        User currentUser = userService.findOne(curUser.getId());
+        LogsEntity logsEntity = new LogsEntity(currentUser,1,"添加课程分类",new Timestamp(new Date().getTime()));
+        logsService.save(logsEntity);
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
         try {
@@ -82,7 +94,11 @@ public class CourseCategoryController extends BaseController{
 
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public Map<String, Object> deleteCourseCate(Model model, @RequestParam("deleteIds[]") Long[] deleteIds) {
+    public Map<String, Object> deleteCourseCate(Model model, @RequestParam("deleteIds[]") Long[] deleteIds, HttpSession session) {
+        User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
+        User currentUser = userService.findOne(curUser.getId());
+        LogsEntity logsEntity = new LogsEntity(currentUser,1,"删除课程分类",new Timestamp(new Date().getTime()));
+        logsService.save(logsEntity);
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
         try {
@@ -100,7 +116,11 @@ public class CourseCategoryController extends BaseController{
     @ResponseBody
 //    @RequiresPermissions("course:update")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Map<String, Object> updateCourseCate(Model model, CourseCategory category) {
+    public Map<String, Object> updateCourseCate(Model model, CourseCategory category, HttpSession session) {
+        User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
+        User currentUser = userService.findOne(curUser.getId());
+        LogsEntity logsEntity = new LogsEntity(currentUser,1,"更新课程分类",new Timestamp(new Date().getTime()));
+        logsService.save(logsEntity);
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
         try {
