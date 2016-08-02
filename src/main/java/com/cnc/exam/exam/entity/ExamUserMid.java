@@ -24,7 +24,7 @@ public class ExamUserMid {
 	private User user;
 	
 	@JoinColumn(name = "status")
-	private Integer status=1;//0请假，1免考
+	private Integer status=1;//0请假，1正常,2已考
 
 	public Long getId() {
 		return id;

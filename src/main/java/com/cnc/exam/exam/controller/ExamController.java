@@ -27,6 +27,7 @@ import com.cnc.exam.entity.json.ExamJson;
 import com.cnc.exam.entity.json.UserJson;
 import com.cnc.exam.exam.entity.Exam;
 import com.cnc.exam.exam.exception.UserAlreadyHasThisExamException;
+import com.cnc.exam.exam.exception.UserStatusErrorException;
 import com.cnc.exam.exam.repository.ExamUserMidRepository;
 import com.cnc.exam.exam.service.ExamService;
 import com.cnc.exam.question.entity.Question;
@@ -38,8 +39,7 @@ public class ExamController extends BaseController{
 	private ExamService examService;
 	@Autowired
 	private CourseService courseService;
-	@Autowired
-	private ExamUserMidRepository examUserMidRepository;
+
 	@ResponseBody
 	//@RequiresPermissions("exam:menu")
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -187,6 +187,26 @@ public class ExamController extends BaseController{
 	
 	@ResponseBody
 //	@RequiresPermissions("exam:create")
+	@RequestMapping(value = "/bindMockQuestion", method = RequestMethod.POST)
+	public Map<String, Object> bindMockQuestion(Long examId,@RequestParam("questionIds[]")Long[] questionIds) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		
+		try {
+			examService.bindMockQuestion(examId, questionIds);
+			resultMap.put("data", data);
+			resultMap.put("success", true);
+			resultMap.put("msg", "绑定成功");
+		} catch (Exception e) {
+			resultMap.put("success", false);
+			resultMap.put("msg", "绑定失败");
+			e.printStackTrace();
+		}
+		return resultMap;
+	}
+	
+	@ResponseBody
+//	@RequiresPermissions("exam:create")
 	@RequestMapping(value = "/autoGenerate", method = RequestMethod.POST)
 	public Map<String, Object> autoGenerateExam(Long examId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -194,6 +214,28 @@ public class ExamController extends BaseController{
 		
 		try {
 			examService.autoGenerateExam(examId);
+			resultMap.put("data", data);
+			resultMap.put("success", true);
+			resultMap.put("msg", "生成成功");
+		} catch (Exception e) {
+			resultMap.put("success", false);
+			resultMap.put("msg", "生成失败");
+			e.printStackTrace();
+		}
+		
+
+		return resultMap;
+
+	}
+	
+	@ResponseBody
+//	@RequiresPermissions("exam:create")
+	@RequestMapping(value = "/autoGenerateMock", method = RequestMethod.POST)
+	public Map<String, Object> autoGenerateMockExam(Long examId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();		
+		try {
+			examService.autoGenerateMockExam(examId);
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "生成成功");
@@ -306,7 +348,7 @@ public class ExamController extends BaseController{
 
 	}
 	/**
-	 * 查找试卷问题
+	 * 查找正常试卷问题
 	 * @param id
 	 * @return
 	 */
@@ -336,6 +378,37 @@ public class ExamController extends BaseController{
 
 	}
 	
+	/**
+	 * 查找模拟试卷问题
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+//	@RequiresPermissions("exam:view")
+	@RequestMapping(value = "/findMockQuestions", method = RequestMethod.GET)
+	public Map<String, Object> findMockQuestionstionById(Long examId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		Exam exam=examService.findOne(examId);
+		List<Question> questions=exam.getMockQuestions();
+		List<QuestionJson> questionJsons=new ArrayList<>();
+		for(Question q:questions){
+			QuestionJson questionJson=new QuestionJson();
+			questionJson.setContent(q.getContent());
+			questionJson.setChoices(q.getChoices());
+			questionJson.setType(q.getType());
+			questionJson.setContentImgageUrl(q.getContentImgageUrl());
+			questionJson.setId(q.getId());
+			questionJsons.add(questionJson);
+		}
+		
+		data.put("questions",questionJsons);
+		resultMap.put("data", data);
+		resultMap.put("success", true);
+		return resultMap;
+
+	}
+	
 	@ResponseBody
 //	@RequiresPermissions("exam:view")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
@@ -343,6 +416,7 @@ public class ExamController extends BaseController{
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
+		
 		//判题
 		try{
 			ExamResultEntity examResult=examService.judgeExam(userId, examId, performances,isMock);
@@ -358,6 +432,12 @@ public class ExamController extends BaseController{
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "提交成功");
+		}catch(UserStatusErrorException e){
+			e.printStackTrace();
+			resultMap.put("data", data);
+			resultMap.put("success", false);
+			resultMap.put("msg", "用户已经参加过考试或已请假");
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			resultMap.put("data", data);

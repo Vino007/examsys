@@ -63,7 +63,12 @@ public class Exam extends BaseEntity<Long>{
 	@ManyToMany(targetEntity=Question.class,fetch=FetchType.LAZY)
 	@JoinTable(name="t_exam_question",joinColumns=@JoinColumn(name="exam_id"),inverseJoinColumns=@JoinColumn(name="question_id"))
 	private List<Question> questions=new ArrayList<>();
-
+	
+	//模拟题
+	@JSONField(serialize=false)
+	@ManyToMany(targetEntity=Question.class,fetch=FetchType.LAZY)
+	@JoinTable(name="t_exam_mock_question",joinColumns=@JoinColumn(name="exam_id"),inverseJoinColumns=@JoinColumn(name="question_id"))
+	private List<Question> mockQuestions=new ArrayList<>();
 
 	@JSONField(serialize=false)
 	@OneToMany(mappedBy = "exam")
@@ -158,6 +163,14 @@ public class Exam extends BaseEntity<Long>{
 
 	public void setMockExamUrl(String mockExamUrl) {
 		this.mockExamUrl = mockExamUrl;
+	}
+
+	public List<Question> getMockQuestions() {
+		return mockQuestions;
+	}
+
+	public void setMockQuestions(List<Question> mockQuestions) {
+		this.mockQuestions = mockQuestions;
 	}
 	
 	

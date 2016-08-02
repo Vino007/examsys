@@ -14,5 +14,8 @@ public interface ExamRepository extends BaseRepository<Exam, Long>{
 	@Query("update ExamUserMid e set e.status=?3 where e.exam.id=?1 and e.user.id=?2 ")
 	public void updateUserStatus(long examId,long userId,int status);
 	
+	@Query("select e.status from ExamUserMid e  where e.exam.id=?1 and e.user.id=?2 ")
+	public Integer findUserStatus(long examId,long userId);
+	
 
 }

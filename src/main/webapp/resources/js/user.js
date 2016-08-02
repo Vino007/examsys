@@ -3,23 +3,7 @@
  */
 $(document).ready(function () {
     var allRoles = [];
-    //url arguments
-    var userAll = {'url': 'user/all', 'type': 'GET'},
-        userFind = {'url': 'user/find', 'type': 'GET'},
-        userSearch = {'url': 'user/search', 'type': 'GET'},
-        userAdd = {'url': 'user/add', 'type': 'POST'},
-        userDelete = {'url': 'user/delete', 'type': 'POST'},
-        userUpdate = {'url': 'user/update', 'type': 'POST'},
-        userGetAllRoles = {'url': 'user/getAllRoles', 'type': 'GET'},
-        userGetRoles = {'url': 'user/getRoles', 'type': 'GET'},
-        userBind = {'url': 'user/bind', 'type': 'POST'};
-
-    // userAll = {'url': '../mock/userpage.json', 'type': 'GET'};
-    // userSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
-    // userUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
-    // userAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
-    // userDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
-    // userGetAllRoles = {'url': '../mock/userGetAllRoles.json', 'type': 'GET'};
+    var allDepts = [];
 
     var initObj = {
         urlObj: userAll,
@@ -29,6 +13,7 @@ $(document).ready(function () {
 
     init(initObj);
     getAllRoles();
+    getAllDepts();
 
 
     /*add start*/
@@ -51,30 +36,11 @@ $(document).ready(function () {
 
     /*delete start*/
     $('#delete-single').click(function () {
-        if (!confirm('确认删除?'))
-            return false;
-        var id = $('#edit-submit').attr('data-id');
-        var deleteIds = [];
-        deleteIds.push(id);
-        var deleteObj = {
-            name: "deleteIds",
-            value: deleteIds
-        };
-        opADU(userDelete, deleteObj);
+        deleteSingle(userDelete);
     });
 
     $('#delete-multiple').click(function () {
-        if (!confirm('确认删除?'))
-            return false;
-        var deleteIds = [];
-        $.each($('[name=sub-checkbox]:checked'), function (key, value) {
-            deleteIds.push($(value).val());
-        });
-        var deleteObj = {
-            name: "deleteIds",
-            value: deleteIds
-        };
-        opADU(userDelete, deleteObj);
+        deleteMultiple(userDelete);
     });
 
     /*delete end*/
@@ -90,14 +56,21 @@ $(document).ready(function () {
         });
 
 
+        //store id
         $('#edit-submit').attr('data-id', $(that).parents().siblings('td').eq(0).children().val());
-        var roleIndex = $('#user tr:first th:contains("角色")').index();
+
+        //role fill
+        var roleIndex = $('#main-table tr:first th:contains("角色")').index();
         var roles = [];
         roles = $(that).parents().siblings('td').eq(roleIndex).text().split(',');
         $('.edit-form .form-inline input').prop('checked', false);
         $.each(roles, function (key, value) {
             $('.edit-form .form-inline label[data-value=' + value + '] input').prop('checked', true);
         });
+
+        //dept fill
+        var deptIndex = $('#main-table tr:first th:contains("部门")').index();
+        $('.depts-options').val($(that).parents().siblings('td').eq(deptIndex).attr('data-id'));
     });
 
     //submit edit user
@@ -143,12 +116,44 @@ $(document).ready(function () {
 
     /*search end*/
 
+    /*dept based search start*/
+    $('.dept-based-search').change(function () {
+        var deptName = $('.dept-based-search option:selected').text();
+        var id = $(this).val();
+        if (id == 'all') {
+            window.location.reload();
+        } else {
+            $.ajax({
+                url: departmentShowUsers.url,
+                type: departmentShowUsers.type,
+                async: true,
+                data: {'id': id}
+            }).done(function (data) {
+                $('#main-table tr + tr').remove();
+                $.each(data.data.users, function (key, value) {
+                    var roles = '';
+                    if (value.roles.length == 1) {
+                        roles += value.roles[0].description;
+                    } else {
+                        $.each(value.roles, function (k, v) {
+                            roles += v.description + ',';
+                        });
+                    }
+                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+                    $('#main-table').append(tr);
+                });
+            });
+        }
+    })
+
+    /*dept based search end*/
+
     // function opADU(urlObj, submitData) {
     //     $.ajax({
     //         url: urlObj.url,
     //         async: true,
     //         type: urlObj.type,
-    //         data: getFormJson(submitData)
+    //         data: submitData
     //     }).done(function (data) {
     //         alert(data.msg);
     //         if (data.success) {
@@ -211,8 +216,31 @@ $(document).ready(function () {
         });
     }
 
+    function getAllDepts() {
+        $.ajax({
+            url: userGetAllDepts.url,
+            async: true,
+            type: userGetAllDepts.type
+        }).done(function (data) {
+            if (data.success) {
+                $.each(data.data.availableDepts, function (key, value) {
+                    var deptObj = {
+                        deptName: value.deptName,
+                        id: value.id
+                    };
+                    allDepts.push(deptObj);
+
+                    //add roles to checkbox
+                    var selectOption = '<option value="' + value.id + '">' + value.deptName + '</option>';
+                    $('.dept-based-search').append(selectOption);
+                    $('.depts-options').append(selectOption);
+                });
+            }
+        });
+    }
+
     function resetTable(data) {
-        $('#user tr + tr').remove();
+        $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {
             var roles = '';
             if (value.roles.length == 1) {
@@ -222,8 +250,8 @@ $(document).ready(function () {
                     roles += v.description + ',';
                 });
             }
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
-            $('#user').append(tr);
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+            $('#main-table').append(tr);
         });
     }
 

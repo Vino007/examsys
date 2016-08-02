@@ -73,6 +73,7 @@ public class Question extends BaseEntity<Long>{
 	private List<Exam> exams=new ArrayList<Exam>();
 	
 	
+	
 	public String getChoices() {
 		return choices;
 	}

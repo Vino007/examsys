@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Result</title>
+    <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/css/base.css">
+    <link rel="stylesheet" href="resources/css/index.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            <div class="form-inline">
+                <input class="form-control input-group" type="text" placeholder="用户名">
+                <input class="form-control input-group" type="text" placeholder="课程名">
+                <input class="form-control input-group" type="text" placeholder="部门">
+                <input class="form-control input-group" type="text" placeholder="分数">
+                <input class="form-control input-group" type="text" placeholder="时间">
+                <button id="search" class="btn btn-primary">搜索成绩</button>
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="form-group">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#add">新增成绩</button>
+                <button id="delete-multiple" class="btn btn-danger">删除成绩</button>
+            </div>
+        </div>
+        <table id="main-table" class="table table-bordered table-striped">
+            <tr>
+                <th><input type="checkbox" name="check-all"></th>
+                <th>用户名</th>
+                <th>部门</th>
+                <th>角色</th>
+                <th>课程名</th>
+                <th>课程分类</th>
+                <th>分数</th>
+                <th>时间</th>
+                <th>是否通过</th>
+                <th>管理</th>
+            </tr>
+        </table>
+        <ul id="pagination" class="pagination"></ul>
+    </div>
+
+</div>
+
+<div class="modal fade" id="add">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    新增成绩
+                </h4>
+            </div>
+            <form class="form-group add-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label">用户名：</label>
+                        <input name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">课程名：</label>
+                        <input name="courseName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">分数：</label>
+                        <input name="score" type="number" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">是否通过：</label>
+                        <select class="form-control" name="isPass">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="submit" id="add-submit" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    编辑成绩
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-group edit-form">
+                    <div class="form-group">
+                        <label class="control-label">用户名：</label>
+                        <input name="username" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">部门：</label>
+                        <input name="deptName" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">角色：</label>
+                        <input name="role" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">课程名：</label>
+                        <input name="courseName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">课程分类：</label>
+                        <input name="coursecatName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">分数：</label>
+                        <input name="score" type="number" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">时间：</label>
+                        <input name="time" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">是否通过：</label>
+                        <select class="form-control" name="isPass">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </form>
+                <div class="form-group">
+                    <button id="delete-single" class="btn btn-danger">删除角色</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
+                </button>
+                <button type="button" id="edit-submit" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="resources/js/jquery-2.2.4.min.js"></script>
+<script src="resources/bootstrap/js/bootstrap.min.js"></script>
+<script src="resources/js/jquery.twbsPagination.min.js"></script>
+<script src="resources/js/share.js"></script>
+<script src="resources/js/examResult.js"></script>
+</body>
+</html>

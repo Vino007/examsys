@@ -2,23 +2,6 @@
  * Created by chucc on 2016/7/25.
  */
 $(document).ready(function () {
-    var allRoles = [];
-    //url arguments
-    var roleAll = {'url': 'role/all', 'type': 'GET'},
-        roleFind = {'url': 'role/find', 'type': 'GET'},
-        roleSearch = {'url': 'role/search', 'type': 'GET'},
-        roleAdd = {'url': 'role/add', 'type': 'POST'},
-        roleDelete = {'url': 'role/delete', 'type': 'POST'},
-        roleUpdate = {'url': 'role/update', 'type': 'POST'},
-        roleGetResourceTree = {'url': 'role/getResourceTree', 'type': 'GET'},
-        roleBind = {'url': 'role/bind', 'type': 'POST'};
-
-    // roleAll = {'url': '../mock/roleAll.json', 'type': 'GET'};
-    // roleSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
-    // roleUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
-    // roleAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
-    // roleDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
-
     var initObj = {
         urlObj: roleAll,
         data: {},
@@ -31,15 +14,6 @@ $(document).ready(function () {
     $('.add-form').submit(function (e) {
         e.preventDefault();
         var submitData = $('.add-form').serializeArray();
-        var rolesArray = [];
-        $.each($('.add-form .form-inline input:checked'), function (key, value) {
-            rolesArray.push($(value).val());
-        });
-        var rolesObj = {
-            name: 'roleIds',
-            value: rolesArray
-        };
-        submitData.push(rolesObj);
         opADU(roleAdd, submitData);
     });
 
@@ -47,30 +21,11 @@ $(document).ready(function () {
 
     /*delete start*/
     $('#delete-single').click(function () {
-        if (!confirm('确认删除?'))
-            return false;
-        var id = $('#edit-submit').attr('data-id');
-        var deleteIds = [];
-        deleteIds.push(id);
-        var deleteObj = {
-            name: "deleteIds",
-            value: deleteIds
-        };
-        opADU(roleDelete, deleteObj);
+        deleteSingle(roleDelete);
     });
 
     $('#delete-multiple').click(function () {
-        if (!confirm('确认删除?'))
-            return false;
-        var deleteIds = [];
-        $.each($('[name=sub-checkbox]:checked'), function (key, value) {
-            deleteIds.push($(value).val());
-        });
-        var deleteObj = {
-            name: "deleteIds",
-            value: deleteIds
-        };
-        opADU(roleDelete, deleteObj);
+        deleteMultiple(roleDelete);
     });
 
     /*delete end*/
@@ -121,10 +76,10 @@ $(document).ready(function () {
     /*search end*/
 
     function resetTable(data) {
-        $('#user tr + tr').remove();
+        $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {
             var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.name + '</td><td>' + value.description + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
-            $('#role').append(tr);
+            $('#main-table').append(tr);
         });
     }
 });

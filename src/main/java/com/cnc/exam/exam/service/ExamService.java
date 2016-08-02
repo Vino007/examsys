@@ -12,6 +12,7 @@ import com.cnc.exam.common.MyPage;
 import com.cnc.exam.entity.json.ExamJson;
 import com.cnc.exam.entity.json.UserJson;
 import com.cnc.exam.exam.entity.Exam;
+import com.cnc.exam.exam.exception.UserStatusErrorException;
 import com.cnc.exam.exam.exception.UserAlreadyHasThisExamException;
 import com.cnc.exam.result.entity.ExamResultEntity;
 
@@ -60,8 +61,13 @@ public interface ExamService extends BaseService<Exam, Long> {
 	 * @param performances 用户的回答
 	 * @param isMock 是否是模拟考试
 	 * @return
+	 * @throws UserStatusErrorException 
 	 */
-	ExamResultEntity judgeExam(Long userId, Long examId, String[] performances, boolean isMock);
+	ExamResultEntity judgeExam(Long userId, Long examId, String[] performances, boolean isMock) throws UserStatusErrorException;
 
 	MyPage<ExamJson> findExamByUser(Long userId, Pageable pageable);
+
+	void autoGenerateMockExam(Long examId);
+
+	void bindMockQuestion(Long examId, Long[] questionIds);
 }

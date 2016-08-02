@@ -32,6 +32,7 @@ import com.cnc.exam.entity.json.UserJson;
 import com.cnc.exam.exam.entity.Exam;
 import com.cnc.exam.exam.entity.ExamUserMid;
 import com.cnc.exam.exam.entity.UserStatusConstants;
+import com.cnc.exam.exam.exception.UserStatusErrorException;
 import com.cnc.exam.exam.exception.UserAlreadyHasThisExamException;
 import com.cnc.exam.exam.repository.ExamRepository;
 import com.cnc.exam.exam.repository.ExamUserMidRepository;
@@ -183,6 +184,27 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 		selectQuestionList.addAll(selectQuestions);
 		exam.setQuestions(selectQuestionList);
 	}
+	
+	/**
+	 * 自动生成要覆盖之前的结果
+	 */
+	@Override
+	public void autoGenerateMockExam(Long examId) {
+		Exam exam = examRepository.findOne(examId);
+		Course course = exam.getCourse();
+		int questionNumber = exam.getQuestionNumber();
+		List<Question> allQuestions = course.getQuestions();// 获取该考试所属课程的所有考题
+		Set<Question> selectQuestions = new HashSet<>();
+		Random random = new Random();
+		// 随机生成策略
+		while (selectQuestions.size() < questionNumber && selectQuestions.size() < allQuestions.size()) {// questionNumber大于课程question怎么办
+			// 随机挑一个题目进来
+			selectQuestions.add(allQuestions.get(random.nextInt(5000) % allQuestions.size()));
+		}
+		List<Question> selectQuestionList = new ArrayList<>();
+		selectQuestionList.addAll(selectQuestions);
+		exam.setMockQuestions(selectQuestionList);
+	}
 
 	@Override
 	public void addUser(Long examId, Long[] userIds) throws UserAlreadyHasThisExamException {
@@ -272,11 +294,15 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 	}
 
 	@Override
-	public ExamResultEntity judgeExam(Long userId,Long examId, String[] performances,boolean isMock) {
+	public ExamResultEntity judgeExam(Long userId,Long examId, String[] performances,boolean isMock) throws UserStatusErrorException {
 		Exam exam=examRepository.findOne(examId);
 		User user=userRepository.findOne(userId);
+		if(examRepository.findUserStatus(examId, userId)!=1){
+			throw new UserStatusErrorException();
+		}
 		List<Question> questions=exam.getQuestions();
 		List<Integer> judgeResult=new ArrayList<>();
+		
 		int rightQuestionCount=0;
 		String performance="";//用户的回答
 		String answerIsRight="";//回答的正确情况
@@ -298,9 +324,10 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 		if(score>=60) isPass=1;
 		
 		ExamResultEntity examResultEntity=new ExamResultEntity(user, exam, (int)score, isPass, performance,answerIsRight);
-		if(!isMock)
+		if(!isMock){
+			examRepository.updateUserStatus(examId, userId, 2);//设置为已考状态
 			examResultRepository.save(examResultEntity);
-		
+		}
 		return examResultEntity;
 	}
 
@@ -335,6 +362,21 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 
 		return examPage;
 
+	}
+
+	@Override
+	public void bindMockQuestion(Long examId, Long[] questionIds) {
+		if (examId == null || examId < 0)
+			throw new IllegalArgumentException("exam id 不合法");
+		Exam exam = examRepository.findOne(examId);
+		if (exam == null)
+			throw new IllegalArgumentException("exam id 对应的记录不存在");
+		List<Question> questions = new ArrayList<>();
+		for (Long id : questionIds) {
+			questions.add(questionRepository.findOne(id));
+		}
+		exam.setMockQuestions(questions);
+		
 	}
 
 	

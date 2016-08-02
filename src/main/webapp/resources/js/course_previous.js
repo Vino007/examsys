@@ -45,7 +45,7 @@ $(document).ready(function () {
             url: '',
             async: true,
             type: 'POST',
-            data: getFormJson(submitData)
+            data: submitData
         }).done(function (data) {
             if (data.success) {
                 alert('修改成功');
