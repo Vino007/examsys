@@ -51,7 +51,7 @@ public class ExamResultControllerTest {
 
 	@Test
 	public void testGet() throws Exception {
-		mockMvc.perform((get("/examresult/search?search_deptId=2")))
+		mockMvc.perform((get("/examresult/search?search_score=98")))
 				.andExpect(status().isOk()).andDo(print());
 
 	}
@@ -79,5 +79,17 @@ public class ExamResultControllerTest {
 	public void testDownload() throws Exception {
 		String params = "path=E:/temp.xls";
 		mockMvc.perform((get("/examresult/download?"+params))).andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testDownloadSpecail() throws Exception {
+		String params = "path=E:/temp.xls&ids[]=1";
+		mockMvc.perform((get("/examresult/downloadspecial?"+params))).andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testSituation() throws Exception {
+		String params = "courseId=1";
+		mockMvc.perform((get("/examresult/getsituation?"+params))).andExpect(status().isOk()).andDo(print());
 	}
 }

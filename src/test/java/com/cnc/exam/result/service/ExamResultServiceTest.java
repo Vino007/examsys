@@ -1,9 +1,8 @@
-package com.cnc.exam.log.service;
+package com.cnc.exam.result.service;
 
 import static org.junit.Assert.*;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,19 +11,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.cnc.exam.log.entity.LogsEntity;
+import com.cnc.exam.log.utils.FastJsonTool;
+import com.cnc.exam.result.entity.ExamSituation;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = { "classpath:applicationContext.xml", "classpath:spring-mvc.xml" })
-public class LogsServiceTest {
+public class ExamResultServiceTest {
 
 	@Autowired
-	private LogsService logsService;
+	private ExamResultService examResultService;
 	@Test
 	public void test() {
-		/*LogsEntity logsEntity = new LogsEntity(1, 1+"", 1, 1+"", new Timestamp(new Date().getTime()));
-		logsService.save(logsEntity);*/
+		Map<String, ExamSituation> map = examResultService.getConditionEntities(1);
+		System.out.println(FastJsonTool.createJsonString(map));
 	}
 
 }

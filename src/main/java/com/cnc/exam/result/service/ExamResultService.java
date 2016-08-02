@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.base.service.BaseService;
 import com.cnc.exam.result.entity.ExamResultEntity;
+import com.cnc.exam.result.entity.ExamSituation;
 
 public interface ExamResultService extends BaseService<ExamResultEntity, Long>{
 
@@ -20,4 +21,9 @@ public interface ExamResultService extends BaseService<ExamResultEntity, Long>{
 	public void update(ExamResultEntity er);
 	
 	public void saveToExcel(String path) throws FileNotFoundException;
+	
+	public void saveToExcel(String path,String[] ids) throws FileNotFoundException;
+
+	public Map<String, ExamSituation> getConditionEntities(long courseId);
+	
 }

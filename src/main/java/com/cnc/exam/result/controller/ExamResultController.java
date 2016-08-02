@@ -1,8 +1,10 @@
 package com.cnc.exam.result.controller;
 
 import java.io.FileNotFoundException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.log.utils.FastJsonTool;
 import com.cnc.exam.result.entity.ExamResultEntity;
+import com.cnc.exam.result.entity.ExamSituation;
 import com.cnc.exam.result.service.ExamResultService;
 
 @Controller
@@ -39,6 +42,7 @@ public class ExamResultController extends BaseController {
 	
 	@Autowired
 	private UserService userService;
+	
 	@ResponseBody
 	@RequestMapping(value="/add",method=RequestMethod.GET)
 	public Map<String, Object> insertER(Model model, ExamResultEntity examResultEntity){
@@ -70,16 +74,20 @@ public class ExamResultController extends BaseController {
 	public Map<String, Object> getLogsByCondition(Model model, ExamResultEntity examResultEntity,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
-		Subject curUser=SecurityUtils.getSubject();
+		int flag= 1 ;
+		/*Subject curUser=SecurityUtils.getSubject();
 		Session session=curUser.getSession();	
 		User currentUser = (User) session.getAttribute(Constants.CURRENT_USER);
+		if(null==currentUser){
+			return null;
+		}
 		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
-		int flag= 0 ;
+		
 		for(String item : allPermission){
 			if("examresut:viewall".equals(item)){
 				flag = 1;
 			}
-		}
+		}*/
 		if(flag == 1){
 			
 		}else{
@@ -87,7 +95,7 @@ public class ExamResultController extends BaseController {
 			if(searchParams.containsKey("username")){
 				searchParams.remove("username");
 			}
-			searchParams.put("username", currentUser.getUsername());
+			//searchParams.put("username", currentUser.getUsername());
 		}
 		Page<ExamResultEntity> logsPage = examResultService.findERByCondition(searchParams, buildPageRequest(pageNumber));
 		Map<String, Object> resultMap = new HashMap<>();
@@ -162,6 +170,63 @@ public class ExamResultController extends BaseController {
 			resultMap.put("data", data);
 			resultMap.put("msg", "下载失败");
 			resultMap.put("success", false);
+			e.printStackTrace();
+		}
+		
+		return resultMap;
+	}
+	
+	/**
+	 * 导出成绩
+	 * @param model
+	 * @param er
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/downloadspecial ",method=RequestMethod.GET)	
+	public Map<String, Object> downloadSpecialEaxmResult(Model model,@RequestParam("path")String path,@RequestParam("ids[]")String[] ids){
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try {
+			examResultService.saveToExcel(path,ids);
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载成功");
+			resultMap.put("successs", true);
+		} catch (FileNotFoundException e) {
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载失败");
+			resultMap.put("successs", false);
+			e.printStackTrace();
+		}
+		
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 根据课程查询情况
+	 * @param model
+	 * @param er
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/getsituation",method=RequestMethod.GET)	
+	public Map<String, Object> getSituation(Model model,@RequestParam("courseId")long courseId){
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try{
+			Map<String, ExamSituation> conditionEntities = examResultService.getConditionEntities(courseId);
+			data.put("page", "");
+			resultMap.put("data", conditionEntities);
+			resultMap.put("msg", "下载成功");
+			resultMap.put("successs", true);
+		} catch (Exception e) {
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载失败");
+			resultMap.put("successs", false);
 			e.printStackTrace();
 		}
 		
