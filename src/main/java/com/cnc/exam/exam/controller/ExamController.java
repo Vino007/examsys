@@ -366,7 +366,7 @@ public class ExamController extends BaseController{
 			questionJson.setContent(q.getContent());
 			questionJson.setChoices(q.getChoices());
 			questionJson.setType(q.getType());
-			questionJson.setContentImgageUrl(q.getContentImgageUrl());
+			questionJson.setContentImgageUrl(q.getContentImageUrl());
 			questionJson.setId(q.getId());
 			questionJsons.add(questionJson);
 		}
@@ -397,7 +397,7 @@ public class ExamController extends BaseController{
 			questionJson.setContent(q.getContent());
 			questionJson.setChoices(q.getChoices());
 			questionJson.setType(q.getType());
-			questionJson.setContentImgageUrl(q.getContentImgageUrl());
+			questionJson.setContentImgageUrl(q.getContentImageUrl());
 			questionJson.setId(q.getId());
 			questionJsons.add(questionJson);
 		}

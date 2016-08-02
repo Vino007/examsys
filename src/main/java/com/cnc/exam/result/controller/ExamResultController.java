@@ -47,11 +47,11 @@ public class ExamResultController extends BaseController {
 			examResultEntity.setCreateTime(new Date());
 			examResultService.save(examResultEntity);
 			resultMap.put("data", "");
-			resultMap.put("successs", true);
+			resultMap.put("success", true);
 			resultMap.put("msg", "添加成功");
 		}catch(Exception e){
 			resultMap.put("data", "");
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			resultMap.put("msg", "添加失败");
 		}
 		return resultMap;
@@ -94,7 +94,7 @@ public class ExamResultController extends BaseController {
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", logsPage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		resultMap.put("msg","查询成功");
 		return resultMap;
 	}
@@ -113,11 +113,11 @@ public class ExamResultController extends BaseController {
 			examResultService.delete(deleteIds);
 		}catch(Exception e){
 			resultMap.put("msg", "删除失败");
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 		}
 		resultMap.put("data", "");
 		resultMap.put("msg", "删除成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	
@@ -136,7 +136,7 @@ public class ExamResultController extends BaseController {
 		data.put("page", "");
 		resultMap.put("data", data);
 		resultMap.put("msg", "更新成功");
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	
@@ -156,12 +156,12 @@ public class ExamResultController extends BaseController {
 			data.put("page", "");
 			resultMap.put("data", data);
 			resultMap.put("msg", "下载成功");
-			resultMap.put("successs", true);
+			resultMap.put("success", true);
 		} catch (FileNotFoundException e) {
 			data.put("page", "");
 			resultMap.put("data", data);
 			resultMap.put("msg", "下载失败");
-			resultMap.put("successs", false);
+			resultMap.put("success", false);
 			e.printStackTrace();
 		}
 		

@@ -127,7 +127,8 @@ $(document).ready(function () {
                 url: departmentShowUsers.url,
                 type: departmentShowUsers.type,
                 async: true,
-                data: {'id': id}
+                data: {'id': id},
+                dataType:'json'
             }).done(function (data) {
                 $('#main-table tr + tr').remove();
                 $.each(data.data.users, function (key, value) {
@@ -198,7 +199,8 @@ $(document).ready(function () {
         $.ajax({
             url: userGetAllRoles.url,
             async: true,
-            type: userGetAllRoles.type
+            type: userGetAllRoles.type,
+            dataType:'json'
         }).done(function (data) {
             if (data.success) {
                 $.each(data.data.roles, function (key, value) {
@@ -220,7 +222,8 @@ $(document).ready(function () {
         $.ajax({
             url: userGetAllDepts.url,
             async: true,
-            type: userGetAllDepts.type
+            type: userGetAllDepts.type,
+            dataType:'json'
         }).done(function (data) {
             if (data.success) {
                 $.each(data.data.availableDepts, function (key, value) {

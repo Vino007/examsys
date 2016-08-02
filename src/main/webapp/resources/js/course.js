@@ -96,7 +96,8 @@ $(document).ready(function () {
             url: courseShowMsg.url,
             type: courseShowMsg.type,
             async: true,
-            data: {'id': id}
+            data: {'id': id},
+            dataType:'json'
         }).done(function (data) {
             $('.show-comment').html('');
             if (data.success) {
@@ -122,7 +123,8 @@ $(document).ready(function () {
         $.ajax({
             url: courseAddMsg.url,
             type: courseAddMsg.type,
-            data: commentObj
+            data: commentObj,
+            dataType:'json'
         }).done(function (data) {
             if (data.success) {
                 alert(data.msg);
@@ -147,7 +149,8 @@ $(document).ready(function () {
                 url: coursecatShowCourses.url,
                 type: coursecatShowCourses.type,
                 async: true,
-                data: {'id': id}
+                data: {'id': id},
+                dataType:'json'
             }).done(function (data) {
                 console.log(data)
                 $('#main-table tr + tr').remove();
@@ -178,7 +181,8 @@ $(document).ready(function () {
         $.ajax({
             url: courseGetAllCat.url,
             async: true,
-            type: courseGetAllCat.type
+            type: courseGetAllCat.type,
+            dataType:'json'
         }).done(function (data) {
             if (data.success) {
                 $.each(data.data.availableCategories, function (key, value) {

@@ -88,7 +88,8 @@ $(document).ready(function () {
                 url: coursecatShowCourses.url,
                 type: coursecatShowCourses.type,
                 async: true,
-                data: {'id': id}
+                data: {'id': id},
+                dataType:'json'
             }).done(function (data) {
                 console.log(data)
                 $('#main-table tr + tr').remove();

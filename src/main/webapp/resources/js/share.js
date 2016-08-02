@@ -94,7 +94,7 @@ var
 
 
 //url rewrite
-courseSearch = {'url': '../mock/courseSearch.json', 'type': 'GET'};
+/*courseSearch = {'url': '../mock/courseSearch.json', 'type': 'GET'};
 courseGetAllCat = {'url': '../mock/coursePreSetCate.json', 'type': 'GET'};
 courseShowMsg = {'url': '../mock/courseShowMsg.json', 'type': 'GET'};
 courseAddMsg = {'url': '../mock/courseAddMsg.json', 'type': 'POST'};
@@ -129,7 +129,7 @@ examFindMockQuestions = {'url': '../mock/examFindQuestions.json', 'type': 'GET'}
 
 examResultSearch = {'url': '../mock/examResultSearch.json', 'type': 'GET'};
 
-logsAll = {'url': '../mock/logsAll.json', 'type': 'GET'};
+logsAll = {'url': '../mock/logsAll.json', 'type': 'GET'};*/
 /*url end*/
 
 $(document).ready(function () {
@@ -159,7 +159,8 @@ function opADU(urlObj, submitData) {
         url: urlObj.url,
         async: true,
         type: urlObj.type,
-        data: getFormJson(submitData)
+        data: getFormJson(submitData),
+        dataType:'json'
     }).done(function (data) {
         alert(data.msg);
         if (data.success) {
@@ -204,7 +205,8 @@ function init(initObj) {
         url: initObj.urlObj.url,
         async: true,
         type: initObj.urlObj.type,
-        data: initObj.data
+        data: initObj.data,
+        dataType:'json'
     }).done(function (data) {
         if (data.success) {
             // initObj.resetTable(data);
@@ -219,7 +221,8 @@ function init(initObj) {
                         url: initObj.urlObj.url,
                         async: true,
                         type: initObj.urlObj.type,
-                        data: {"pageNumber": page}
+                        data: {"pageNumber": page},
+                        dataType:'json'
                     }).done(function (data) {
                         if (data.success) {
                             initObj.resetTable(data);

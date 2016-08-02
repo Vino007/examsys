@@ -19,7 +19,8 @@ $(document).ready(function () {
     $.ajax({
         url: urlObj.url,
         type: urlObj.type,
-        data: {'examId': examId}
+        data: {'examId': examId},
+        dataType:'json'
     }).done(function (data) {
         if (data.success) {
             $('#exam-list').html('');

@@ -81,7 +81,8 @@ $(document).ready(function () {
                 url: departmentShowUsers.url,
                 type: departmentShowUsers.type,
                 async: true,
-                data: {'id': id}
+                data: {'id': id},
+                dataType:'json'
             }).done(function (data) {
                 $('#main-table tr + tr').remove();
                 $.each(data.data.users, function (key, value) {

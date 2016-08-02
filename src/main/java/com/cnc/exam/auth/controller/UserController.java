@@ -251,7 +251,7 @@ public class UserController extends BaseController {
 		data.put("currentDeptName", department == null ? null : department.getDeptName());
 		data.put("availableDepts", departments);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 
@@ -276,7 +276,7 @@ public class UserController extends BaseController {
 		List<Department> departments = departmentService.findAll();
 		data.put("availableDepts", departments);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 }
