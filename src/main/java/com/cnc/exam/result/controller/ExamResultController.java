@@ -1,8 +1,10 @@
 package com.cnc.exam.result.controller;
 
 import java.io.FileNotFoundException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.log.utils.FastJsonTool;
 import com.cnc.exam.result.entity.ExamResultEntity;
+import com.cnc.exam.result.entity.ExamSituation;
 import com.cnc.exam.result.service.ExamResultService;
 
 @Controller
@@ -191,6 +194,35 @@ public class ExamResultController extends BaseController {
 			resultMap.put("msg", "下载成功");
 			resultMap.put("successs", true);
 		} catch (FileNotFoundException e) {
+			data.put("page", "");
+			resultMap.put("data", data);
+			resultMap.put("msg", "下载失败");
+			resultMap.put("successs", false);
+			e.printStackTrace();
+		}
+		
+		return resultMap;
+	}
+	
+	
+	/**
+	 * 根据课程查询情况
+	 * @param model
+	 * @param er
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/getsituation",method=RequestMethod.GET)	
+	public Map<String, Object> getSituation(Model model,@RequestParam("courseId")long courseId){
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		try{
+			Map<String, ExamSituation> conditionEntities = examResultService.getConditionEntities(courseId);
+			data.put("page", "");
+			resultMap.put("data", conditionEntities);
+			resultMap.put("msg", "下载成功");
+			resultMap.put("successs", true);
+		} catch (Exception e) {
 			data.put("page", "");
 			resultMap.put("data", data);
 			resultMap.put("msg", "下载失败");

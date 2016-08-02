@@ -86,4 +86,10 @@ public class ExamResultControllerTest {
 		String params = "path=E:/temp.xls&ids[]=1";
 		mockMvc.perform((get("/examresult/downloadspecial?"+params))).andExpect(status().isOk()).andDo(print());
 	}
+	
+	@Test
+	public void testSituation() throws Exception {
+		String params = "courseId=1";
+		mockMvc.perform((get("/examresult/getsituation?"+params))).andExpect(status().isOk()).andDo(print());
+	}
 }
