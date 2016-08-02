@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.auth.repository.UserRepository;
 import com.cnc.exam.base.service.AbstractBaseServiceImpl;
+import com.cnc.exam.common.Constants;
 import com.cnc.exam.common.MyPage;
 import com.cnc.exam.course.entity.Course;
 import com.cnc.exam.entity.json.ExamJson;
@@ -36,6 +37,9 @@ import com.cnc.exam.exam.exception.UserStatusErrorException;
 import com.cnc.exam.exam.exception.UserAlreadyHasThisExamException;
 import com.cnc.exam.exam.repository.ExamRepository;
 import com.cnc.exam.exam.repository.ExamUserMidRepository;
+import com.cnc.exam.log.entity.LogsEntity;
+import com.cnc.exam.log.service.LogsService;
+import com.cnc.exam.mail.utils.SendMailUtil;
 import com.cnc.exam.question.entity.Question;
 import com.cnc.exam.question.repository.QuestionRepository;
 import com.cnc.exam.result.entity.ExamResultEntity;
@@ -53,6 +57,7 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 	private ExamUserMidRepository examUserMidRepository;
 	@Autowired
 	private ExamResultRepository examResultRepository;
+	
 	@Override
 	public void update(Exam obj) {
 		if (obj == null || obj.getId() == null)
@@ -321,12 +326,19 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 		double score=(100.0/questions.size())*rightQuestionCount;
 		score=Math.rint(score);
 		int isPass=0;
-		if(score>=60) isPass=1;
+		if(score>=exam.getPassLine()) isPass=1;
 		
 		ExamResultEntity examResultEntity=new ExamResultEntity(user, exam, (int)score, isPass, performance,answerIsRight);
 		if(!isMock){
 			examRepository.updateUserStatus(examId, userId, 2);//设置为已考状态
 			examResultRepository.save(examResultEntity);
+			if(isPass!=1&&user.getEmail()!=null){
+				try{
+				SendMailUtil.simpleEmail(user.getEmail(), Constants.EMAIL_SUBJECT, Constants.EMAIL_MSG);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 		}
 		return examResultEntity;
 	}

@@ -1,6 +1,8 @@
 package com.cnc.exam.exam.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,9 @@ import java.util.Map;
 import javax.persistence.Column;
 import javax.servlet.ServletRequest;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -30,6 +35,8 @@ import com.cnc.exam.exam.exception.UserAlreadyHasThisExamException;
 import com.cnc.exam.exam.exception.UserStatusErrorException;
 import com.cnc.exam.exam.repository.ExamUserMidRepository;
 import com.cnc.exam.exam.service.ExamService;
+import com.cnc.exam.log.entity.LogsEntity;
+import com.cnc.exam.log.service.LogsService;
 import com.cnc.exam.question.entity.Question;
 import com.cnc.exam.result.entity.ExamResultEntity;
 @Controller
@@ -39,7 +46,8 @@ public class ExamController extends BaseController{
 	private ExamService examService;
 	@Autowired
 	private CourseService courseService;
-
+	@Autowired
+	private LogsService logsService;
 	@ResponseBody
 	//@RequiresPermissions("exam:menu")
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
@@ -90,6 +98,7 @@ public class ExamController extends BaseController{
 	public Map<String, Object> addExam(Exam exam,Long courseId) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
+
 		
 		try {
 			if(courseId!=null&&courseService.findOne(courseId)!=null){
@@ -99,6 +108,7 @@ public class ExamController extends BaseController{
 			resultMap.put("success", true);
 			resultMap.put("data", data);
 			resultMap.put("msg", "添加成功");
+			logsService.save(new LogsEntity(getCurrentUser(), 2, "添加一场考试",new Timestamp(new Date().getTime())));
 
 		} catch (Exception e) {
 			resultMap.put("success", false);
@@ -121,6 +131,7 @@ public class ExamController extends BaseController{
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "删除成功");
+			logsService.save(new LogsEntity(getCurrentUser(), 2, "删除考试",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "删除失败");
@@ -152,6 +163,7 @@ public class ExamController extends BaseController{
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "修改成功");
+			logsService.save(new LogsEntity(getCurrentUser(), 2, "更新考试",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "修改失败");
@@ -217,6 +229,7 @@ public class ExamController extends BaseController{
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "生成成功");
+			logsService.save(new LogsEntity(getCurrentUser(),2, "生成试卷",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "生成失败");
@@ -285,6 +298,7 @@ public class ExamController extends BaseController{
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "修改成功");
+			logsService.save(new LogsEntity(getCurrentUser(), 2, "修改参考人员状态",new Timestamp(new Date().getTime())));
 		}catch(Exception e){
 			resultMap.put("data", data);
 			resultMap.put("success", false);
@@ -309,6 +323,7 @@ public class ExamController extends BaseController{
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "添加成功");
+			logsService.save(new LogsEntity(getCurrentUser(), 2, "添加参考人员",new Timestamp(new Date().getTime())));
 		}catch(UserAlreadyHasThisExamException e){
 			resultMap.put("data", data);
 			resultMap.put("success", false);
@@ -432,6 +447,7 @@ public class ExamController extends BaseController{
 			resultMap.put("data", data);
 			resultMap.put("success", true);
 			resultMap.put("msg", "提交成功");
+			logsService.save(new LogsEntity(getCurrentUser(), 2, "完成一场考试",new Timestamp(new Date().getTime())));
 		}catch(UserStatusErrorException e){
 			e.printStackTrace();
 			resultMap.put("data", data);
