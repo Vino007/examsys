@@ -1,7 +1,9 @@
 package com.cnc.exam.course.controller;
 
 import com.cnc.exam.auth.constant.Constants;
+import com.cnc.exam.auth.entity.Role;
 import com.cnc.exam.auth.entity.User;
+import com.cnc.exam.auth.service.UserService;
 import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.course.entity.Course;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhangyn on 2016/7/26.
@@ -33,6 +36,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/course")
 public class CourseController extends BaseController {
+    @Autowired
+    private UserService userService;
     @Autowired
     private CourseService courseService;
     @Autowired
@@ -67,11 +72,17 @@ public class CourseController extends BaseController {
 
     @ResponseBody
 //    @RequiresPermissions("course:create")
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public Map<String, Object> addCourse(Model model, Course course, Long categoryId, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
+        if (!isPermission(curUser, categoryId)) {
+            model.addAttribute("Permission denied", "true");
+            resultMap.put("success", false);
+            resultMap.put("msg", "没有该操作权限");
+            return resultMap;
+        }
         try {
             course = courseService.saveWithCheckDuplicate(course, curUser);
             courseService.setCourseCategory(course.getId(), categoryId);
@@ -90,14 +101,23 @@ public class CourseController extends BaseController {
 
     @ResponseBody
 //    @RequiresPermissions("course:delete")
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public Map<String, Object> deleteCourse(Model model, @RequestParam("deleteIds[]") Long[] deleteIds) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public Map<String, Object> deleteCourse(Model model, @RequestParam("deleteIds[]") Long[] deleteIds, HttpSession session) {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
+        User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
+        for (Long couId : deleteIds) {
+            if (courseService.findOne(couId).getCourseCategory() != null && !isPermission(curUser, courseService.findOne(couId).getCourseCategory().getId())) {
+                model.addAttribute("Permission denied", "true");
+                resultMap.put("success", false);
+                resultMap.put("msg", "没有该操作权限");
+                return resultMap;
+            }
+        }
         try {
             courseService.deleteCourses(deleteIds);
-        } catch(DeleteWithMsgException e){
-            resultMap.put("msg", "部分课程存在留言");
+        } catch (DeleteWithMsgException e) {
+            resultMap.put("msg", "部分课程存在留言或考试");
             resultMap.put("success", false);
             return resultMap;
         } catch (Exception e) {
@@ -114,12 +134,19 @@ public class CourseController extends BaseController {
     @ResponseBody
 //    @RequiresPermissions("course:update")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public Map<String, Object> updateCourse(Model model, Course course, Long categoryId) {
+    public Map<String, Object> updateCourse(Model model, Course course, Long categoryId, HttpSession session) {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
+        User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
+        if (categoryId!= null && !isPermission(curUser, categoryId)) {
+            model.addAttribute("Permission denied", "true");
+            resultMap.put("success", false);
+            resultMap.put("msg", "没有该操作权限");
+            return resultMap;
+        }
         try {
             courseService.updateCourse(course);
-            courseService.setCourseCategory(course.getId(),categoryId);
+            courseService.setCourseCategory(course.getId(), categoryId);
         } catch (CourseDuplicateException e) {
             model.addAttribute("courseDuplicate", "true");
             e.printStackTrace();
@@ -239,6 +266,21 @@ public class CourseController extends BaseController {
         resultMap.put("success", true);
         return resultMap;
     }
-    
 
+    Boolean isPermission(User user, Long categoryId) {
+        if(categoryId == null)
+            return true;
+        Set<Role> roles = userService.findOne(user.getId()).getRoles();
+        for (Role role : roles) {
+            if (role.getName().equals("admin"))
+                return true;
+            Set<CourseCategory> categories = role.getCategories();
+            for (CourseCategory c : categories) {
+                if (categoryId == c.getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

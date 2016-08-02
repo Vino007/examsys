@@ -54,7 +54,7 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
     public void deleteCourses(Long... ids)throws DeleteWithMsgException{
         for (Long id : ids) {
             Course c = courseRepository.findOne(id);
-            if(c.getCourseMessages().size()!=0){
+            if(c.getCourseMessages().size()!=0 || c.getExams().size()!=0){
                 throw new DeleteWithMsgException();
             }
             if(c.getCourseCategory()!=null){
