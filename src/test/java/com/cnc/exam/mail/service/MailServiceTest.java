@@ -9,6 +9,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.cnc.exam.mail.utils.SendMailUtil;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = { "classpath:applicationContext.xml", "classpath:spring-mvc.xml" })
@@ -18,8 +20,10 @@ public class MailServiceTest {
 	private MailService mailService;
 	@Test
 	public void test() {
-		long count= mailService.getCount();
-		System.out.println(count);
+		/*long count= mailService.getCount();
+		System.out.println(count);*/
+		SendMailUtil sendMailUtil = new SendMailUtil();
+		sendMailUtil.simpleEmail("511955993@qq.com", "test", "msg");
 	}
 
 }

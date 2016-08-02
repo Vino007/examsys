@@ -100,11 +100,10 @@ public class ExamResultServiceImpl extends
 				String examId = (String) searchParams.get("examId");
 				String userId = (String) searchParams.get("userId");
 				String isPass = (String) searchParams.get("isPass");
-				String deptId = (String) searchParams.get("deptId");
+				String deptName = (String) searchParams.get("deptName");
 				String userName = (String) searchParams.get("username");
 				String courName = (String) searchParams.get("coursename");
-				String createTimeRange = (String) searchParams
-						.get("createTime");
+				String createTimeRange = (String) searchParams.get("createTime");
 				if (userName != null && !"".equals(userName)) {
 					Predicate condition = cb.like(
 							root.get("user").get("username").as(String.class),
@@ -160,11 +159,11 @@ public class ExamResultServiceImpl extends
 					else
 						allCondition = cb.and(allCondition, condition);
 				}
-				if (deptId != null && !"".equals(deptId)) {
+				if (deptName != null && !"".equals(deptName)) {
 					Predicate condition = cb.like(
-							root.get("user").get("department").get("id")
+							root.get("user").get("department").get("deptName")
 									.as(String.class),
-							"%" + searchParams.get("deptId") + "%");
+							"%" + searchParams.get("deptName") + "%");
 					if (null == allCondition)
 						allCondition = cb.and(condition);
 					else

@@ -28,6 +28,8 @@ import com.cnc.exam.auth.entity.User;
 import com.cnc.exam.auth.service.UserService;
 import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
+import com.cnc.exam.log.entity.LogsEntity;
+import com.cnc.exam.log.service.LogsService;
 import com.cnc.exam.log.utils.FastJsonTool;
 import com.cnc.exam.result.entity.ExamResultEntity;
 import com.cnc.exam.result.entity.ExamSituation;
@@ -40,6 +42,8 @@ public class ExamResultController extends BaseController {
 	@Autowired
 	private ExamResultService examResultService;
 	
+	@Autowired
+	private LogsService logsService;
 	@Autowired
 	private UserService userService;
 	
@@ -136,8 +140,18 @@ public class ExamResultController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/update",method=RequestMethod.GET)	
+	@RequestMapping(value="/update",method=RequestMethod.POST)	
 	public Map<String, Object> updateExamResult(Model model,ExamResultEntity er){
+		Subject curUser=SecurityUtils.getSubject();
+		Session session=curUser.getSession();	
+		User currentUser = (User) session.getAttribute(Constants.CURRENT_USER);
+		if(null==currentUser){
+			return null;
+		}
+		currentUser = userService.findOne(currentUser.getId());
+		LogsEntity logsEntity = new LogsEntity(currentUser,2,"更新了考试成绩",new Timestamp(new Date().getTime()));
+		
+		logsService.save(logsEntity);
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		examResultService.update(er);
