@@ -141,6 +141,7 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter{
 		}
 		data.put("menuPermissions", menuResourceJsons);
 		data.put("buttonPermissions", buttonResourceJsons);
+		data.put("userId", currentUser.getId());
 		resourceMap.put("success", true);
 		resourceMap.put("data",data );
 		resourceMap.put("msg","登录成功" );

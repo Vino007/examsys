@@ -38,11 +38,11 @@ public class HomeController extends BaseController{
 	private UserService userService;
 	@Autowired
 	private ResourceService resourceService;
-	@ResponseBody
+	//@ResponseBody
 	@RequestMapping("/")
-	public Map<String,Object> home(Model model,HttpServletRequest request){
+	public String home(Model model,HttpServletRequest request){
 		
-		Subject curUser=SecurityUtils.getSubject();
+	/*	Subject curUser=SecurityUtils.getSubject();
 		Session session=curUser.getSession();	
 		String username=(String) curUser.getPrincipal();
 		
@@ -72,8 +72,10 @@ public class HomeController extends BaseController{
 		data.put("menuPermissions", menuResourceJsons);
 		data.put("buttonPermissions", buttonResourceJsons);
 		resourceMap.put("success", true);
-		resourceMap.put("data",data );
-		return resourceMap;
+		resourceMap.put("data",data );*/
+		
+		//return resourceMap;
+		return "redirct:index.html";
 	}
 	private class ResourceJson{
 		private String url;

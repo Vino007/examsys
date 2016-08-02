@@ -43,19 +43,31 @@
         
     </mvc:annotation-driven>
     
+ <!--     <bean id="htmlViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+        <property name="order" value= "1"></property>
+        <property name= "viewNames" value= "index" /> 
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="contentType" value="text/html"/>
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".html"/>
+    </bean> -->
     
    <!--   <mvc:view-controller path="/404" view-name="404"/> --> <!-- 如果当前路径是/ 则交给相应的视图解析器直接解析为视图 -->
     <!-- 默认的视图解析器 在上边的解析错误时使用 (默认使用html)- -->
-    <bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+               <property name="order" value= "2"></property>
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <property name="contentType" value="text/html"/>
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    
+
 
 	<!-- 静态资源文件处理，mapping为映射,location为实际路径，根路径为webapp路径 -->
 	<mvc:resources mapping="/resources/**" location="/resources/" /> 
+
 	<!-- 静态html处理 -->
 	<mvc:resources location="/WEB-INF/pages/static/" mapping="/static/**"></mvc:resources><!-- 静态页面请求，如404.html -->
 	<mvc:resources location="/WEB-INF/pages/" mapping="/**"></mvc:resources><!-- 静态页面请求，如404.html -->

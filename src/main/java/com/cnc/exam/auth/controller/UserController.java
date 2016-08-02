@@ -269,7 +269,7 @@ public class UserController extends BaseController {
 
 	@ResponseBody
 //    @RequiresPermissions("course:msg")
-	@RequestMapping(value = "/getAllDept", method = RequestMethod.GET)
+	@RequestMapping(value = "/getAllDepts", method = RequestMethod.GET)
 	public Map<String, Object> getAllCategory(Model model) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
