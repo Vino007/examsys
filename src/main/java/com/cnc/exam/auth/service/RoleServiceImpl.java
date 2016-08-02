@@ -16,6 +16,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
+import com.cnc.exam.course.entity.CourseCategory;
+import com.cnc.exam.course.repository.CourseCategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,8 @@ public class RoleServiceImpl extends AbstractBaseServiceImpl<Role, Long> impleme
 	private RoleRepository roleRepository;
 	@Autowired
 	private ResourceRepository resourceRepository;
+	@Autowired
+	private CourseCategoryRepository courseCategoryRepository;
 
 	public RoleRepository getRoleRepository() {
 		return roleRepository;
@@ -164,6 +168,32 @@ public class RoleServiceImpl extends AbstractBaseServiceImpl<Role, Long> impleme
 	public Page<Role> findRoleByCondition(Map<String, Object> searchParams,
 			Pageable pageable) {
 		return roleRepository.findAll(buildSpecification(searchParams), pageable);
+	}
+
+	@Override
+	public void connectRoleAndCategory(Long roleId, Long... categoryIds) {
+		Role role=findOne(roleId);
+
+		Set<CourseCategory> categories=role.getCategories();
+		if(categories==null)
+			categories = new HashSet<>();
+		for(Long categoryId:categoryIds){
+			categories.add(courseCategoryRepository.findOne(categoryId));
+		}
+		role.setCategories(categories);
+	}
+
+	@Override
+	public void disconnectRoleAndCategory(Long roleId, Long... categoryIds) {
+		Role role = roleRepository.findOne(roleId);
+		Set<CourseCategory> categories = role.getCategories();
+		for(Long categoryId : categoryIds)
+			categories.remove(courseCategoryRepository.findOne(categoryId));
+	}
+
+	@Override
+	public void clearAllRoleAndCategoryConnection(Long roleId) {
+		roleRepository.findOne(roleId).getCategories().clear();
 	}
 
 	@Override

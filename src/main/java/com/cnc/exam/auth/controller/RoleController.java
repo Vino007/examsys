@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.cnc.exam.course.entity.CourseCategory;
+import com.cnc.exam.course.service.CourseCategoryService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +39,8 @@ public class RoleController extends BaseController{
 	private RoleService roleService;
 	@Autowired
 	private ResourceService resourceService;
+	@Autowired
+	private CourseCategoryService courseCategoryService;
 	
 	@ResponseBody
 	@RequiresPermissions("role:menu")
@@ -172,6 +176,38 @@ public class RoleController extends BaseController{
 		return resultMap;
 		
 	}
-	
-	
+
+	@ResponseBody
+	@RequestMapping(value = "/getAllCat", method = RequestMethod.GET)
+	public Map<String, Object> getAllCategory(Model model) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		List<CourseCategory> categories = courseCategoryService.findAll();
+		data.put("availableCategories", categories);
+		resultMap.put("data", data);
+		resultMap.put("successs", true);
+		return resultMap;
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/bindCats",method=RequestMethod.POST)
+	public Map<String, Object> bindCategories(Model model,@RequestParam("roleId")Long roleId,@RequestParam(value="categoryIds[]",required=false)Long[] categoryIds){
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		roleService.clearAllRoleAndCategoryConnection(roleId);
+		try{
+			roleService.connectRoleAndCategory(roleId,categoryIds);
+		}catch(Exception e){
+			e.printStackTrace();
+			resultMap.put("msg", "绑定失败");
+			resultMap.put("success", false);
+			return resultMap;
+		}
+
+		resultMap.put("data", data);
+		resultMap.put("msg", "绑定成功");
+		resultMap.put("success", true);
+		return resultMap;
+
+	}
 }

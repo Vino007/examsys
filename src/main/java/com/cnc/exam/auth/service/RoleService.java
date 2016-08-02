@@ -26,4 +26,7 @@ public interface RoleService extends  BaseService<Role, Long> {
 	public void saveWithCheckDuplicate(Role role,User user) throws RoleDuplicateException;
 	public Page<Role> findRoleByCondition(Map<String, Object> searchParams,
 			Pageable pageable);
+	public void connectRoleAndCategory(Long roleId, Long... categoryIds);
+	public void disconnectRoleAndCategory(Long roleId, Long... categoryIds);
+	public void clearAllRoleAndCategoryConnection(Long roleId);
 }
