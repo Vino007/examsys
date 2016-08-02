@@ -72,7 +72,7 @@ public class CourseController extends BaseController {
 
     @ResponseBody
 //    @RequiresPermissions("course:create")
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public Map<String, Object> addCourse(Model model, Course course, Long categoryId, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
         Map<String, Object> resultMap = new HashMap<>();
@@ -101,7 +101,7 @@ public class CourseController extends BaseController {
 
     @ResponseBody
 //    @RequiresPermissions("course:delete")
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public Map<String, Object> deleteCourse(Model model, @RequestParam("deleteIds[]") Long[] deleteIds, HttpSession session) {
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
@@ -117,7 +117,7 @@ public class CourseController extends BaseController {
         try {
             courseService.deleteCourses(deleteIds);
         } catch (DeleteWithMsgException e) {
-            resultMap.put("msg", "部分课程存在留言");
+            resultMap.put("msg", "部分课程存在留言或考试");
             resultMap.put("success", false);
             return resultMap;
         } catch (Exception e) {
