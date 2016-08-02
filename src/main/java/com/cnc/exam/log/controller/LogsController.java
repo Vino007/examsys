@@ -49,7 +49,7 @@ public class LogsController extends BaseController {
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", logsPage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 	
@@ -71,7 +71,7 @@ public class LogsController extends BaseController {
 		Map<String, Object> data = new HashMap<>();
 		data.put("page", logsPage);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 }

@@ -181,7 +181,7 @@ public class CourseController extends BaseController {
         List<CourseCategory> categories = courseCategoryService.findAll();
         data.put("availableCategories", categories);
         resultMap.put("data", data);
-        resultMap.put("successs", true);
+        resultMap.put("success", true);
         return resultMap;
     }
 
@@ -197,7 +197,7 @@ public class CourseController extends BaseController {
         data.put("currentCategoryName", courseCategory == null ? null : courseCategory.getCoursecatName());
         data.put("availableCategories", categories);
         resultMap.put("data", data);
-        resultMap.put("successs", true);
+        resultMap.put("success", true);
         return resultMap;
     }
 

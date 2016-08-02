@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.cnc.exam.auth.entity.User;
@@ -16,4 +17,7 @@ public interface ExamUserMidRepository  extends JpaRepository<ExamUserMid, Long>
 	
 /*	@Query("select e from ExamUserMid e where e.exam.id=?1 and e.status=?2  ")
 	public Page<ExamUserMid> findByStatus(long examId,int status,Pageable pageable);*/
+	@Modifying
+	@Query("update ExamUserMid e set e.status=?3 where e.exam.id=?1 and e.user.id=?2")
+	void updateExamUserStatus(long examId,long userId,int status);
 }

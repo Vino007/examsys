@@ -19,6 +19,10 @@
                     <option value="false">否</option>
                 </select></label>
                 <button id="search" class="btn btn-primary">搜索课程</button>
+                <label class="form-control control-label">按分类搜索：<select class="cate-based-search">
+                    <option value="all">全部</option>
+                </select></label>
+                <button id="cate-mgr" class="btn btn-primary">课程分类管理</button>
             </div>
         </div>
         <div class="content-header">
@@ -27,9 +31,10 @@
                 <button id="delete-multiple" class="btn btn-danger">删除课程</button>
             </div>
         </div>
-        <table id="course" class="table table-bordered table-striped">
+        <table id="main-table" class="table table-bordered table-striped">
             <tr>
                 <th><input type="checkbox" name="check-all"></th>
+                <th>课程id</th>
                 <th>课程名称</th>
                 <th>课程类别</th>
                 <th>课程类型</th>
@@ -38,6 +43,7 @@
                 <th>讲师</th>
                 <th>在线资料</th>
                 <th>是否在线</th>
+                <th>评论</th>
                 <th>管理</th>
             </tr>
         </table>
@@ -66,7 +72,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">课程类别：</label>
-                        <select class="form-control cates-checkbox">
+                        <select name="categoryId" class="form-control cates-options">
                         </select>
                     </div>
                     <div class="form-group">
@@ -91,7 +97,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">是否在线：</label>
-                        <select class="form-control" name="online">
+                        <select class="form-control" name="Online">
                             <option value="是">是</option>
                             <option value="否">否</option>
                         </select>
@@ -125,12 +131,16 @@
             <div class="modal-body">
                 <form class="form-group edit-form">
                     <div class="form-group">
+                        <label class="control-label">课程id：</label>
+                        <input name="courseId" class="form-control" disabled>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">课程名称：</label>
                         <input name="courseName" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="control-label">课程类别：</label>
-                        <select class="form-control cates-checkbox">
+                        <select name="categoryId" class="form-control cates-options">
                         </select>
                     </div>
                     <div class="form-group">
@@ -155,7 +165,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">是否在线：</label>
-                        <select class="form-control" name="online">
+                        <select class="form-control" name="Online">
                             <option value="是">是</option>
                             <option value="否">否</option>
                         </select>
@@ -173,6 +183,39 @@
                     提交更改
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="comment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    评论课程
+                </h4>
+            </div>
+            <form class="form-group comment-form">
+                <div class="modal-body">
+                    <ul class="list-group show-comment">
+                    </ul>
+                    <div>
+                        <textarea class="form-control" placeholder="写下你的评论" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="submit" id="comment-submit" class="btn btn-primary">
+                        发表评论
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

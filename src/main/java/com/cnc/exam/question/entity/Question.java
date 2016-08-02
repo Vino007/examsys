@@ -31,7 +31,7 @@ public class Question extends BaseEntity<Long>{
 	 * 题干图片url
 	 */
 	@Column(name="content_img_url",length=255)
-	private String contentImgageUrl="";
+	private String contentImageUrl="";
 	/**
 	 * 选项
 	 */
@@ -71,6 +71,7 @@ public class Question extends BaseEntity<Long>{
 	@JSONField(serialize=false)
 	@ManyToMany(targetEntity=Exam.class,mappedBy="questions")
 	private List<Exam> exams=new ArrayList<Exam>();
+	
 	
 	
 	public String getChoices() {
@@ -116,13 +117,14 @@ public class Question extends BaseEntity<Long>{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getContentImgageUrl() {
-		return contentImgageUrl;
-	}
-	public void setContentImgageUrl(String contentImgageUrl) {
-		this.contentImgageUrl = contentImgageUrl;
-	}
+
 	
+	public String getContentImageUrl() {
+		return contentImageUrl;
+	}
+	public void setContentImageUrl(String contentImageUrl) {
+		this.contentImageUrl = contentImageUrl;
+	}
 	public List<Exam> getExams() {
 		return exams;
 	}

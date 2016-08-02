@@ -47,7 +47,11 @@ public class Exam extends BaseEntity<Long>{
 	private Integer questionNumber;//题目数量
 	
 	@Column(name="exam_url",length=200)
-	private String examUrl;//考试链接
+	private String examUrl;//正式考试链接
+	
+	//模拟考链接
+	@Column(name="mock_exam_url",length=200)
+	private String mockExamUrl;
 	
 	//所属课程
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -59,7 +63,12 @@ public class Exam extends BaseEntity<Long>{
 	@ManyToMany(targetEntity=Question.class,fetch=FetchType.LAZY)
 	@JoinTable(name="t_exam_question",joinColumns=@JoinColumn(name="exam_id"),inverseJoinColumns=@JoinColumn(name="question_id"))
 	private List<Question> questions=new ArrayList<>();
-
+	
+	//模拟题
+	@JSONField(serialize=false)
+	@ManyToMany(targetEntity=Question.class,fetch=FetchType.LAZY)
+	@JoinTable(name="t_exam_mock_question",joinColumns=@JoinColumn(name="exam_id"),inverseJoinColumns=@JoinColumn(name="question_id"))
+	private List<Question> mockQuestions=new ArrayList<>();
 
 	@JSONField(serialize=false)
 	@OneToMany(mappedBy = "exam")
@@ -146,6 +155,22 @@ public class Exam extends BaseEntity<Long>{
 
 	public void setCourse(Course course) {
 		this.course = course;
+	}
+
+	public String getMockExamUrl() {
+		return mockExamUrl;
+	}
+
+	public void setMockExamUrl(String mockExamUrl) {
+		this.mockExamUrl = mockExamUrl;
+	}
+
+	public List<Question> getMockQuestions() {
+		return mockQuestions;
+	}
+
+	public void setMockQuestions(List<Question> mockQuestions) {
+		this.mockQuestions = mockQuestions;
 	}
 	
 	

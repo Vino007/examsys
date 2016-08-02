@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>开始考试</title>
+    <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/css/base.css">
+    <style>
+        #exam-list img {
+            max-width: 980px;
+        }
+
+        #countdown {
+            position: fixed;
+            right: 100px;
+            bottom: 100px;
+            font-size: 24px;
+            width: 160px;
+            height: 80px;
+            line-height: 80px;
+            text-align: center;
+            background: rgb(221, 221, 221);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                开始考试
+            </h3>
+        </div>
+        <div class="panel-body">
+            <form>
+                <ul id="exam-list" class="list-group">
+                </ul>
+                <button class="btn btn-primary btn-lg" type="submit">交卷</button>
+            </form>
+        </div>
+    </div>
+    <div id="countdown"></div>
+</div>
+
+<script src="resources/js/jquery-2.2.4.min.js"></script>
+<script src="resources/bootstrap/js/bootstrap.min.js"></script>
+<script src="resources/js/jquery.twbsPagination.min.js"></script>
+<script src="resources/js/jquery.countdown.min.js"></script>
+<script src="resources/js/share.js"></script>
+<script src="resources/js/startExam.js"></script>
+</body>
+</html>
