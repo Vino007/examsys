@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhangyn on 2016/7/26.
@@ -141,10 +138,9 @@ public class CourseCategoryController extends BaseController{
     }
 
     @ResponseBody
-    @RequiresPermissions("category:view")
     @RequestMapping(value = "/showCourses", method = RequestMethod.GET)
     public Map<String, Object> showCateCourses(Model model, Long id) {
-        List<Course> courseList = courseCategoryService.findCoursesByCatID(id);
+        Set<Course> courseList = courseCategoryService.findCoursesByCatID(id);
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
         data.put("courses", courseList);

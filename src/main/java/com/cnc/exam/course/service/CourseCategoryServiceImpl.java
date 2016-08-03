@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhangyn on 2016/7/26.
@@ -51,7 +52,7 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
         CourseCategory courseCategory;
         for (Long id : ids) {
             courseCategory = courseCategoryRepository.findOne(id);
-            List<Course> courses = courseCategory.getCourses();
+            Set<Course> courses = courseCategory.getCourses();
             if (courses.size() != 0) {
                 for (Course course : courses) {
                     courseRepository.findByCourseName(course.getCourseName()).setCourseCategory(null);
@@ -100,7 +101,7 @@ public class CourseCategoryServiceImpl extends AbstractBaseServiceImpl<CourseCat
     }
 
     @Override
-    public List<Course> findCoursesByCatID(Long catId) {
+    public Set<Course> findCoursesByCatID(Long catId) {
         CourseCategory courseCategory = courseCategoryRepository.findOne(catId);
         return courseCategory.getCourses();
     }

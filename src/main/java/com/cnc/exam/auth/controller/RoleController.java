@@ -185,7 +185,7 @@ public class RoleController extends BaseController{
 		List<CourseCategory> categories = courseCategoryService.findAll();
 		data.put("availableCategories", categories);
 		resultMap.put("data", data);
-		resultMap.put("successs", true);
+		resultMap.put("success", true);
 		return resultMap;
 	}
 

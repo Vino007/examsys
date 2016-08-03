@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by zhangyn on 2016/7/26.
@@ -23,5 +24,5 @@ public interface CourseCategoryService extends BaseService<CourseCategory,Long> 
                                                   Pageable pageable);
     CourseCategory findByName(String name);
 
-    List<Course> findCoursesByCatID(Long catId);
+    Set<Course> findCoursesByCatID(Long catId);
 }
