@@ -3,6 +3,7 @@
  */
 $(document).ready(function () {
     var allRoles = [];
+
     var allDepts = [];
 
     var initObj = {

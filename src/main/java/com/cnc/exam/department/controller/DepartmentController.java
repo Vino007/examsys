@@ -7,6 +7,7 @@ import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.department.entity.Department;
 import com.cnc.exam.department.exception.DeptDuplicateException;
 import com.cnc.exam.department.service.DepartmentService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,7 @@ public class DepartmentController extends BaseController {
     private DepartmentService departmentService;
 
     @ResponseBody
+    @RequiresPermissions("department:menu")
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public Map<String, Object> getDepartmentByCondition(Model model, User user, @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
         Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
@@ -45,6 +47,7 @@ public class DepartmentController extends BaseController {
     }
 
     @ResponseBody
+    @RequiresPermissions("department:create")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Map<String, Object> addDepartment(Model model, Department department, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
@@ -66,6 +69,7 @@ public class DepartmentController extends BaseController {
     }
 
     @ResponseBody
+    @RequiresPermissions("department:delete")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Map<String, Object> deleteDepartment(Model model, @RequestParam("deleteIds[]") Long[] deleteIds) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -83,6 +87,7 @@ public class DepartmentController extends BaseController {
     }
 
     @ResponseBody
+    @RequiresPermissions("department:update")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Map<String, Object> updateDepartment(Model model, Department department) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -104,7 +109,7 @@ public class DepartmentController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value = "/showUsers", method = RequestMethod.GET)
-    public Map<String, Object> showCateCourses(Model model, Long id) {
+    public Map<String, Object> showDeptUsers(Model model, Long id) {
         List<User> users = departmentService.findUserByDeptId(id);
         Map<String, Object> resultMap = new HashMap<>();
         Map<String, Object> data = new HashMap<>();
