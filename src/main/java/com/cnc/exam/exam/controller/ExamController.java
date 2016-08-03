@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.servlet.ServletRequest;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cnc.exam.auth.constant.Constants;
 import com.cnc.exam.auth.entity.User;
+import com.cnc.exam.auth.service.UserService;
 import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.common.MyPage;
@@ -48,6 +50,8 @@ public class ExamController extends BaseController{
 	@Autowired
 	private CourseService courseService;
 	@Autowired
+	private UserService userService;
+	@Autowired
 	private LogsService logsService;
 	@ResponseBody
 	@RequiresPermissions("exam:menu")
@@ -56,32 +60,77 @@ public class ExamController extends BaseController{
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
 			@RequestParam(value = "page.size", defaultValue = Constants.PAGE_SIZE + "") int pageSize,
 			@RequestParam(value = "sortType", defaultValue = "auto") String sortType) {
-		Page<Exam> examPage = examService.findAll(buildPageRequest(pageNumber));
-
+		
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		data.put("page", examPage);
+		int flag= 0 ;
+		Subject curUser=SecurityUtils.getSubject();
+		Session session=curUser.getSession();	
+		User currentUser = (User) session.getAttribute(Constants.CURRENT_USER);
+		if(null==currentUser){
+			return null;
+		}
+		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
+		
+		for(String item : allPermission){
+			if("exam:viewAll".equals(item)){
+				flag=1;
+				Page<Exam> 	examPage=examService.findAll(buildPageRequest(pageNumber));
+				data.put("page", examPage);
+				break;						
+			}
+					
+		}
+		if(flag==0){
+			MyPage<ExamJson> examPage=examService.findExamByUser(currentUser.getId(),buildPageRequest(pageNumber));
+			data.put("page", examPage);
+		}
+									
 		resultMap.put("data", data);
 		resultMap.put("success", true);
 		return resultMap;
 	}
 
 	@ResponseBody
-	@RequiresPermissions("exam:viewAll")
+	@RequiresPermissions("exam:viewOwn")
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public Map<String, Object> getExamsByCondition(Exam exam,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
-		Page<Exam> examPage = examService.findExamByCondition(searchParams, buildPageRequest(pageNumber));
+		
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		data.put("page", examPage);
+		
+		int flag= 0 ;
+		Subject curUser=SecurityUtils.getSubject();
+		Session session=curUser.getSession();	
+		User currentUser = (User) session.getAttribute(Constants.CURRENT_USER);
+		if(null==currentUser){
+			return null;
+		}
+		
+		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
+		
+		for(String item : allPermission){
+			if("exam:viewAll".equals(item)){
+				flag=1;
+				Page<Exam> examPage = examService.findExamByCondition(searchParams, buildPageRequest(pageNumber));
+				data.put("page", examPage);
+				break;						
+			}
+					
+		}
+		if(flag==0){
+			MyPage<ExamJson> examPage=examService.findExamByUser(currentUser.getId(),buildPageRequest(pageNumber));
+			data.put("page", examPage);
+		}
+										
 		resultMap.put("data", data);
 		resultMap.put("success", true);
 		return resultMap;
 	}
 	@ResponseBody
-	@RequiresPermissions("exam:viewAll")
+	@RequiresPermissions("exam:viewOwn")
 	@RequestMapping(value = "/find", method = RequestMethod.GET)
 	public Map<String, Object> findById(Long id) {
 		Map<String, Object> resultMap = new HashMap<>();

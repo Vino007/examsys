@@ -85,7 +85,6 @@ $(document).ready(function () {
                 });
             }
             var createTime = toDateStr(value.createTime);
-           // var createTime = "2014";
             var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.name + '</td><td>' + value.description + '</td><td>' + coursecat + '</td><td>' + createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind-resource"data-toggle="modal"data-target="#bind-resource">绑定资源</button></td><td><button class="btn btn-primary form-control bind-coursecat"data-toggle="modal"data-target="#bind-coursecat">绑定课程分类</button></td></tr>';
             $('#main-table').append(tr);
         });

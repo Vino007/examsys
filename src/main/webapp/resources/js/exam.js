@@ -13,7 +13,7 @@ $(document).ready(function () {
     $('.add-form').submit(function (e) {
         e.preventDefault();
         var submitData = $('.add-form').serializeArray();
-        opADU(courseAdd, submitData);
+        opADU(examAdd, submitData);
     });
 
     /*add end*/
@@ -43,7 +43,7 @@ $(document).ready(function () {
         $('#edit-submit').attr('data-id', $(that).parents().siblings('td').eq(0).children().val());
     });
 
-    //submit edit user
+    //submit edit
     $('#edit-submit').click(function () {
         var submitData = $('.edit-form').serializeArray();
         var id = $(this).attr('data-id');
@@ -53,13 +53,13 @@ $(document).ready(function () {
         };
         submitData.push(idObj);
 
-        opADU(courseUpdate, submitData);
+        opADU(examUpdate, submitData);
     });
 
     /*edit end*/
 
     /*search start*/
-    //search user
+    //search
     $('#search').click(function () {
         var search = $(this).siblings('input').val();
         var onlineOpt = ($('.is-online').length && $('.is-online').val() != 'true') ? ($('.is-online').val() ? false : '') : true;
@@ -89,7 +89,7 @@ $(document).ready(function () {
     //type choose
     $(document).on('click', '.bind', function () {
         var examId = $(this).parents().siblings('td').eq(0).children().val();
-        var courseId = $(this).parents().siblings('td').eq(1).text();
+        var courseId = $(this).parents().siblings('td').eq(1).attr('data-id');
         $('#bind-mock-btn').attr('href', 'examBindQuestion.html?examId=' + examId + '&courseId=' + courseId + '&isMock=true');
         $('#bind-formal-btn').attr('href', 'examBindQuestion.html?examId=' + examId + '&courseId=' + courseId + '&isMock=false');
     });
@@ -109,7 +109,7 @@ $(document).ready(function () {
         $.each(data.data.page.content, function (key, value) {
             startTime = toDateStr(value.startTime);
             endTime = toDateStr(value.endTime);
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.course.id + '</td><td>' + value.course.courseName + '</td><td data-id="' + (value.courseCategory == null ? '' : value.courseCategory.id) + '">' + (value.courseCategory == null ? "未分类" : value.courseCategory.coursecatName) + '</td><td>' + startTime + '</td><td>' + endTime + '</td><td>' + value.passLine + '</td><td>' + value.questionNumber + '</td><td><button class="btn btn-primary form-control start-exam" data-id="' + value.id + '"data-toggle="modal"data-target="#start-exam">开始考试</button></td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind"data-toggle="modal"data-target="#bind-question">绑定考题</button></td><td><button class="btn btn-primary form-control user">参考人员</button></td></tr>';
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td data-id="' + (value.course.id != null ? value.course.id : value.exam.course.id) + '">' + (value.course.courseName != null ? value.course.courseName : value.exam.course.courseName) + '</td><td data-id="' + (value.courseCategory == null ? '' : value.courseCategory.id) + '">' + (value.courseCategory == null ? "未分类" : value.courseCategory.coursecatName) + '</td><td>' + startTime + '</td><td>' + endTime + '</td><td>' + value.passLine + '</td><td>' + value.questionNumber + '</td><td><button class="btn btn-primary form-control start-exam" data-id="' + value.id + '"data-toggle="modal"data-target="#start-exam">开始考试</button></td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind"data-toggle="modal"data-target="#bind-question">绑定考题</button></td><td><button class="btn btn-primary form-control user">参考人员</button></td></tr>';
             $('#main-table').append(tr);
         });
     }

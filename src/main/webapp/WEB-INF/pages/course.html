@@ -25,10 +25,10 @@
                 <button id="cate-mgr" class="btn btn-primary">课程分类管理</button>
             </div>
         </div>
-        <div class="content-header">
+        <div class="content-header" data-permission>
             <div class="form-group">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#add">新增课程</button>
-                <button id="delete-multiple" class="btn btn-danger">删除课程</button>
+                <button data-permission="course:create" class="btn btn-primary" data-toggle="modal" data-target="#add">新增课程</button>
+                <button data-permission="course:delete" id="delete-multiple" class="btn btn-danger">删除课程</button>
             </div>
         </div>
         <table id="main-table" class="table table-bordered table-striped">
@@ -44,7 +44,7 @@
                 <th>在线资料</th>
                 <th>是否在线</th>
                 <th>评论</th>
-                <th>管理</th>
+                <th data-permission="course:update">管理</th>
             </tr>
         </table>
         <ul id="pagination" class="pagination"></ul>

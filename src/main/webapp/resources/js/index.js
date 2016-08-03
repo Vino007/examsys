@@ -3,11 +3,11 @@
  */
 $(document).ready(function () {
     //user.json
-    var usr = sessionStorage.getItem('username');
+    var usr = localStorage.getItem('username');
     $('.usr-info span').eq(1).text(usr);
 
     //get left-nav items
-    var sessionData = JSON.parse(sessionStorage.getItem('data'));
+    var sessionData = JSON.parse(localStorage.getItem('data'));
     $.each(sessionData.data.menuPermissions, function (key, value) {
         var li = '<li><a href="' + value.url + '" target="body-content">' + value.name + '</a></li>';
         $('.left-nav-list').append(li);

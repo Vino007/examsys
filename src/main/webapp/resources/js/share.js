@@ -78,7 +78,7 @@ var examAll = {'url': 'exam/all', 'type': 'GET'},
     examUpdate = {'url': 'exam/update', 'type': 'POST'},
     examBindQuestion = {'url': 'exam/bindQuestion', 'type': 'POST'},
     examBindMockQuestion = {'url': 'exam/bindMockQuestion', 'type': 'POST'},
-    examFindUser = {'url': 'exam/findUser', 'type': 'POST'},
+    examFindUser = {'url': 'exam/findUser', 'type': 'GET'},
     examUpdateUserStatus = {'url': 'exam/updateUserStatus', 'type': 'POST'},
     examAddUser = {'url': 'exam/addUser', 'type': 'POST'},
     examRemoveUser = {'url': 'exam/RemoveUser', 'type': 'POST'},
@@ -95,67 +95,101 @@ var
     examResultSearch = {'url': 'examresult/search', 'type': 'GET'},
     examResultAdd = {'url': 'examresult/add', 'type': 'POST'},
     examResultDelete = {'url': 'examresult/delete', 'type': 'POST'},
-    examResultUpdate = {'url': 'examresult/update', 'type': 'POST'};
+    examResultUpdate = {'url': 'examresult/update', 'type': 'POST'},
+    examResultDownload = {'url': 'examresult/download', 'type': 'GET'},
+    examResultDownloadSpecial = {'url': 'examresult/downloadspecial', 'type': 'GET'},
+    examResultGetSituation = {'url': 'examresult/getsituation', 'type': 'GET'};
 
 //logs
 var
-    logsAll = {'url': 'logs/all', 'type': 'GET'};
+    logsAll = {'url': '/logs/all', 'type': 'GET'};
+logsSearch = {'url': '/logs/search', 'type': 'GET'};
 
 //resources
-var resourcesTree = {'url': 'resource/resourceTree', 'type': 'GET'};
+var resourcesTree = {'url': '/resource/resourceTree', 'type': 'GET'};
 
 
-/*//url rewrite
+//url rewrite
+/*
 courseSearch = {'url': '../mock/courseSearch.json', 'type': 'GET'};
-courseGetAllCat = {'url': '../mock/coursePreSetCate.json', 'type': 'GET'};
-courseShowMsg = {'url': '../mock/courseShowMsg.json', 'type': 'GET'};
-courseAddMsg = {'url': '../mock/courseAddMsg.json', 'type': 'POST'};
-courseGetCourseQues = {'url': '../mock/courseGetCourseQues.json', 'type': 'GET'};
-coursecatShowCourses = {'url': '../mock/courseShowCourses.json', 'type': 'GET'};
+ courseGetAllCat = {'url': '../mock/coursePreSetCate.json', 'type': 'GET'};
+ courseShowMsg = {'url': '../mock/courseShowMsg.json', 'type': 'GET'};
+ courseAddMsg = {'url': '../mock/courseAddMsg.json', 'type': 'POST'};
+ courseGetCourseQues = {'url': '../mock/courseGetCourseQues.json', 'type': 'GET'};
+ coursecatShowCourses = {'url': '../mock/courseShowCourses.json', 'type': 'GET'};
 
-coursecatSearch = {'url': '../mock/coursecatSearch.json', 'type': 'GET'};
-courseGetAllCat = {'url': '../mock/coursePreSetCate.json', 'type': 'GET'};
+ coursecatSearch = {'url': '../mock/coursecatSearch.json', 'type': 'GET'};
+ courseGetAllCat = {'url': '../mock/coursePreSetCate.json', 'type': 'GET'};
 
-roleAll = {'url': '../mock/roleAll.json', 'type': 'GET'};
-roleSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
-roleUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
-roleAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
-roleDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
-roleBind = {'url': '../mock/roleBind.json', 'type': 'POST'};
-roleGetAllCat = {'url': '../mock/roleGetAllCat.json', 'type': 'GET'};
-roleBindCats = {'url': '../mock/roleBind.json', 'type': 'POST'};
+ roleAll = {'url': '../mock/roleAll.json', 'type': 'GET'};
+ roleSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
+ roleUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
+ roleAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
+ roleDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
+ roleBind = {'url': '../mock/roleBind.json', 'type': 'POST'};
+ roleGetAllCat = {'url': '../mock/roleGetAllCat.json', 'type': 'GET'};
+ roleBindCats = {'url': '../mock/roleBind.json', 'type': 'POST'};
 
-userAll = {'url': '../mock/userpage.json', 'type': 'GET'};
-userSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
-userUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
-userAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
-userDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
-userGetAllRoles = {'url': '../mock/userGetAllRoles.json', 'type': 'GET'};
-userGetAllDepts = {'url': '../mock/userGetAllDepts.json', 'type': 'GET'};
+ userAll = {'url': '../mock/userpage.json', 'type': 'GET'};
+ userSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
+ userUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
+ userAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
+ userDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
+ userGetAllRoles = {'url': '../mock/userGetAllRoles.json', 'type': 'GET'};
+ userGetAllDepts = {'url': '../mock/userGetAllDepts.json', 'type': 'GET'};
 
-questionAll = {'url': '../mock/questionAll.json', 'type': 'GET'};
+ questionAll = {'url': '../mock/questionAll.json', 'type': 'GET'};
 
-departmentSearch = {'url': '../mock/departmentSearch.json', 'type': 'GET'};
-departmentShowUsers = {'url': '../mock/departmentShowUsers.json', 'type': 'GET'};
+ departmentSearch = {'url': '../mock/departmentSearch.json', 'type': 'GET'};
+ departmentShowUsers = {'url': '../mock/departmentShowUsers.json', 'type': 'GET'};
 
-examAll = {'url': '../mock/examAll.json', 'type': 'GET'};
-examFindUser = {'url': '../mock/examFindUser.json', 'type': 'POST'};
-examFindQuestions = {'url': '../mock/examFindQuestions.json', 'type': 'GET'};
-examFindMockQuestions = {'url': '../mock/examFindQuestions.json', 'type': 'GET'};
-examSubmit = {'url': '../mock/examSubmit.json', 'type': 'POST'};
-examBindQuestion = {'url': '../mock/examBindQuestion.json', 'type': 'POST'};
-examBindMockQuestion = {'url': '../mock/examBindQuestion.json', 'type': 'POST'};
-examPrepareBindQuestion = {'url': '../mock/examPrepareBindQuestion.json', 'type': 'GET'};
-examPrepareBindMockQuestion = {'url': '../mock/examPrepareBindQuestion.json', 'type': 'GET'};
+ examAll = {'url': '../mock/examAll.json', 'type': 'GET'};
+ examFindUser = {'url': '../mock/examFindUser.json', 'type': 'GET'};
+ examFindQuestions = {'url': '../mock/examFindQuestions.json', 'type': 'GET'};
+ examFindMockQuestions = {'url': '../mock/examFindQuestions.json', 'type': 'GET'};
+ examSubmit = {'url': '../mock/examSubmit.json', 'type': 'POST'};
+ examBindQuestion = {'url': '../mock/examBindQuestion.json', 'type': 'POST'};
+ examBindMockQuestion = {'url': '../mock/examBindQuestion.json', 'type': 'POST'};
+ examPrepareBindQuestion = {'url': '../mock/examPrepareBindQuestion.json', 'type': 'GET'};
+ examPrepareBindMockQuestion = {'url': '../mock/examPrepareBindQuestion.json', 'type': 'GET'};
 
-examResultSearch = {'url': '../mock/examResultSearch.json', 'type': 'GET'};
+ examResultSearch = {'url': '../mock/examResultSearch.json', 'type': 'GET'};
+ examResultGetSituation = {'url': '../mock/examResultGetSituation.json', 'type': 'GET'};
 
-logsAll = {'url': '../mock/logsAll.json', 'type': 'GET'};
+ logsAll = {'url': '../mock/logsAll.json', 'type': 'GET'};
 
-roleGetResourceTree = {'url': '../mock/ztree.json', 'type': 'GET'};*/
+ roleGetResourceTree = {'url': '../mock/ztree.json', 'type': 'GET'};*/
 /*url end*/
 
+/*permission control start*/
+function permissionControl() {
+    var btnPermission = (JSON.parse(localStorage.getItem('data'))).data.buttonPermissions;
+    var existPermission = [];
+    $.each($('[data-permission]'), function (key, value) {
+        existPermission.push($(value).attr('data-permission'));
+    });
+    $.each(btnPermission, function (key, value) {
+        if (jQuery.inArray(value.permission, existPermission) != -1) {
+            $('[data-permission=' + value.permission + ']').removeAttr('data-permission');
+        }
+    });
+    //if table
+    $.each($('[data-permission]'), function (key, value) {
+        if ($(value).get(0).tagName == 'th') {
+            var index = $(value).index();
+            $('#main-table tr:nth-child(' + index + ')').remove();
+        } else {
+            $(value).remove();
+        }
+    });
+}
+
+/*permission control end*/
+
 $(document).ready(function () {
+
+
+
     //checkbox select all
     $(document).on('change', '[name=check-all]', function () {
         if ($(this).prop('checked')) {
@@ -246,15 +280,17 @@ function init(initObj) {
                 totalPages: totalPages,
                 visiblePages: visiblePages,
                 onPageClick: function (event, page) {
+                    initObj.data['pageNumber'] = page;
                     $.ajax({
                         url: initObj.urlObj.url,
                         async: true,
                         type: initObj.urlObj.type,
-                        data: {"pageNumber": page},
+                        data: initObj.data,
                         dataType: 'json'
                     }).done(function (data) {
                         if (data.success) {
                             initObj.resetTable(data);
+                            // permissionControl();
                         }
                     });
                 }

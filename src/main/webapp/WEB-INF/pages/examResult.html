@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="resources/css/base.css">
     <link rel="stylesheet" href="resources/css/index.css">
+    <style>
+        .margin {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -16,14 +21,22 @@
                 <input name="search_coursename" class="form-control input-group" type="text" placeholder="课程名">
                 <input name="search_deptName" class="form-control input-group" type="text" placeholder="部门名">
                 <input name="search_score" class="form-control input-group" type="text" placeholder="分数">
-                <input name="search_createTime" class="form-control input-group" type="text" placeholder="时间(yyyy-MM-dd HH:mm:ss)">
-                <button id="search" class="btn btn-primary">搜索成绩</button>
+                <input name="search_createTime" class="form-control input-group" type="text"
+                       placeholder="时间(yyyy-MM-dd HH:mm:ss)">
+                <button id="search" class="btn btn-primary margin">搜索成绩</button>
+            </div>
+            <div class="form-group form-inline margin">
+                <input id="situation-course-id" class="form-control" placeholder="课程id">
+                <button id="result-situation" class="btn btn-primary" data-toggle="modal" data-target="#situation">
+                    考试情况查询
+                </button>
             </div>
         </div>
         <div class="content-header">
             <div class="form-group">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#add">新增成绩</button>
-                <button id="delete-multiple" class="btn btn-danger">删除成绩</button>
+                <button data-permission="examResult:create" class="btn btn-primary" data-toggle="modal" data-target="#add">新增成绩</button>
+                <button data-permission="examResult:delete" id="delete-multiple" class="btn btn-danger">删除成绩</button>
+                <button data-permission="examResult:export" id="export-result" class="btn btn-primary">导出成绩</button>
             </div>
         </div>
         <table id="main-table" class="table table-bordered table-striped">
@@ -37,7 +50,7 @@
                 <th>分数</th>
                 <th>时间</th>
                 <th>是否通过</th>
-                <th>管理</th>
+                <th data-permission="examResult:update">管理</th>
             </tr>
         </table>
         <ul id="pagination" class="pagination"></ul>
@@ -152,6 +165,40 @@
                 </button>
                 <button type="button" id="edit-submit" class="btn btn-primary">
                     提交更改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="situation">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    考试情况
+                </h4>
+            </div>
+            <div class="modal-body">
+                <table id="situation-table" class="table table-bordered table-striped">
+                    <tr>
+                        <th>成绩id</th>
+                        <th>通过人数</th>
+                        <th>未通过人数</th>
+                        <th>总人数</th>
+                        <th>通过率</th>
+                        <th>时间</th>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">关闭
                 </button>
             </div>
         </div>

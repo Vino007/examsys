@@ -14,14 +14,13 @@
         </div>
         <div class="content-header">
             <div class="form-group">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#add">新增考试</button>
-                <button id="delete-multiple" class="btn btn-danger">删除考试</button>
+                <button data-permission="exam:create" class="btn btn-primary" data-toggle="modal" data-target="#add">新增考试</button>
+                <button data-permission="exam:delete" id="delete-multiple" class="btn btn-danger">删除考试</button>
             </div>
         </div>
         <table id="main-table" class="table table-bordered table-striped">
             <tr>
                 <th><input type="checkbox" name="check-all"></th>
-                <th>课程id</th>
                 <th>课程名称</th>
                 <th>课程分类</th>
                 <th>开始时间</th>
@@ -29,9 +28,9 @@
                 <th>及格线</th>
                 <th>题数</th>
                 <th>开始考试</th>
-                <th>管理</th>
-                <th>绑定考题</th>
-                <th>参考人员</th>
+                <th data-permission="exam:update">管理</th>
+                <th data-permission="exam:bindQuestion">绑定考题</th>
+                <th data-permission="exam:update">参考人员</th>
             </tr>
         </table>
         <ul id="pagination" class="pagination"></ul>

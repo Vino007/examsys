@@ -315,7 +315,7 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 	public ExamResultEntity judgeExam(Long userId,Long examId, String[] performances,boolean isMock) throws UserStatusErrorException {
 		Exam exam=examRepository.findOne(examId);
 		User user=userRepository.findOne(userId);
-		if(examRepository.findUserStatus(examId, userId)!=1){
+		if(examRepository.findUserStatus(examId, userId)==null||examRepository.findUserStatus(examId, userId)!=1){
 			throw new UserStatusErrorException();
 		}
 		List<Question> questions=exam.getQuestions();

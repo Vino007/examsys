@@ -75,6 +75,38 @@ $(document).ready(function () {
 
     /*search end*/
 
+    //situation
+    $('#result-situation').click(function () {
+        var courseId = $('#situation-course-id').val();
+        $.ajax({
+            url: examResultGetSituation.url,
+            type: examResultGetSituation.type,
+            dataType: 'json',
+            data: {'courseId': courseId}
+        }).done(function (data) {
+            if (data.success) {
+                $.each(data.data, function (key, value) {
+                    var time = toDateStr(value.time);
+                    var tr = '<tr><td>' + value.examId + '</td><td>' + value.passCount + '</td><td>' + value.unpassCount + '</td><td>' + value.total + '</td><td>' + value.passPercent + '</td><td>' + time + '</td></tr>';
+                    $('#situation-table').append(tr);
+                });
+            }
+        });
+    });
+
+    //export result
+    $('#export-result').click(function () {
+        var ids = getCheckedIds();
+        var url = examResultDownloadSpecial;
+        $.ajax({
+            url: url.url,
+            type: url.type,
+            data: {'ids': ids}
+        }).done(function () {
+            window.open('/download');
+        });
+    });
+
     function resetTable(data) {
         $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {

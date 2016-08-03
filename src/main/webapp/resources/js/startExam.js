@@ -99,7 +99,7 @@ $(document).ready(function () {
                 performances.push($('[name=' + (key + 1) + ']').val());
             }
         });
-        var userId = sessionStorage.getItem('userId');
+        var userId = localStorage.getItem('userId');
         var submitData = {
             'userId': userId,
             'examId': examId,
@@ -116,7 +116,7 @@ $(document).ready(function () {
             dataType: 'json'
         }).done(function (data) {
             if (data.success) {
-                $('#exam-form button[type=submit]').remove();
+                $('#exam-form #submit-paper').remove();
                 $('#countdown').remove();
                 alert(data.msg);
                 $('#score-result').val(data.data.score);
@@ -137,14 +137,5 @@ $(document).ready(function () {
             }
         });
     })
-
-
-    function resetTable(data) {
-        $('#main-table tr + tr').remove();
-        $.each(data.data.page.content, function (key, value) {
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.course.id + '</td><td>' + value.course.courseName + '</td><td data-id="' + (value.courseCategory == null ? '' : value.courseCategory.id) + '">' + (value.courseCategory == null ? "未分类" : value.courseCategory.coursecatName) + '</td><td>' + value.startTime + '</td><td>' + value.endTime + '</td><td>' + value.passLine + '</td><td>' + value.questionNumber + '</td><td><button class="btn btn-primary form-control start-exam" data-id="' + value.id + '"data-toggle="modal"data-target="#start-exam">开始考试</button></td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind"data-toggle="modal"data-target="#bind">绑定考题</button></td><td><button class="btn btn-primary form-control user">参考人员</button></td></tr>';
-            $('#main-table').append(tr);
-        });
-    }
 
 });

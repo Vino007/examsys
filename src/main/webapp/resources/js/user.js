@@ -3,8 +3,6 @@
  */
 $(document).ready(function () {
     var allRoles = [];
-
-
     var allDepts = [];
 
     var initObj = {
@@ -102,12 +100,12 @@ $(document).ready(function () {
     /*search start*/
     //search user
     $('#search').click(function () {
-        var search = [];
-        search = $(this).siblings('input').val().split(',');
+        var search = $(this).siblings('input').val().split(',');
         var searchArgs = {
             'search_username': search[0] == undefined ? '' : search[0],
-            'search_user': search[1] == undefined ? '' : search[1]
+            'search_name': search[1] == undefined ? '' : search[1]
         };
+        console.log(searchArgs);
         var initObj = {
             urlObj: userSearch,
             data: searchArgs,
@@ -135,12 +133,14 @@ $(document).ready(function () {
                 $('#main-table tr + tr').remove();
                 $.each(data.data.users, function (key, value) {
                     var roles = '';
-                    if (value.roles.length == 1) {
-                        roles += value.roles[0].description;
-                    } else {
-                        $.each(value.roles, function (k, v) {
-                            roles += v.description + ',';
-                        });
+                    if (value.roles != null) {
+                        if (value.roles.length == 1) {
+                            roles += value.roles[0].description;
+                        } else {
+                            $.each(value.roles, function (k, v) {
+                                roles += v.description + ',';
+                            });
+                        }
                     }
                     var createTime = toDateStr(value.createTime);
                     var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td><td>' + createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
