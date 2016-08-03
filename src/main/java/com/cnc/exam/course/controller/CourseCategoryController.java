@@ -11,6 +11,7 @@ import com.cnc.exam.course.exception.CourseCategoryDuplicateException;
 import com.cnc.exam.course.service.CourseCategoryService;
 import com.cnc.exam.log.entity.LogsEntity;
 import com.cnc.exam.log.service.LogsService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -42,7 +43,7 @@ public class CourseCategoryController extends BaseController{
     private UserService userService;
 
     @ResponseBody
-//    @RequiresPermissions("coursecat:menu")
+    @RequiresPermissions("category:menu")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Map<String, Object> getALLCategories(Model model, @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber) {
         Page<CourseCategory> categoryPage = courseCategoryService.findAll(buildPageRequest(pageNumber));
@@ -68,7 +69,7 @@ public class CourseCategoryController extends BaseController{
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:create")
+    @RequiresPermissions("category:create")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Map<String, Object> addCourseCate(Model model, CourseCategory category, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
@@ -93,6 +94,7 @@ public class CourseCategoryController extends BaseController{
     }
 
     @ResponseBody
+    @RequiresPermissions("category:delete")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Map<String, Object> deleteCourseCate(Model model, @RequestParam("deleteIds[]") Long[] deleteIds, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
@@ -114,7 +116,7 @@ public class CourseCategoryController extends BaseController{
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:update")
+    @RequiresPermissions("category:update")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Map<String, Object> updateCourseCate(Model model, CourseCategory category, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
@@ -139,7 +141,7 @@ public class CourseCategoryController extends BaseController{
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
+    @RequiresPermissions("category:view")
     @RequestMapping(value = "/showCourses", method = RequestMethod.GET)
     public Map<String, Object> showCateCourses(Model model, Long id) {
         List<Course> courseList = courseCategoryService.findCoursesByCatID(id);

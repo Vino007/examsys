@@ -48,7 +48,7 @@ public class CourseController extends BaseController {
     private LogsService logsService;
 
     @ResponseBody
-//    @RequiresPermissions("course:menu")
+    @RequiresPermissions("course:menu")
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public Map<String, Object> getALLCourses(Model model, @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber) {
         Page<Course> coursePage = courseService.findAll(buildPageRequest(pageNumber));
@@ -61,7 +61,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:view")
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public Map<String, Object> getCoursesByCondition(Model model, User user, @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
         Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
@@ -75,7 +74,7 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:create")
+    @RequiresPermissions("course:create")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Map<String, Object> addCourse(Model model, Course course, Long categoryId, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
@@ -107,7 +106,7 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:delete")
+    @RequiresPermissions("course:delete")
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public Map<String, Object> deleteCourse(Model model, @RequestParam("deleteIds[]") Long[] deleteIds, HttpSession session) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -146,7 +145,7 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:update")
+    @RequiresPermissions("course:update")
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Map<String, Object> updateCourse(Model model, Course course, Long categoryId, HttpSession session) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -180,7 +179,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:view")
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public Map<String, Object> findCourse(Model model, Long id) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -192,7 +190,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
     @RequestMapping(value = "/addMsg", method = RequestMethod.POST)
     public Map<String, Object> addCourseMsg(Model model, CourseMessage courseMessage, @RequestParam("courseId") Long courseId, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
@@ -209,7 +206,7 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
+    @RequiresPermissions("course:viewMessage")
     @RequestMapping(value = "/showMsg", method = RequestMethod.GET)
     public Map<String, Object> showCourseMsg(Model model, Long id, HttpSession session) {
         User curUser = (User) session.getAttribute(Constants.CURRENT_USER);
@@ -226,7 +223,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
     @RequestMapping(value = "/getAllCat", method = RequestMethod.GET)
     public Map<String, Object> getAllCategory(Model model) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -239,7 +235,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
     @RequestMapping(value = "/preSetCate", method = RequestMethod.GET)
     public Map<String, Object> prepareSetCategory(Model model, Long id) {
         Course curCourse = courseService.findOne(id);
@@ -255,7 +250,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
     @RequestMapping(value = "/setCate", method = RequestMethod.GET)
     public Map<String, Object> setCategory(Model model, Long courseId, Long categoryId) {
         courseService.setCourseCategory(courseId, categoryId);
@@ -268,7 +262,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
     @RequestMapping(value = "/setOffLine", method = RequestMethod.POST)
     public Map<String, Object> setOffLine(Model model, @RequestParam("ids[]") Long[] ids) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -281,7 +274,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
     @RequestMapping(value = "/setOnLine", method = RequestMethod.POST)
     public Map<String, Object> setOnLine(Model model, @RequestParam("ids[]") Long[] ids) {
         Map<String, Object> resultMap = new HashMap<>();
@@ -294,7 +286,6 @@ public class CourseController extends BaseController {
     }
 
     @ResponseBody
-//    @RequiresPermissions("course:msg")
     @RequestMapping(value = "/getCourseQues", method = RequestMethod.GET)
     public Map<String, Object> getCourseQues(Model model, Long id) {
         Course curCourse = courseService.findOne(id);
