@@ -15,6 +15,8 @@ import com.cnc.exam.course.service.CourseCategoryService;
 import com.cnc.exam.course.service.CourseService;
 import com.cnc.exam.log.entity.LogsEntity;
 import com.cnc.exam.log.service.LogsService;
+import com.cnc.exam.question.entity.Question;
+import com.cnc.exam.question.service.QuestionService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -124,6 +126,7 @@ public class CourseController extends BaseController {
         }
         try {
             logsEntity = new LogsEntity(currentUser,1,"删除课程对应题库",new Timestamp(new Date().getTime()));
+
             logsService.save(logsEntity);
             courseService.deleteCourses(deleteIds);
         } catch (DeleteWithMsgException e) {
@@ -131,6 +134,7 @@ public class CourseController extends BaseController {
             resultMap.put("success", false);
             return resultMap;
         } catch (Exception e) {
+            e.printStackTrace();
             resultMap.put("msg", "删除失败");
             resultMap.put("success", false);
             return resultMap;
@@ -285,6 +289,20 @@ public class CourseController extends BaseController {
         courseService.onLineCourse(ids);
         resultMap.put("data", data);
         resultMap.put("msg", "上线成功");
+        resultMap.put("success", true);
+        return resultMap;
+    }
+
+    @ResponseBody
+//    @RequiresPermissions("course:msg")
+    @RequestMapping(value = "/getCourseQues", method = RequestMethod.GET)
+    public Map<String, Object> getCourseQues(Model model, Long id) {
+        Course curCourse = courseService.findOne(id);
+        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> data = new HashMap<>();
+        List<Question> questions = curCourse.getQuestions();
+        data.put("questions", questions);
+        resultMap.put("data", data);
         resultMap.put("success", true);
         return resultMap;
     }

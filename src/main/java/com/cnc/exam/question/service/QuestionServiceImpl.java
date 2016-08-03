@@ -159,8 +159,15 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 	}
 	@Override
 	public void delete(Long... ids) {
-	
-		super.delete(ids);
+		Question question;
+		for (Long id:ids) {
+			question = questionRepository.findOne(id);
+			if(question.getCourse()!=null){
+				courseRepository.findOne(question.getCourse().getId()).getQuestions().remove(question);
+			}
+			question.setCourse(null);
+			questionRepository.delete(id);
+		}
 		
 	}
 	

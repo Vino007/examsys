@@ -61,10 +61,6 @@ public class CourseServiceImpl extends AbstractBaseServiceImpl<Course, Long> imp
             if(c.getCourseMessages().size()!=0 || c.getExams().size()!=0){
                 throw new DeleteWithMsgException();
             }
-            List<Question> questions = c.getQuestions();
-            for (Question q:questions) {
-                questionRepository.delete(q.getId());
-            }
             if(c.getCourseCategory()!=null){
                 courseCategoryRepository.findOne(c.getCourseCategory().getId()).getCourses().remove(c);
             }
