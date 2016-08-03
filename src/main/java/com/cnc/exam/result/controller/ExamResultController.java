@@ -89,7 +89,7 @@ public class ExamResultController extends BaseController {
 		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
 		
 		for(String item : allPermission){
-			if("examResut:viewall".equals(item)){
+			if("examResult:viewAll".equals(item)){
 				flag = 1;
 			}
 		}
