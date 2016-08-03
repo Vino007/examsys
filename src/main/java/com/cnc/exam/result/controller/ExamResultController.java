@@ -1,6 +1,8 @@
 package com.cnc.exam.result.controller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,13 +11,19 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -89,7 +97,7 @@ public class ExamResultController extends BaseController {
 		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
 		
 		for(String item : allPermission){
-			if("examResut:viewall".equals(item)){
+			if("examResult:viewAll".equals(item)){
 				flag = 1;
 			}
 		}
@@ -171,15 +179,24 @@ public class ExamResultController extends BaseController {
 	 * @param model
 	 * @param er
 	 * @return
+	 * @throws IOException 
 	 */
 	@ResponseBody
 	@RequiresPermissions("examResult:export")
 	@RequestMapping(value="/download ",method=RequestMethod.GET)	
-	public Map<String, Object> downloadEaxmResult(Model model,@RequestParam("path")String path){
+	public ResponseEntity<byte[]> downloadEaxmResult(Model model,HttpSession session) throws IOException{
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		try {
-			examResultService.saveToExcel(path);
+		String realPath=session.getServletContext().getRealPath("/WEB-INF/upload");
+		String fileName="examresult"+System.currentTimeMillis()+".xls";
+		examResultService.saveToExcel(realPath+"\\"+fileName);
+		HttpHeaders headers = new HttpHeaders();    
+		headers.setContentDispositionFormData("attachment", fileName); 	
+	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);   
+	    return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(realPath+"\\"+fileName)),    
+				                                  headers, HttpStatus.CREATED);
+		/*try {
+			
 			data.put("page", "");
 			resultMap.put("data", data);
 			resultMap.put("msg", "下载成功");
@@ -192,7 +209,7 @@ public class ExamResultController extends BaseController {
 			e.printStackTrace();
 		}
 		
-		return resultMap;
+		return resultMap;*/
 	}
 	
 	/**
@@ -200,28 +217,24 @@ public class ExamResultController extends BaseController {
 	 * @param model
 	 * @param er
 	 * @return
+	 * @throws IOException 
 	 */
 	@ResponseBody
 	@RequiresPermissions("examResult:export")
 	@RequestMapping(value="/downloadspecial ",method=RequestMethod.GET)	
-	public Map<String, Object> downloadSpecialEaxmResult(Model model,@RequestParam("path")String path,@RequestParam("ids[]")String[] ids){
+	public ResponseEntity<byte[]> downloadSpecialEaxmResult(Model model,HttpSession session,@RequestParam("ids[]")
+
+String[] ids) throws IOException{
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
-		try {
-			examResultService.saveToExcel(path,ids);
-			data.put("page", "");
-			resultMap.put("data", data);
-			resultMap.put("msg", "下载成功");
-			resultMap.put("successs", true);
-		} catch (FileNotFoundException e) {
-			data.put("page", "");
-			resultMap.put("data", data);
-			resultMap.put("msg", "下载失败");
-			resultMap.put("successs", false);
-			e.printStackTrace();
-		}
-		
-		return resultMap;
+		String realPath=session.getServletContext().getRealPath("/WEB-INF/upload");
+		String fileName="userExport"+System.currentTimeMillis()+".xls";
+		examResultService.saveToExcel(realPath+"\\"+fileName,ids);
+		HttpHeaders headers = new HttpHeaders();    
+		headers.setContentDispositionFormData("attachment", fileName); 	
+	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);   
+	    return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(realPath+"\\"+fileName)),    
+				                                  headers, HttpStatus.CREATED);
 	}
 	
 	
