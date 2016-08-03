@@ -48,6 +48,7 @@ public class ExamResultController extends BaseController {
 	private UserService userService;
 	
 	@ResponseBody
+	@RequiresPermissions("examResult:create")
 	@RequestMapping(value="/add",method=RequestMethod.GET)
 	public Map<String, Object> insertER(Model model, ExamResultEntity examResultEntity){
 		Map<String, Object> resultMap = new HashMap<>();
@@ -78,8 +79,8 @@ public class ExamResultController extends BaseController {
 	public Map<String, Object> getLogsByCondition(Model model, ExamResultEntity examResultEntity,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
 		Map<String, Object> searchParams = Servlets.getParametersStartingWith(request, "search_");
-		int flag= 1 ;
-		/*Subject curUser=SecurityUtils.getSubject();
+		int flag= 0 ;
+		Subject curUser=SecurityUtils.getSubject();
 		Session session=curUser.getSession();	
 		User currentUser = (User) session.getAttribute(Constants.CURRENT_USER);
 		if(null==currentUser){
@@ -88,10 +89,10 @@ public class ExamResultController extends BaseController {
 		Set<String> allPermission = userService.findAllPermissionsByUsername(currentUser.getUsername());
 		
 		for(String item : allPermission){
-			if("examresut:viewall".equals(item)){
+			if("examResut:viewall".equals(item)){
 				flag = 1;
 			}
-		}*/
+		}
 		if(flag == 1){
 			
 		}else{
@@ -99,8 +100,9 @@ public class ExamResultController extends BaseController {
 			if(searchParams.containsKey("username")){
 				searchParams.remove("username");
 			}
-			//searchParams.put("username", currentUser.getUsername());
+			searchParams.put("username", currentUser.getUsername());
 		}
+		
 		Page<ExamResultEntity> logsPage = examResultService.findERByCondition(searchParams, buildPageRequest(pageNumber));
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
@@ -118,6 +120,7 @@ public class ExamResultController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
+	@RequiresPermissions("examResult:delete")
 	@RequestMapping(value="/delete",method=RequestMethod.POST)
 	public  Map<String, Object> deleteER(Model model,@RequestParam("deleteIds[]")Long[] deleteIds){
 		Map<String, Object> resultMap = new HashMap<>();
@@ -140,6 +143,7 @@ public class ExamResultController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
+	@RequiresPermissions("examResult:update")
 	@RequestMapping(value="/update",method=RequestMethod.POST)	
 	public Map<String, Object> updateExamResult(Model model,ExamResultEntity er){
 		Subject curUser=SecurityUtils.getSubject();
@@ -169,6 +173,7 @@ public class ExamResultController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
+	@RequiresPermissions("examResult:export")
 	@RequestMapping(value="/download ",method=RequestMethod.GET)	
 	public Map<String, Object> downloadEaxmResult(Model model,@RequestParam("path")String path){
 		Map<String, Object> resultMap = new HashMap<>();
@@ -197,6 +202,7 @@ public class ExamResultController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
+	@RequiresPermissions("examResult:export")
 	@RequestMapping(value="/downloadspecial ",method=RequestMethod.GET)	
 	public Map<String, Object> downloadSpecialEaxmResult(Model model,@RequestParam("path")String path,@RequestParam("ids[]")String[] ids){
 		Map<String, Object> resultMap = new HashMap<>();
@@ -226,6 +232,7 @@ public class ExamResultController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
+	@RequiresPermissions("examResult:viewall")
 	@RequestMapping(value="/getsituation",method=RequestMethod.GET)	
 	public Map<String, Object> getSituation(Model model,@RequestParam("courseId")long courseId){
 		Map<String, Object> resultMap = new HashMap<>();
