@@ -18,4 +18,8 @@ public interface ExamResultRepository extends BaseRepository<ExamResultEntity, L
 	@Query("from ExamResultEntity er where er.exam.course.id=?1")
 	public List<ExamResultEntity> getEntities(long courseId);
 	
+	@Modifying
+	@Query("delete from ExamResultEntity er where er.id=?1")
+	public void deleteEntity(long examresultid);
+	
 }

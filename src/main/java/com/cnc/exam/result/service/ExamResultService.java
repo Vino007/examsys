@@ -26,4 +26,6 @@ public interface ExamResultService extends BaseService<ExamResultEntity, Long>{
 
 	public Map<String, ExamSituation> getConditionEntities(long courseId);
 	
+	public void deleteEntity(Long[] ids);
+	
 }

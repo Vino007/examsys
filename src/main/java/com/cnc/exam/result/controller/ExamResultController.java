@@ -118,11 +118,11 @@ public class ExamResultController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value="/delete",method=RequestMethod.GET)
+	@RequestMapping(value="/delete",method=RequestMethod.POST)
 	public  Map<String, Object> deleteER(Model model,@RequestParam("deleteIds[]")Long[] deleteIds){
 		Map<String, Object> resultMap = new HashMap<>();
 		try{
-			examResultService.delete(deleteIds);
+			examResultService.deleteEntity(deleteIds);
 		}catch(Exception e){
 			resultMap.put("msg", "删除失败");
 			resultMap.put("success", false);

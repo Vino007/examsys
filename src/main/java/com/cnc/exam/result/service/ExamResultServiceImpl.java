@@ -329,4 +329,12 @@ public class ExamResultServiceImpl extends
 			}
 		}
 	}
+
+	@Override
+	public void deleteEntity(Long[] ids) {
+		for(int i=0;i<ids.length;i++){
+			examResultRepository.deleteEntity(ids[i]);
+		}
+		
+	}
 }
