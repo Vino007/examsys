@@ -54,7 +54,7 @@ public class Exam extends BaseEntity<Long>{
 	private String mockExamUrl;
 	
 	//所属课程
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "course_id")
 	private Course course;//课程id
 	

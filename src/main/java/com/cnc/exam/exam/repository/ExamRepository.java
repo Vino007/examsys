@@ -17,5 +17,8 @@ public interface ExamRepository extends BaseRepository<Exam, Long>{
 	@Query("select e.status from ExamUserMid e  where e.exam.id=?1 and e.user.id=?2 ")
 	public Integer findUserStatus(long examId,long userId);
 	
+	@Modifying
+	@Query("delete from Exam e where e.id=?1")
+	public void deleteExam(long examId);
 
 }

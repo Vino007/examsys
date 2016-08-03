@@ -6,20 +6,36 @@
     <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="resources/css/base.css">
     <style>
+        #exam-list {
+            list-style: decimal inside;
+        }
+
+        #exam-list li {
+            display: list-item;
+        }
+
         #exam-list img {
             max-width: 980px;
         }
 
-        #countdown {
+        .fixed-div {
             position: fixed;
             right: 100px;
             bottom: 100px;
             font-size: 24px;
+            text-align: center;
+            background: rgb(221, 221, 221);
+        }
+
+        #countdown {
             width: 160px;
             height: 80px;
             line-height: 80px;
-            text-align: center;
-            background: rgb(221, 221, 221);
+        }
+
+        #score-info {
+            width: 300px;
+            display: none;
         }
     </style>
 </head>
@@ -32,14 +48,18 @@
             </h3>
         </div>
         <div class="panel-body">
-            <form>
+            <form id="exam-form">
                 <ul id="exam-list" class="list-group">
                 </ul>
-                <button class="btn btn-primary btn-lg" type="submit">交卷</button>
+                <button id="submit-paper" class="btn btn-primary btn-lg" type="button">交卷</button>
             </form>
         </div>
     </div>
-    <div id="countdown"></div>
+    <div id="countdown" class="fixed-div"></div>
+    <div id="score-info" class="form-group fixed-div">
+        <label>成绩<input id="score-result" class="form-control" readonly></label>
+        <label>是否通过<input id="is-pass-result" class="form-control" readonly></label>
+    </div>
 </div>
 
 <script src="resources/js/jquery-2.2.4.min.js"></script>

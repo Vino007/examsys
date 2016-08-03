@@ -78,7 +78,15 @@ $(document).ready(function () {
     function resetTable(data) {
         $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.name + '</td><td>' + value.description + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind-resources"data-toggle="modal"data-target="#bind-resource">绑定资源</button></td><td><button class="btn btn-primary form-control bind-coursecat"data-toggle="modal"data-target="#bind-coursecat">绑定课程分类</button></td></tr>';
+            var coursecat = '';
+            if (value.categories != null) {
+                $.each(value.categories, function (k, v) {
+                    coursecat += (v.coursecatName + ';');
+                });
+            }
+            var createTime = toDateStr(value.createTime);
+           // var createTime = "2014";
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.name + '</td><td>' + value.description + '</td><td>' + coursecat + '</td><td>' + createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind-resource"data-toggle="modal"data-target="#bind-resource">绑定资源</button></td><td><button class="btn btn-primary form-control bind-coursecat"data-toggle="modal"data-target="#bind-coursecat">绑定课程分类</button></td></tr>';
             $('#main-table').append(tr);
         });
     }
@@ -108,7 +116,8 @@ $(document).ready(function () {
                 resourceIds: resourceIds,
                 roleId: roleId
             }),
-            url: roleBind.url//请求的action路径
+            url: roleBind.url,//请求的action路径
+            dataType: 'json'
         }).done(function (data) {
             alert(data.msg);
             $('#bind-resource').modal('hide');
@@ -134,9 +143,9 @@ $(document).ready(function () {
     };
 
     var zNodes;
-    $(document).on('click', '.bind-resources', function () {
+    $(document).on('click', '.bind-resource', function () {
         $('#resourceTree').html('');
-        var roleId = $(this).parents().siblings('td').eq(0).children().val();
+        var roleId = $(this).parents().siblings('td').eq(0).children('input').val();
         var roleName = $(this).parents().siblings('td').eq(1).text();
         $('#bind-role-id').val(roleId);
         $('#bind-role-name').text(roleName);
@@ -144,7 +153,7 @@ $(document).ready(function () {
             async: true,
             cache: false,
             type: roleGetResourceTree.type,
-            dataType: "json",
+            dataType: 'json',
             data: {'id': roleId},
             url: roleGetResourceTree.url//请求的action路径
         }).done(function (data) {
@@ -160,6 +169,7 @@ $(document).ready(function () {
     //绑定课程分类
     $(document).on('click', '.bind-coursecat', function () {
         $('#bind-coursecat-checkbox').html('');
+        $('#bind-coursecat-submit').attr('data-id', $(this).parents().siblings('td').eq(0).children().val());
         $.ajax({
             url: roleGetAllCat.url,
             type: roleGetAllCat.type,
@@ -176,7 +186,25 @@ $(document).ready(function () {
     });
 
     $('#bind-coursecat-submit').click(function () {
-        console.log($('[name=bind-coursecat]').val());
+        var roleId = $(this).attr('data-id');
+        var categoryIds = [];
+        $.each($('[name=bind-coursecat]:checked'), function (key, value) {
+            categoryIds.push($(value).val());
+        });
+        var data = {
+            'roleId': roleId,
+            'categoryIds': categoryIds
+        };
+
+        $.ajax({
+            url: roleBindCats.url,
+            type: roleBindCats.type,
+            dataType: 'json',
+            data: data
+        }).done(function (data) {
+            alert(data.msg);
+            $('#bind-coursecat').modal('hide');
+        });
     });
 
 });

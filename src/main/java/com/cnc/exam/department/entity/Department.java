@@ -22,7 +22,7 @@ public class Department extends BaseEntity<Long> {
     @Column(name = "description", length = 255)
     private String description;
     @JSONField(serialize = false)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "department")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "department")
     private List<User> users = new ArrayList<User>();
 
     public Department() {

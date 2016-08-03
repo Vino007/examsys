@@ -12,7 +12,8 @@ $(document).ready(function () {
     function resetTable(data) {
         $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {
-            var tr = '<tr><td>' + value.user.username + '</td><td>' + value.opType + '</td><td>' + value.content + '</td><td>' + value.timestamp + '</td></tr>';
+            var timestamp = toDateStr(value.timestamp);
+            var tr = '<tr><td>' + value.user.username + '</td><td>' + value.opType + '</td><td>' + value.content + '</td><td>' + timestamp + '</td></tr>';
             $('#main-table').append(tr);
         });
     }

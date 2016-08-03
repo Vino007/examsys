@@ -33,16 +33,16 @@ public class Course extends BaseEntity<Long> {
     @JSONField(serialize = false)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
     private List<CourseMessage> courseMessages = new ArrayList<CourseMessage>();
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "coursecat_id")
     private CourseCategory courseCategory;
     //问题列表
     @JSONField(serialize = false)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
+    @OneToMany( fetch = FetchType.EAGER, mappedBy = "course")
     private List<Question> questions=new ArrayList<>();
     //考试列表
     @JSONField(serialize = false)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
+    @OneToMany( fetch = FetchType.EAGER, mappedBy = "course")
     private List<Exam> exams=new ArrayList<>();
     
     public CourseCategory getCourseCategory() {

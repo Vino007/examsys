@@ -23,11 +23,11 @@ import com.cnc.exam.exam.entity.Exam;
 @Entity
 @Table(name = "t_exam_results")
 public class ExamResultEntity extends BaseEntity<Long>{
-	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	private User user;
 	
-	@ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="exam_id")
 	private Exam exam;
 	

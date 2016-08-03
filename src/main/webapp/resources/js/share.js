@@ -25,7 +25,8 @@ var coursecatSearch = {'url': 'coursecat/search', 'type': 'GET'},
     coursecatUpdate = {'url': 'coursecat/update', 'type': 'POST'},
     courseGetAllCat = {'url': 'course/getAllCat', 'type': 'GET'},
     coursePreSetCate = {'url': 'course/preSetCate', 'type': 'GET'},
-    courseSetCate = {'url': 'course/setCate', 'type': 'GET'};
+    courseSetCate = {'url': 'course/setCate', 'type': 'GET'},
+    courseGetCourseQues = {'url': 'course/getCourseQues', 'type': 'GET'};
 
 //role
 var roleAll = {'url': 'role/all', 'type': 'GET'},
@@ -35,7 +36,9 @@ var roleAll = {'url': 'role/all', 'type': 'GET'},
     roleDelete = {'url': 'role/delete', 'type': 'POST'},
     roleUpdate = {'url': 'role/update', 'type': 'POST'},
     roleGetResourceTree = {'url': 'role/getResourceTree', 'type': 'GET'},
-    roleBind = {'url': 'role/bind', 'type': 'POST'};
+    roleBind = {'url': 'role/bind', 'type': 'POST'},
+    roleGetAllCat = {'url': 'role/getAllCat', 'type': 'GET'},
+    roleBindCats = {'url': 'role/bindCats', 'type': 'POST'};
 
 //user
 var userAll = {'url': 'user/all', 'type': 'GET'},
@@ -74,12 +77,18 @@ var examAll = {'url': 'exam/all', 'type': 'GET'},
     examDelete = {'url': 'exam/delete', 'type': 'POST'},
     examUpdate = {'url': 'exam/update', 'type': 'POST'},
     examBindQuestion = {'url': 'exam/bindQuestion', 'type': 'POST'},
+    examBindMockQuestion = {'url': 'exam/bindMockQuestion', 'type': 'POST'},
     examFindUser = {'url': 'exam/findUser', 'type': 'POST'},
     examUpdateUserStatus = {'url': 'exam/updateUserStatus', 'type': 'POST'},
     examAddUser = {'url': 'exam/addUser', 'type': 'POST'},
     examRemoveUser = {'url': 'exam/RemoveUser', 'type': 'POST'},
     examFindQuestions = {'url': 'exam/findQuestions', 'type': 'GET'},
-    examFindMockQuestions = {'url': 'exam/findMockQuestions', 'type': 'GET'};
+    examFindMockQuestions = {'url': 'exam/findMockQuestions', 'type': 'GET'},
+    examSubmit = {'url': 'exam/submit', 'type': 'POST'},
+    examPrepareBindQuestion = {'url': 'exam/prepareBindQuestion', 'type': 'GET'},
+    examPrepareBindMockQuestion = {'url': 'exam/prepareBindMockQuestion', 'type': 'GET'},
+    examAutoGenerate = {'url': 'exam/autoGenerate', 'type': 'POST'},
+    examAutoGenerateMock = {'url': 'exam/autoGenerateMock', 'type': 'POST'};
 
 //examresult
 var
@@ -92,12 +101,16 @@ var
 var
     logsAll = {'url': 'logs/all', 'type': 'GET'};
 
+//resources
+var resourcesTree = {'url': 'resource/resourceTree', 'type': 'GET'};
 
-//url rewrite
-/*courseSearch = {'url': '../mock/courseSearch.json', 'type': 'GET'};
+
+/*//url rewrite
+courseSearch = {'url': '../mock/courseSearch.json', 'type': 'GET'};
 courseGetAllCat = {'url': '../mock/coursePreSetCate.json', 'type': 'GET'};
 courseShowMsg = {'url': '../mock/courseShowMsg.json', 'type': 'GET'};
 courseAddMsg = {'url': '../mock/courseAddMsg.json', 'type': 'POST'};
+courseGetCourseQues = {'url': '../mock/courseGetCourseQues.json', 'type': 'GET'};
 coursecatShowCourses = {'url': '../mock/courseShowCourses.json', 'type': 'GET'};
 
 coursecatSearch = {'url': '../mock/coursecatSearch.json', 'type': 'GET'};
@@ -108,6 +121,9 @@ roleSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
 roleUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
 roleAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
 roleDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
+roleBind = {'url': '../mock/roleBind.json', 'type': 'POST'};
+roleGetAllCat = {'url': '../mock/roleGetAllCat.json', 'type': 'GET'};
+roleBindCats = {'url': '../mock/roleBind.json', 'type': 'POST'};
 
 userAll = {'url': '../mock/userpage.json', 'type': 'GET'};
 userSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
@@ -126,10 +142,17 @@ examAll = {'url': '../mock/examAll.json', 'type': 'GET'};
 examFindUser = {'url': '../mock/examFindUser.json', 'type': 'POST'};
 examFindQuestions = {'url': '../mock/examFindQuestions.json', 'type': 'GET'};
 examFindMockQuestions = {'url': '../mock/examFindQuestions.json', 'type': 'GET'};
+examSubmit = {'url': '../mock/examSubmit.json', 'type': 'POST'};
+examBindQuestion = {'url': '../mock/examBindQuestion.json', 'type': 'POST'};
+examBindMockQuestion = {'url': '../mock/examBindQuestion.json', 'type': 'POST'};
+examPrepareBindQuestion = {'url': '../mock/examPrepareBindQuestion.json', 'type': 'GET'};
+examPrepareBindMockQuestion = {'url': '../mock/examPrepareBindQuestion.json', 'type': 'GET'};
 
 examResultSearch = {'url': '../mock/examResultSearch.json', 'type': 'GET'};
 
-logsAll = {'url': '../mock/logsAll.json', 'type': 'GET'};*/
+logsAll = {'url': '../mock/logsAll.json', 'type': 'GET'};
+
+roleGetResourceTree = {'url': '../mock/ztree.json', 'type': 'GET'};*/
 /*url end*/
 
 $(document).ready(function () {
@@ -155,12 +178,13 @@ $(document).ready(function () {
 });
 
 function opADU(urlObj, submitData) {
+    // console.log(getFormJson(submitData));
     $.ajax({
         url: urlObj.url,
         async: true,
         type: urlObj.type,
-        data: getFormJson(submitData),
-        dataType:'json'
+        data: getFormJson(submitData)
+        , dataType: 'json'
     }).done(function (data) {
         alert(data.msg);
         if (data.success) {
@@ -187,10 +211,7 @@ function deleteSingle(deleteUrl) {
 function deleteMultiple(deleteUrl) {
     if (!confirm('确认删除?'))
         return false;
-    var deleteIds = [];
-    $.each($('[name=sub-checkbox]:checked'), function (key, value) {
-        deleteIds.push($(value).val());
-    });
+    var deleteIds = getCheckedIds();
     var deleteObj = {
         name: 'deleteIds',
         value: deleteIds
@@ -200,13 +221,21 @@ function deleteMultiple(deleteUrl) {
     opADU(deleteUrl, deleteObjArr);
 }
 
+function getCheckedIds() {
+    var checkedIds = [];
+    $.each($('[name=sub-checkbox]:checked'), function (key, value) {
+        checkedIds.push($(value).val());
+    });
+    return checkedIds;
+}
+
 function init(initObj) {
     $.ajax({
         url: initObj.urlObj.url,
         async: true,
         type: initObj.urlObj.type,
         data: initObj.data,
-        dataType:'json'
+        dataType: 'json'
     }).done(function (data) {
         if (data.success) {
             // initObj.resetTable(data);
@@ -222,7 +251,7 @@ function init(initObj) {
                         async: true,
                         type: initObj.urlObj.type,
                         data: {"pageNumber": page},
-                        dataType:'json'
+                        dataType: 'json'
                     }).done(function (data) {
                         if (data.success) {
                             initObj.resetTable(data);
@@ -241,3 +270,14 @@ function getFormJson(formArray) {
     })
     return jsonobj;
 }
+
+function toDateStr(timestamp) {
+    var time = new Date(timestamp);
+    var y = time.getFullYear(),
+        M = (time.getMonth() + 1) >= 10 ? (time.getMonth() + 1) : '0' + (time.getMonth() + 1),
+        d = time.getDate() >= 10 ? time.getDate() : '0' + time.getDate(),
+        h = time.getHours() >= 10 ? time.getHours() : '0' + time.getHours(),
+        m = time.getMinutes() >= 10 ? time.getMinutes() : '0' + time.getMinutes(),
+        s = time.getSeconds() >= 10 ? time.getSeconds() : '0' + time.getSeconds();
+    return y + '-' + M + '-' + d + ' ' + h + ':' + m + ':' + s;
+};

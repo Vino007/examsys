@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Bind Question</title>
+    <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="resources/css/base.css">
+    <link rel="stylesheet" href="resources/css/index.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            <div class="form-inline">
+                <input class="form-control input-group" type="text" placeholder="搜索题库">
+                <label class="form-control control-label">类型：<select class="type-based-search">
+                    <option value="">全部</option>
+                    <option value="1">单选</option>
+                    <option value="2">多选</option>
+                    <option value="3">填空</option>
+                    <option value="4">判断</option>
+                </select></label>
+                <label class="form-control control-label">是否在线：<select class="is-online">
+                    <option value="">全部</option>
+                    <option value="true">是</option>
+                    <option value="false">否</option>
+                </select></label>
+                <button id="search" class="btn btn-primary">搜索题库</button>
+                <button id="back-to-exam" class="btn btn-primary">返回考试管理</button>
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="form-group">
+                <button id="bind-question" class="btn btn-primary">绑定</button>
+                <button id="auto-generate" class="btn btn-primary">自动生成</button>
+            </div>
+        </div>
+        <table id="main-table" class="table table-bordered table-striped">
+            <tr>
+                <th><input type="checkbox" name="check-all"></th>
+                <th>题目</th>
+                <th>图片</th>
+                <th>选项</th>
+                <th>答案</th>
+                <th>是否在线</th>
+                <th>课程id</th>
+            </tr>
+        </table>
+        <ul id="pagination" class="pagination"></ul>
+    </div>
+
+</div>
+<script src="resources/js/jquery-2.2.4.min.js"></script>
+<script src="resources/bootstrap/js/bootstrap.min.js"></script>
+<script src="resources/js/jquery.twbsPagination.min.js"></script>
+<script src="resources/js/share.js"></script>
+<script src="resources/js/examBindQuestion.js"></script>
+</body>
+</html>

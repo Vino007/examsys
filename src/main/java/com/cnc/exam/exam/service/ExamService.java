@@ -70,4 +70,9 @@ public interface ExamService extends BaseService<Exam, Long> {
 	void autoGenerateMockExam(Long examId);
 
 	void bindMockQuestion(Long examId, Long[] questionIds);
+	
+
+	void deleteExam(Long[] examIds);
+
+	void clearConnection(Long[] examIds);
 }

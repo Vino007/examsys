@@ -59,12 +59,12 @@ $(document).ready(function () {
     /*edit end*/
 
     /*search start*/
-    //search user
+    //search
     $('#search').click(function () {
-        var search = $(this).siblings('input').val();
-        var searchArgs = {
-            'search_name': search
-        };
+        var searchArgs = {};
+        $.each($('.conditional-search input'), function (key, value) {
+            searchArgs[$(this).attr('name')] = $(this).val();
+        });
         var initObj = {
             urlObj: examResultSearch,
             data: searchArgs,
@@ -86,7 +86,8 @@ $(document).ready(function () {
                     roles += v.description + ',';
                 });
             }
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.user.username + '</td><td>' + value.user.department.deptName + '</td><td>' + roles + '</td><td>' + value.exam.course.courseName + '</td><td>' + value.exam.course.courseCategory.coursecatName + '</td><td>' + value.score + '</td><td>' + value.exam.createTime + '</td><td>' + value.isPass + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+            var createTime = toDateStr(value.exam.createTime);
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.user.username + '</td><td>' + value.user.department.deptName + '</td><td>' + roles + '</td><td>' + value.exam.course.courseName + '</td><td>' + value.exam.course.courseCategory.coursecatName + '</td><td>' + value.score + '</td><td>' + createTime + '</td><td>' + (value.isPass == 1 ? "是" : "否") + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
             $('#main-table').append(tr);
         });
     }

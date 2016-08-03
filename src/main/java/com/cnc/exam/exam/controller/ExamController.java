@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.servlet.ServletRequest;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class ExamController extends BaseController{
 	@Autowired
 	private LogsService logsService;
 	@ResponseBody
-	//@RequiresPermissions("exam:menu")
+	@RequiresPermissions("exam:menu")
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public Map<String, Object> getALLExams(
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
@@ -66,7 +67,7 @@ public class ExamController extends BaseController{
 	}
 
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:viewAll")
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public Map<String, Object> getExamsByCondition(Exam exam,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
@@ -80,7 +81,7 @@ public class ExamController extends BaseController{
 		return resultMap;
 	}
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:viewAll")
 	@RequestMapping(value = "/find", method = RequestMethod.GET)
 	public Map<String, Object> findById(Long id) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -93,7 +94,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:create")
+	@RequiresPermissions("exam:create")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Map<String, Object> addExam(Exam exam,Long courseId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -121,12 +122,13 @@ public class ExamController extends BaseController{
 	}
 
 	@ResponseBody
-//	@RequiresPermissions("exam:delete")
+	@RequiresPermissions("exam:delete")
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public Map<String, Object> deleteExams(@RequestParam("deleteIds[]") Long[] deleteIds) {
 		Map<String, Object> resultMap = new HashMap<>();		
 		Map<String, Object> data = new HashMap<>();
 		try {
+			examService.clearConnection(deleteIds);
 			examService.delete(deleteIds);
 			resultMap.put("data", data);
 			resultMap.put("success", true);
@@ -134,7 +136,9 @@ public class ExamController extends BaseController{
 			logsService.save(new LogsEntity(getCurrentUser(), 2, "删除考试",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
+			resultMap.put("data", data);
 			resultMap.put("msg", "删除失败");
+			logsService.save(new LogsEntity(getCurrentUser(), 2, "删除考试",new Timestamp(new Date().getTime())));
 			e.printStackTrace();
 		}
 
@@ -150,7 +154,7 @@ public class ExamController extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-//	@RequiresPermissions("exam:update")
+	@RequiresPermissions("exam:update")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public Map<String, Object> updateExam(Exam exam,Long courseId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -175,7 +179,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:create")
+	@RequiresPermissions("exam:bindQuestion")
 	@RequestMapping(value = "/prepareBindQuestion", method = RequestMethod.GET)
 	public Map<String, Object> prepartBindQuestion(Long examId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -210,9 +214,45 @@ public class ExamController extends BaseController{
 
 	}
 	
+	@ResponseBody
+	@RequiresPermissions("exam:bindMockQuestion")
+	@RequestMapping(value = "/prepareBindMockQuestion", method = RequestMethod.GET)
+	public Map<String, Object> prepartBindMockQuestion(Long examId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		
+		try {
+			Exam exam=examService.findOne(examId);
+			List<Long> selectIds=new ArrayList<>();
+			List<Question> selectQuestions=exam.getMockQuestions();
+			for(Question q:selectQuestions){
+				selectIds.add(q.getId());
+			}
+			List<Question> allQuestion=exam.getCourse().getQuestions();
+			for(Question q:selectQuestions){
+				allQuestion.remove(q);
+			}
+			data.put("selectIds", selectIds);
+			data.put("selectQuestions", selectQuestions);
+			data.put("noSelectQuestions", allQuestion);
+			
+			resultMap.put("data", data);
+			resultMap.put("success", true);
+			resultMap.put("msg", "查询成功");
+		} catch (Exception e) {
+			resultMap.put("success", false);
+			resultMap.put("msg", "查询失败");
+			e.printStackTrace();
+		}
+		
+
+		return resultMap;
+
+	}
+	
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:create")
+	@RequiresPermissions("exam:bindQuestion")
 	@RequestMapping(value = "/bindQuestion", method = RequestMethod.POST)
 	public Map<String, Object> bindQuestion(Long examId,@RequestParam("questionIds[]")Long[] questionIds) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -235,7 +275,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:create")
+	@RequiresPermissions("exam:bindMockQuestion")
 	@RequestMapping(value = "/bindMockQuestion", method = RequestMethod.POST)
 	public Map<String, Object> bindMockQuestion(Long examId,@RequestParam("questionIds[]")Long[] questionIds) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -255,7 +295,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:create")
+	@RequiresPermissions("exam:autoGenerate")
 	@RequestMapping(value = "/autoGenerate", method = RequestMethod.POST)
 	public Map<String, Object> autoGenerateExam(Long examId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -279,7 +319,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:create")
+	@RequiresPermissions("exam:autoGenerateMock")
 	@RequestMapping(value = "/autoGenerateMock", method = RequestMethod.POST)
 	public Map<String, Object> autoGenerateMockExam(Long examId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -307,7 +347,7 @@ public class ExamController extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:viewAll")
 	@RequestMapping(value = "/findUser", method = RequestMethod.POST)
 	public Map<String, Object> findUsersByStatus(Long examId,@RequestParam(required=false)Integer status,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber) {
@@ -324,7 +364,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:update")
 	@RequestMapping(value = "/updateUserStatus", method = RequestMethod.POST)
 	public Map<String, Object> findUsersByStatus(Long examId,@RequestParam("userIds[]")Long[] userIds,Integer status) {
 		
@@ -348,7 +388,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:update")
 	
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	public Map<String, Object> addUser(Long examId,@RequestParam("userIds[]")Long[] userIds) {
@@ -377,7 +417,7 @@ public class ExamController extends BaseController{
 
 	}
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:update")
 	@RequestMapping(value = "/removeUser", method = RequestMethod.POST)
 	public Map<String, Object> removeUser(Long examId,@RequestParam("userIds[]")Long[] userIds) {
 		
@@ -405,7 +445,7 @@ public class ExamController extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:join")
 	@RequestMapping(value = "/findQuestions", method = RequestMethod.GET)
 	public Map<String, Object> findQuestionstionById(Long examId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -436,7 +476,7 @@ public class ExamController extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:join")
 	@RequestMapping(value = "/findMockQuestions", method = RequestMethod.GET)
 	public Map<String, Object> findMockQuestionstionById(Long examId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -462,7 +502,7 @@ public class ExamController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:join")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
 	public Map<String, Object> submitExam(Long userId,Long examId,boolean isMock,@RequestParam("performances[]")String[] performances) {
 		
@@ -508,7 +548,7 @@ public class ExamController extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-//	@RequiresPermissions("exam:view")
+	@RequiresPermissions("exam:viewOwn")
 	@RequestMapping(value = "/findExamByUser", method = RequestMethod.GET)
 	public Map<String, Object> findExamByUser(Long userId,@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber) {
 		Map<String, Object> resultMap = new HashMap<>();

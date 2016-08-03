@@ -73,8 +73,8 @@ $(document).ready(function () {
     //search user
     $('#search').click(function () {
         var content = $(this).siblings('input').val();
-        var type = $(this).siblings('.type-based-search').val();
-        var isOnline = $(this).siblings('.is-online').val();
+        var type = $(this).siblings().children('.type-based-search').val();
+        var isOnline = $(this).siblings().children('.is-online').val();
         var searchArgs = {
             'search_content': content,
             'search_type': type,
@@ -91,21 +91,26 @@ $(document).ready(function () {
     /*search end*/
 
     function toggleOnline(urlObj) {
-        var ids = [];
-        $.each($('[name=sub-checkbox]:checked'), function (key, value) {
-            ids.push($(value).val());
-        });
-        var obj = {
-            name: "id",
-            value: ids
-        };
+        var ids = getCheckedIds();
+        var obj = [
+            {
+                name: "id",
+                value: ids
+            }
+        ];
         opADU(urlObj, obj);
     }
-    
+
     function resetTable(data) {
         $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {
-            var tr = '<tr><td><input type="checkbox"name="sub-checkbox"value="' + value.id + '"></td><td>' + value.content + '</td><td><img src="' + value.contentImageUrl + '"></td><td>' + value.choices + '</td><td>' + value.answer + '</td><td>' + (value.isOnline ? "是" : "否") + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+            var img;
+            if (value.contentImageUrl == null) {
+                img = '';
+            } else {
+                img = '<img src="' + value.contentImageUrl + '">';
+            }
+            var tr = '<tr><td><input type="checkbox"name="sub-checkbox"value="' + value.id + '"></td><td>' + value.content + '</td><td>' + img + '</td><td>' + value.choices + '</td><td>' + value.answer + '</td><td>' + (value.isOnline ? "是" : "否") + '</td><td>' + (value.courseId == null ? "" : value.courseId) + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
             $('#main-table').append(tr);
         });
     }

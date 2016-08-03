@@ -82,7 +82,7 @@ $(document).ready(function () {
                 type: departmentShowUsers.type,
                 async: true,
                 data: {'id': id},
-                dataType:'json'
+                dataType: 'json'
             }).done(function (data) {
                 $('#main-table tr + tr').remove();
                 $.each(data.data.users, function (key, value) {
@@ -94,7 +94,7 @@ $(document).ready(function () {
                             roles += v.description + ',';
                         });
                     }
-                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + (value.department == null ? "" : value.department.id) + '">' + (value.department == null ? "" : value.department.deptName) + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
                     $('#main-table').append(tr);
                 });
             });
@@ -106,7 +106,7 @@ $(document).ready(function () {
     function resetTable(data) {
         $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td></tr>';
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td data-id="' + (value.department == null ? "" : value.department.id) + '">' + (value.department == null ? "" : value.department.deptName) + '</td><td>' + value.email + '</td></tr>';
             $('#main-table').append(tr);
         });
     }

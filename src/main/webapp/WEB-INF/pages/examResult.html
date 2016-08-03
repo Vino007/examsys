@@ -11,12 +11,12 @@
 <div class="container">
     <div class="row">
         <div class="form-group">
-            <div class="form-inline">
-                <input class="form-control input-group" type="text" placeholder="用户名">
-                <input class="form-control input-group" type="text" placeholder="课程名">
-                <input class="form-control input-group" type="text" placeholder="部门">
-                <input class="form-control input-group" type="text" placeholder="分数">
-                <input class="form-control input-group" type="text" placeholder="时间">
+            <div class="form-inline conditional-search">
+                <input name="search_username" class="form-control input-group" type="text" placeholder="用户名">
+                <input name="search_coursename" class="form-control input-group" type="text" placeholder="课程名">
+                <input name="search_deptName" class="form-control input-group" type="text" placeholder="部门名">
+                <input name="search_score" class="form-control input-group" type="text" placeholder="分数">
+                <input name="search_createTime" class="form-control input-group" type="text" placeholder="时间(yyyy-MM-dd HH:mm:ss)">
                 <button id="search" class="btn btn-primary">搜索成绩</button>
             </div>
         </div>
@@ -120,11 +120,11 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">课程名：</label>
-                        <input name="courseName" class="form-control" required>
+                        <input name="courseName" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label class="control-label">课程分类：</label>
-                        <input name="coursecatName" class="form-control" required>
+                        <input name="coursecatName" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label class="control-label">分数：</label>
@@ -132,7 +132,7 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label">时间：</label>
-                        <input name="time" class="form-control" required>
+                        <input name="time" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label class="control-label">是否通过：</label>
@@ -143,7 +143,7 @@
                     </div>
                 </form>
                 <div class="form-group">
-                    <button id="delete-single" class="btn btn-danger">删除角色</button>
+                    <button id="delete-single" class="btn btn-danger">删除成绩</button>
                 </div>
             </div>
             <div class="modal-footer">

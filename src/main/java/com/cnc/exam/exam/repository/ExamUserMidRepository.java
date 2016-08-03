@@ -22,7 +22,9 @@ public interface ExamUserMidRepository  extends JpaRepository<ExamUserMid, Long>
 	void updateExamUserStatus(long examId,long userId,int status);
 	@Query("select e from ExamUserMid e  where e.exam.id=?1 and e.user.id=?2")
 	ExamUserMid examUserIsExist(long examId,long userId);
-	/*@Modifying
-	@Query("insert into ExamUserMid  (exam_id, status, user_id) values (?1, ?3, ?2)")
-	void insertExamUser(long examId,long userId,int status);*/
+	
+	@Modifying
+	@Query("delete ExamUserMid e  where e.exam.id=?1")
+	void deleteExam(long examId);
+
 }

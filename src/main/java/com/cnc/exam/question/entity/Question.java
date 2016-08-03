@@ -64,7 +64,7 @@ public class Question extends BaseEntity<Long>{
 	private Boolean isOnline=Boolean.TRUE;
 	
 	//所属课程
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "course_id")
 	private Course course;
 	//使用过该考题的考试

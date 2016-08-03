@@ -1,5 +1,7 @@
 package com.cnc.exam.question.controller;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,8 @@ import com.cnc.exam.auth.utils.Servlets;
 import com.cnc.exam.base.controller.BaseController;
 import com.cnc.exam.course.entity.Course;
 import com.cnc.exam.course.service.CourseService;
+import com.cnc.exam.log.entity.LogsEntity;
+import com.cnc.exam.log.service.LogsService;
 import com.cnc.exam.question.entity.Question;
 import com.cnc.exam.question.service.QuestionService;
 
@@ -29,8 +33,10 @@ public class QuestionController extends BaseController{
 	private QuestionService questionService;
 	@Autowired
 	private CourseService courseService;
+	@Autowired
+	private LogsService logsService;
 	@ResponseBody
-	//@RequiresPermissions("question:menu")
+	@RequiresPermissions("question:menu")
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public Map<String, Object> getALLQuestions(
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
@@ -47,7 +53,7 @@ public class QuestionController extends BaseController{
 	}
 
 	@ResponseBody
-//	@RequiresPermissions("question:view")
+	@RequiresPermissions("question:view")
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public Map<String, Object> getQuestionsByCondition(Question question,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber, ServletRequest request) {
@@ -61,7 +67,7 @@ public class QuestionController extends BaseController{
 		return resultMap;
 	}
 	@ResponseBody
-//	@RequiresPermissions("question:view")
+	@RequiresPermissions("question:view")
 	@RequestMapping(value = "/find", method = RequestMethod.GET)
 	public Map<String, Object> findById(Long id) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -74,14 +80,14 @@ public class QuestionController extends BaseController{
 	}
 	
 	@ResponseBody
-//	@RequiresPermissions("question:create")
+	@RequiresPermissions("question:create")
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public Map<String, Object> addQuestion(Question question) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		try {
 			questionService.save(question);
-
+			logsService.save(new LogsEntity(getCurrentUser(), 1, "添加问题",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "条件失败");
@@ -96,7 +102,7 @@ public class QuestionController extends BaseController{
 	}
 
 	@ResponseBody
-//	@RequiresPermissions("question:delete")
+	@RequiresPermissions("question:delete")
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public Map<String, Object> deleteQuestions(@RequestParam("deleteIds[]") Long[] deleteIds) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -111,6 +117,7 @@ public class QuestionController extends BaseController{
 		}
 		try {
 			questionService.delete(deleteIds);
+			logsService.save(new LogsEntity(getCurrentUser(), 1, "删除问题",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "删除失败");
@@ -128,7 +135,7 @@ public class QuestionController extends BaseController{
 	}
 
 	@ResponseBody
-//	@RequiresPermissions("question:update")
+	@RequiresPermissions("question:update")
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public Map<String, Object> updateQuestion(Question question,Long courseId) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -143,6 +150,7 @@ public class QuestionController extends BaseController{
 		}
 		try {
 			questionService.update(question);
+			logsService.save(new LogsEntity(getCurrentUser(), 1, "修改问题",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "修改失败");
@@ -165,7 +173,7 @@ public class QuestionController extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-//	@RequiresPermissions("question:update")
+	@RequiresPermissions("question:update")
 	@RequestMapping(value = "/offline", method = RequestMethod.POST)
 	public Map<String, Object> offlineQuestion(Long id) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -173,6 +181,7 @@ public class QuestionController extends BaseController{
 		
 		try {
 			questionService.offlineQuestion(id);
+			logsService.save(new LogsEntity(getCurrentUser(), 1, "下线问题",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "题目不存在,下线失败");
@@ -192,7 +201,7 @@ public class QuestionController extends BaseController{
 	 * @return
 	 */
 	@ResponseBody
-//	@RequiresPermissions("question:update")
+	@RequiresPermissions("question:update")
 	@RequestMapping(value = "/online", method = RequestMethod.POST)
 	public Map<String, Object> onlineQuestion(Long id) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -200,6 +209,7 @@ public class QuestionController extends BaseController{
 		
 		try {
 			questionService.onlineQuestion(id);
+			logsService.save(new LogsEntity(getCurrentUser(), 1, "上线问题",new Timestamp(new Date().getTime())));
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "题目不存在,上线失败");

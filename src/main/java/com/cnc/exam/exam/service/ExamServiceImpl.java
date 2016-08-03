@@ -229,6 +229,8 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 				examUserMid.setStatus(1);// 默认正常				
 				examUserMids.add(examUserMid);		
 				//examUserMidRepository.insertExamUser(examId, userId, 1);
+			}else{
+				throw new UserAlreadyHasThisExamException();
 			}
 		//	examUserMid.setId(null);
 			
@@ -402,6 +404,29 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 		
 	}
 
+	@Override
+	public void deleteExam(Long[] examIds) {
+		for(Long examId:examIds){
+			
+			examRepository.deleteExam(examId);
+		}
+	}
 	
-	
+	@Override
+	public void clearConnection(Long[] examIds){
+		for(Long examId:examIds){
+			
+			Exam exam=examRepository.findOne(examId);
+			exam.setCourse(null);
+			exam.setExamUserMids(null);
+			exam.setMockQuestions(null);
+			exam.setQuestions(null);
+			examUserMidRepository.deleteExam(examId);
+			examResultRepository.deleteExam(examId);
+			}
+	}
 }
+
+	
+	
+

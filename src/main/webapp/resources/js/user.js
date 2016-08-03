@@ -3,23 +3,6 @@
  */
 $(document).ready(function () {
     var allRoles = [];
-    //url arguments
-    var userAll = {'url': 'user/all', 'type': 'GET'},
-        userFind = {'url': 'user/find', 'type': 'GET'},
-        userSearch = {'url': 'user/search', 'type': 'GET'},
-        userAdd = {'url': 'user/add', 'type': 'POST'},
-        userDelete = {'url': 'user/delete', 'type': 'POST'},
-        userUpdate = {'url': 'user/update', 'type': 'POST'},
-        userGetAllRoles = {'url': 'user/getAllRoles', 'type': 'GET'},
-        userGetRoles = {'url': 'user/getRoles', 'type': 'GET'},
-        userBind = {'url': 'user/bind', 'type': 'POST'};
-
-    // userAll = {'url': '../mock/userpage.json', 'type': 'GET'};
-    // userSearch = {'url': '../mock/userSearch.json', 'type': 'GET'};
-    // userUpdate = {'url': '../mock/userUpdate.json', 'type': 'POST'};
-    // userAdd = {'url': '../mock/userAdd.json', 'type': 'POST'};
-    // userDelete = {'url': '../mock/userDelete.json', 'type': 'POST'};
-    // userGetAllRoles = {'url': '../mock/userGetAllRoles.json', 'type': 'GET'};
     var allDepts = [];
 
     var initObj = {
@@ -145,7 +128,7 @@ $(document).ready(function () {
                 type: departmentShowUsers.type,
                 async: true,
                 data: {'id': id},
-                dataType:'json'
+                dataType: 'json'
             }).done(function (data) {
                 $('#main-table tr + tr').remove();
                 $.each(data.data.users, function (key, value) {
@@ -157,7 +140,8 @@ $(document).ready(function () {
                             roles += v.description + ',';
                         });
                     }
-                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+                    var createTime = toDateStr(value.createTime);
+                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td><td>' + createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
                     $('#main-table').append(tr);
                 });
             });
@@ -172,7 +156,7 @@ $(document).ready(function () {
     //         async: true,
     //         type: urlObj.type,
     //         data: submitData
-    //     }).done(function (data) {
+    //     ,             dataType: 'json' }).done(function (data) {
     //         alert(data.msg);
     //         if (data.success) {
     //             window.location.reload();
@@ -186,7 +170,7 @@ $(document).ready(function () {
     //         async: true,
     //         type: urlObj.type,
     //         data: data
-    //     }).done(function (data) {
+    //     ,             dataType: 'json' }).done(function (data) {
     //         if (data.success) {
     //             resetTable(data);
     //             //page
@@ -201,7 +185,7 @@ $(document).ready(function () {
     //                         async: true,
     //                         type: userAll.type,
     //                         data: {"pageNumber": page}
-    //                     }).done(function (data) {
+    //                     ,             dataType: 'json' }).done(function (data) {
     //                         if (data.success) {
     //                             resetTable(data);
     //                         }
@@ -217,7 +201,7 @@ $(document).ready(function () {
             url: userGetAllRoles.url,
             async: true,
             type: userGetAllRoles.type,
-            dataType:'json'
+            dataType: 'json'
         }).done(function (data) {
             if (data.success) {
                 $.each(data.data.roles, function (key, value) {
@@ -240,7 +224,7 @@ $(document).ready(function () {
             url: userGetAllDepts.url,
             async: true,
             type: userGetAllDepts.type,
-            dataType:'json'
+            dataType: 'json'
         }).done(function (data) {
             if (data.success) {
                 $.each(data.data.availableDepts, function (key, value) {
@@ -270,7 +254,8 @@ $(document).ready(function () {
                     roles += v.description + ',';
                 });
             }
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + value.department.id + '">' + value.department.deptName + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+            var createTime = toDateStr(value.createTime);
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + (value.department == null ? "" : value.department.id) + '">' + (value.department == null ? "" : value.department.deptName) + '</td><td>' + value.email + '</td><td>' + createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
             $('#main-table').append(tr);
         });
     }
