@@ -20,4 +20,9 @@ public interface ExamUserMidRepository  extends JpaRepository<ExamUserMid, Long>
 	@Modifying
 	@Query("update ExamUserMid e set e.status=?3 where e.exam.id=?1 and e.user.id=?2")
 	void updateExamUserStatus(long examId,long userId,int status);
+	@Query("select e from ExamUserMid e  where e.exam.id=?1 and e.user.id=?2")
+	ExamUserMid examUserIsExist(long examId,long userId);
+	/*@Modifying
+	@Query("insert into ExamUserMid  (exam_id, status, user_id) values (?1, ?3, ?2)")
+	void insertExamUser(long examId,long userId,int status);*/
 }

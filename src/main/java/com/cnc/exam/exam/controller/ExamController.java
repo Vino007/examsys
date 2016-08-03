@@ -176,6 +176,43 @@ public class ExamController extends BaseController{
 	
 	@ResponseBody
 //	@RequiresPermissions("exam:create")
+	@RequestMapping(value = "/prepareBindQuestion", method = RequestMethod.GET)
+	public Map<String, Object> prepartBindQuestion(Long examId) {
+		Map<String, Object> resultMap = new HashMap<>();
+		Map<String, Object> data = new HashMap<>();
+		
+		try {
+			Exam exam=examService.findOne(examId);
+			List<Long> selectIds=new ArrayList<>();
+			List<Question> selectQuestions=exam.getQuestions();
+			for(Question q:selectQuestions){
+				selectIds.add(q.getId());
+			}
+			List<Question> allQuestion=exam.getCourse().getQuestions();
+			for(Question q:selectQuestions){
+				allQuestion.remove(q);
+			}
+			data.put("selectIds", selectIds);
+			data.put("selectQuestions", selectQuestions);
+			data.put("noSelectQuestions", allQuestion);
+			
+			resultMap.put("data", data);
+			resultMap.put("success", true);
+			resultMap.put("msg", "查询成功");
+		} catch (Exception e) {
+			resultMap.put("success", false);
+			resultMap.put("msg", "查询失败");
+			e.printStackTrace();
+		}
+		
+
+		return resultMap;
+
+	}
+	
+	
+	@ResponseBody
+//	@RequiresPermissions("exam:create")
 	@RequestMapping(value = "/bindQuestion", method = RequestMethod.POST)
 	public Map<String, Object> bindQuestion(Long examId,@RequestParam("questionIds[]")Long[] questionIds) {
 		Map<String, Object> resultMap = new HashMap<>();
@@ -271,7 +308,7 @@ public class ExamController extends BaseController{
 	 */
 	@ResponseBody
 //	@RequiresPermissions("exam:view")
-	@RequestMapping(value = "/findUser", method = RequestMethod.GET)
+	@RequestMapping(value = "/findUser", method = RequestMethod.POST)
 	public Map<String, Object> findUsersByStatus(Long examId,@RequestParam(required=false)Integer status,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber) {
 		

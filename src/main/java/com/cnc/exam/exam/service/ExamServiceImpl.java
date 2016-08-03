@@ -220,13 +220,24 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 		
 		for (long userId : userIds) {
 			User user = userRepository.findOne(userId);
+			
 			ExamUserMid examUserMid = new ExamUserMid();
-			examUserMid.setExam(exam);
-			examUserMid.setUser(user);
-			examUserMid.setStatus(1);// 默认正常				
-			examUserMids.add(examUserMid);		
+			ExamUserMid midFromDB=examUserMidRepository.examUserIsExist(examId, userId);
+			if (midFromDB==null){
+				examUserMid.setExam(exam);
+				examUserMid.setUser(user);
+				examUserMid.setStatus(1);// 默认正常				
+				examUserMids.add(examUserMid);		
+				//examUserMidRepository.insertExamUser(examId, userId, 1);
+			}
+		//	examUserMid.setId(null);
+			
 		}
+		try{
 		examUserMidRepository.save(examUserMids);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		
 
 	}
