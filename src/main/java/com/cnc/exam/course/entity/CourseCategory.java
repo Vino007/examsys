@@ -23,10 +23,10 @@ public class CourseCategory extends BaseEntity<Long> {
     private String description;
     @JSONField(serialize = false)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "courseCategory")
-    private List<Course> courses = new ArrayList<Course>();
+    private Set<Course> courses = new HashSet<>();
 
     @JSONField(serialize=false)
-    @ManyToMany(mappedBy="categories",targetEntity=Role.class)
+    @ManyToMany(cascade = CascadeType.ALL,mappedBy="categories",targetEntity=Role.class)
     private Set<Role> roles=new HashSet<Role>();
 
     public Set<Role> getRoles() {
@@ -37,11 +37,11 @@ public class CourseCategory extends BaseEntity<Long> {
         this.roles = roles;
     }
 
-    public List<Course> getCourses() {
+    public Set<Course> getCourses() {
         return courses;
     }
 
-    public void setCourses(List<Course> courses) {
+    public void setCourses(Set<Course> courses) {
         this.courses = courses;
     }
 
