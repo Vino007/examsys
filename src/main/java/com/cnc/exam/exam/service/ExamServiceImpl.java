@@ -425,6 +425,37 @@ public class ExamServiceImpl extends AbstractBaseServiceImpl<Exam, Long> impleme
 			examResultRepository.deleteExam(examId);
 			}
 	}
+
+	@Override
+	public MyPage<Exam> findExamByUser2(final Long userId, Pageable pageable) {
+		//查询
+		Specification<ExamUserMid> spec = new Specification<ExamUserMid>() {
+			@Override
+			public Predicate toPredicate(Root<ExamUserMid> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+				Predicate allCondition = cb.equal(root.get("user").get("id").as(Long.class), userId);
+
+	
+				return allCondition;
+			}
+
+		};
+		Page<ExamUserMid> midPage = examUserMidRepository.findAll(spec, pageable);
+		List<Exam> examJsons=new ArrayList<>();
+		for(ExamUserMid mid:midPage.getContent()){
+			//Exam examJson=new Exam();
+			Exam exam=mid.getExam();
+		
+			
+			examJsons.add(exam);
+		}
+		
+		MyPage<Exam> examPage = new MyPage<>();
+		examPage.setContent(examJsons);
+		examPage.setTotalPages(midPage.getTotalPages());
+		examPage.setTotalElements(midPage.getTotalElements());
+		examPage.setSize(midPage.getSize());
+		return examPage;
+	}
 }
 
 	

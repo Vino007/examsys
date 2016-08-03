@@ -58,9 +58,9 @@
             }).done(function (data) {
                 if (data.success) {
                     var dataStr = JSON.stringify(data);
-                    sessionStorage.setItem('username', usr);
-                    sessionStorage.setItem('data', dataStr);
-                    sessionStorage.setItem('userId', data.data.userId);
+                    localStorage.setItem('username', usr);
+                    localStorage.setItem('data', dataStr);
+                    localStorage.setItem('userId', data.data.userId);
                     window.location.href = 'index.html';
                 } else {
                     alert(data.msg);

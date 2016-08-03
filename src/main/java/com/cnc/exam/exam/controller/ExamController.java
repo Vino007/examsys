@@ -82,7 +82,8 @@ public class ExamController extends BaseController{
 					
 		}
 		if(flag==0){
-			MyPage<ExamJson> examPage=examService.findExamByUser(currentUser.getId(),buildPageRequest(pageNumber));
+			MyPage<Exam> examPage=examService.findExamByUser2(currentUser.getId(),buildPageRequest(pageNumber));
+			
 			data.put("page", examPage);
 		}
 									
@@ -397,7 +398,7 @@ public class ExamController extends BaseController{
 	 */
 	@ResponseBody
 	@RequiresPermissions("exam:viewAll")
-	@RequestMapping(value = "/findUser", method = RequestMethod.POST)
+	@RequestMapping(value = "/findUser", method = RequestMethod.GET)
 	public Map<String, Object> findUsersByStatus(Long examId,@RequestParam(required=false)Integer status,
 			@RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber) {
 		

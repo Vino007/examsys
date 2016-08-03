@@ -112,29 +112,4 @@ $(document).ready(function () {
         });
     }
 
-    function getQueryStringObject() {
-        var queryStringObj = {};
-        var url = location.search;
-        var str = url.substr(1);
-        var strs = str.split('&');
-        $.each(strs, function (key, value) {
-            queryStringObj[this.split('=')[0]] = this.split('=')[1];
-        });
-        return queryStringObj;
-    }
-
-    // function getExamId() {
-    //     var url = location.search;
-    //     var str = url.substr(1);
-    //     var strs = (str.split('&'))[0].split('=');
-    //     return strs[1];
-    // }
-    //
-    // function getCourseId() {
-    //     var url = location.search;
-    //     var str = url.substr(1);
-    //     var strs = (str.split('&'))[1].split('=');
-    //     return strs[1];
-    // }
-
 });

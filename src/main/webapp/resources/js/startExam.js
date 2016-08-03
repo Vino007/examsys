@@ -3,10 +3,10 @@
  */
 $(document).ready(function () {
     //queryString
-    var queryString = location.search.substr(1);
-    var queryStrArr = queryString.split('&');
-    var examId = queryStrArr[0].split('=')[1];
-    var isMock = (queryStrArr[1].split('=')[1] == 'true') ? true : false;
+    var queryString = getQueryStringObject();
+    var examId = queryString.examId;
+    var isMock = queryString.isMock == 'true' ? true : false;
+    var duration = parseInt(queryString.duration);
     var urlObj;
 
     if (isMock) {
@@ -63,6 +63,14 @@ $(document).ready(function () {
                 $('#exam-list').append(li);
             });
 
+          /*  //set countdown
+            var date = new Date(new Date().valueOf() + duration);
+            $('#countdown').countdown(date, function (event) {
+                $(this).html(event.strftime('%H:%M:%S'));
+            }).on('finish.countdown', function () {
+                $('#submit-paper').click();
+            });
+*/
             //set countdown
             var date = new Date(new Date().valueOf() + 60 * 60 * 1000);
             $('#countdown').countdown(date, function (event) {
@@ -70,7 +78,6 @@ $(document).ready(function () {
             }).on('finish.countdown', function () {
 
             });
-
         } else {
             alert(data.msg);
         }
@@ -95,8 +102,10 @@ $(document).ready(function () {
                     ans += ($(v).val() + ';');
                 })
                 performances.push(ans);
-            } else {
+            } else if ($(value).attr('data-type') == 3) {
                 performances.push($('[name=' + (key + 1) + ']').val());
+            } else {
+                performances.push($('[name=' + (key + 1) + ']:checked').val());
             }
         });
         var userId = localStorage.getItem('userId');
@@ -106,6 +115,7 @@ $(document).ready(function () {
             'isMock': isMock,
             'performances': performances
         };
+        console.log(submitData);
 
         //ajax submit
         $.ajax({

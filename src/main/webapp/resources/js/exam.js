@@ -109,7 +109,18 @@ $(document).ready(function () {
         $.each(data.data.page.content, function (key, value) {
             startTime = toDateStr(value.startTime);
             endTime = toDateStr(value.endTime);
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td data-id="' + (value.course.id != null ? value.course.id : value.exam.course.id) + '">' + (value.course.courseName != null ? value.course.courseName : value.exam.course.courseName) + '</td><td data-id="' + (value.courseCategory == null ? '' : value.courseCategory.id) + '">' + (value.courseCategory == null ? "未分类" : value.courseCategory.coursecatName) + '</td><td>' + startTime + '</td><td>' + endTime + '</td><td>' + value.passLine + '</td><td>' + value.questionNumber + '</td><td><button class="btn btn-primary form-control start-exam" data-id="' + value.id + '"data-toggle="modal"data-target="#start-exam">开始考试</button></td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind"data-toggle="modal"data-target="#bind-question">绑定考题</button></td><td><button class="btn btn-primary form-control user">参考人员</button></td></tr>';
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + 
+            value.id + '"></td><td data-id="'
+            + ( value.course.id ) + '">' 
+            + ( value.course.courseName ) 
+            + '</td><td data-id="' + (value.course.courseCategory.id  ) 
+            + '">' + (value.course.courseCategory.coursecatName  ) +
+            '</td><td>' + startTime + '</td><td>' + endTime + '</td><td>' + value.passLine 
+            + '</td><td>' + value.questionNumber
+            + '</td><td><button class="btn btn-primary form-control start-exam" data-id="' 
+            +  value.id
+            + '"data-toggle="modal"data-target="#start-exam">开始考试</button></td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td><td><button class="btn btn-primary form-control bind"data-toggle="modal"data-target="#bind-question">绑定考题</button></td><td><button class="btn btn-primary form-control user">参考人员</button></td></tr>';
+           
             $('#main-table').append(tr);
         });
     }

@@ -13,7 +13,7 @@
         <div class="form-group">
             <div class="form-inline">
                 <input class="form-control input-group" type="text" placeholder="课程名称">
-                <label class="form-control control-label">是否在线：<select class="is-online">
+                <label data-permission="course:update" class="form-control control-label">是否在线：<select class="is-online">
                     <option value="">全部</option>
                     <option value="true">是</option>
                     <option value="false">否</option>
@@ -22,10 +22,10 @@
                 <label class="form-control control-label">按分类搜索：<select class="cate-based-search">
                     <option value="all">全部</option>
                 </select></label>
-                <button id="cate-mgr" class="btn btn-primary">课程分类管理</button>
+                <button data-permission="category:create" id="cate-mgr" class="btn btn-primary">课程分类管理</button>
             </div>
         </div>
-        <div class="content-header" data-permission>
+        <div class="content-header">
             <div class="form-group">
                 <button data-permission="course:create" class="btn btn-primary" data-toggle="modal" data-target="#add">新增课程</button>
                 <button data-permission="course:delete" id="delete-multiple" class="btn btn-danger">删除课程</button>
@@ -145,7 +145,6 @@
                     <div class="form-group">
                         <label class="control-label">课程类别：</label>
                         <select name="categoryId" class="form-control cates-options">
-                            <option value="">未分类</option>
                         </select>
                     </div>
                     <div class="form-group">

@@ -88,11 +88,11 @@ public class QuestionServiceImpl extends AbstractBaseServiceImpl<Question, Long>
 				Integer type=null;
 				Boolean isOnline=null;
 				Long courseId=null;
-				if(searchParams.get("type")!=null)
+				if(searchParams.get("type")!=null&&!searchParams.get("type").equals(""))
 					type=Integer.parseInt((String) searchParams.get("type")) ;
-				if(searchParams.get("isOnline")!=null)					
+				if(searchParams.get("isOnline")!=null&&!searchParams.get("type").equals(""))					
 					isOnline=Boolean.valueOf((String) searchParams.get("isOnline"));
-				if(searchParams.get("courseId")!=null)					
+				if(searchParams.get("courseId")!=null&&!searchParams.get("type").equals(""))					
 					courseId=Long.parseLong((String) searchParams.get("courseId"));
 				
 				if(content!=null&&!"".equals(content)){

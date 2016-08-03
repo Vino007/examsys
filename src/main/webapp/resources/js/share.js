@@ -81,7 +81,7 @@ var examAll = {'url': 'exam/all', 'type': 'GET'},
     examFindUser = {'url': 'exam/findUser', 'type': 'GET'},
     examUpdateUserStatus = {'url': 'exam/updateUserStatus', 'type': 'POST'},
     examAddUser = {'url': 'exam/addUser', 'type': 'POST'},
-    examRemoveUser = {'url': 'exam/RemoveUser', 'type': 'POST'},
+    examRemoveUser = {'url': 'exam/removeUser', 'type': 'POST'},
     examFindQuestions = {'url': 'exam/findQuestions', 'type': 'GET'},
     examFindMockQuestions = {'url': 'exam/findMockQuestions', 'type': 'GET'},
     examSubmit = {'url': 'exam/submit', 'type': 'POST'},
@@ -102,11 +102,11 @@ var
 
 //logs
 var
-    logsAll = {'url': '/logs/all', 'type': 'GET'};
-logsSearch = {'url': '/logs/search', 'type': 'GET'};
+    logsAll = {'url': 'logs/all', 'type': 'GET'};
+logsSearch = {'url': 'logs/search', 'type': 'GET'};
 
 //resources
-var resourcesTree = {'url': '/resource/resourceTree', 'type': 'GET'};
+var resourcesTree = {'url': 'resource/resourceTree', 'type': 'GET'};
 
 
 //url rewrite
@@ -170,14 +170,17 @@ function permissionControl() {
     });
     $.each(btnPermission, function (key, value) {
         if (jQuery.inArray(value.permission, existPermission) != -1) {
-            $('[data-permission=' + value.permission + ']').removeAttr('data-permission');
+            $('[data-permission="' + value.permission + '"]').removeAttr('data-permission');
         }
     });
     //if table
     $.each($('[data-permission]'), function (key, value) {
-        if ($(value).get(0).tagName == 'th') {
+        if ($(value).get(0).tagName == 'TH') {
             var index = $(value).index();
-            $('#main-table tr:nth-child(' + index + ')').remove();
+            // $('#main-table tr').find(':eq(' + index + ')').remove();
+            // $('#main-table tr th:nth-child(' + index + ')').remove();
+            $('#main-table tr td:nth-child(' + (index + 1) + ')').remove();
+            $('#main-table tr th:nth-child(' + (index + 1) + ')').remove();
         } else {
             $(value).remove();
         }
@@ -276,6 +279,8 @@ function init(initObj) {
             //page
             var totalPages = data.data.page.totalPages;
             var visiblePages = totalPages < 10 ? totalPages : 10;
+            $('#pagination').remove();
+            $('.container .row').append('<ul id="pagination" class="pagination"></ul>');
             $('#pagination').twbsPagination({
                 totalPages: totalPages,
                 visiblePages: visiblePages,
@@ -290,7 +295,7 @@ function init(initObj) {
                     }).done(function (data) {
                         if (data.success) {
                             initObj.resetTable(data);
-                            // permissionControl();
+                            permissionControl();
                         }
                     });
                 }
@@ -316,4 +321,15 @@ function toDateStr(timestamp) {
         m = time.getMinutes() >= 10 ? time.getMinutes() : '0' + time.getMinutes(),
         s = time.getSeconds() >= 10 ? time.getSeconds() : '0' + time.getSeconds();
     return y + '-' + M + '-' + d + ' ' + h + ':' + m + ':' + s;
-};
+}
+
+function getQueryStringObject() {
+    var queryStringObj = {};
+    var url = location.search;
+    var str = url.substr(1);
+    var strs = str.split('&');
+    $.each(strs, function (key, value) {
+        queryStringObj[this.split('=')[0]] = this.split('=')[1];
+    });
+    return queryStringObj;
+}

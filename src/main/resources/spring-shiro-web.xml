@@ -116,7 +116,7 @@
     	即ini配置中的[filters]部分；filterChainDefinitions用于声明url和filter的关系，即ini配置中的[urls]部分。 -->
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/loginPage"/><!-- 如果没有登录默会跳转到登录页面,设置loginUrl属性，默认是/login.jsp  -->
-        <property name="unauthorizedUrl" value="${shiro.unauthorizedUrl}"/><!-- 没有权限的时候跳转页面 -->
+        <property name="unauthorizedUrl" value="/unauthorized"/><!-- 没有权限的时候跳转页面 -->
         <property name="successUrl" value="/loginSuccess"></property> 
         <property name="filters">
             <util:map>

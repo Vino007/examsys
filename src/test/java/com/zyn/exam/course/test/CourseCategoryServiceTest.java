@@ -54,12 +54,12 @@ public class CourseCategoryServiceTest {
 
     @Test
     public void testShollCoursesByCat() {
-        List<Course> lst = courseCategoryService.findCoursesByCatID(new Long(1));
+       /* List<Course> lst = courseCategoryService.findCoursesByCatID(new Long(1));
         System.out.println("+++++++++++++");
         for (Course c : lst) {
             System.out.println(c);
         }
-        System.out.println("*************");
+        System.out.println("*************");*/
     }
 
     @Test

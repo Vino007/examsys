@@ -110,7 +110,7 @@ $(document).ready(function () {
             } else {
                 img = '<img src="' + value.contentImageUrl + '">';
             }
-            var tr = '<tr><td><input type="checkbox"name="sub-checkbox"value="' + value.id + '"></td><td>' + value.content + '</td><td>' + img + '</td><td>' + value.choices + '</td><td>' + value.answer + '</td><td>' + (value.isOnline ? "是" : "否") + '</td><td>' + (value.courseId == null ? "" : value.courseId) + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+            var tr = '<tr><td><input type="checkbox"name="sub-checkbox"value="' + value.id + '"></td><td>' + value.content + '</td><td>' + img + '</td><td>' + value.choices + '</td><td>' + value.answer + '</td><td>' + (value.isOnline ? "是" : "否") + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
             $('#main-table').append(tr);
         });
     }

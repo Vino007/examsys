@@ -67,7 +67,7 @@ $(document).ready(function () {
     /*edit end*/
 
     /*search start*/
-    //search user
+    //search
     $('#search').click(function () {
         var search = $(this).siblings('input').val();
         var onlineOpt = ($('.is-online').length && $('.is-online').val() != 'true') ? ($('.is-online').val() ? false : '') : true;
@@ -154,9 +154,10 @@ $(document).ready(function () {
             }).done(function (data) {
                 $('#main-table tr + tr').remove();
                 $.each(data.data.courses, function (key, value) {
-                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.id + '</td><td>' + value.courseName + '</td><td data-id="' + id + '">' + cateName + '</td><td>' + value.courseType + '</td><td>' + value.outline + '</td><td>' + value.objectives + '</td><td>' + value.teacher + '</td><td>' + value.onlineData + '</td><td>' + (value.online ? "是" : "否") + '</td><td><button class="btn btn-primary form-control comment"data-toggle="modal"data-target="#comment">评论</button></td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.id + '</td><td>' + value.courseName + '</td><td data-id="' + id + '">' + cateName + '</td><td>' + value.courseType + '</td><td>' + value.outline + '</td><td>' + value.objectives + '</td><td>' + value.teacher + '</td><td>' + value.onlineData + '</td><td>' + (value.online ? "是" : "否") + '</td><td><button class="btn btn-primary form-control comment"data-toggle="modal"data-target="#comment">评论</button></td><td data-permission="course:update"><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
                     $('#main-table').append(tr);
                 });
+                permissionControl();
             });
         }
     })

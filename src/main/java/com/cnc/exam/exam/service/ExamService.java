@@ -66,7 +66,7 @@ public interface ExamService extends BaseService<Exam, Long> {
 	ExamResultEntity judgeExam(Long userId, Long examId, String[] performances, boolean isMock) throws UserStatusErrorException;
 
 	MyPage<ExamJson> findExamByUser(Long userId, Pageable pageable);
-
+	MyPage<Exam> findExamByUser2(Long userId, Pageable pageable);
 	void autoGenerateMockExam(Long examId);
 
 	void bindMockQuestion(Long examId, Long[] questionIds);

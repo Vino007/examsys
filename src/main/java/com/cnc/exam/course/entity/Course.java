@@ -29,7 +29,7 @@ public class Course extends BaseEntity<Long> {
     @Column(name = "online_data", length = 255)
     private String onlineData;
     @Column(name = "is_online")
-    private Boolean isOnline = Boolean.FALSE;
+    private Boolean isOnline = Boolean.TRUE;
     @JSONField(serialize = false)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "course")
     private List<CourseMessage> courseMessages = new ArrayList<CourseMessage>();

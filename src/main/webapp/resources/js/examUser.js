@@ -86,15 +86,7 @@ $(document).ready(function () {
             }).done(function (data) {
                 $('#main-table tr + tr').remove();
                 $.each(data.data.users, function (key, value) {
-                    var roles = '';
-                    if (value.roles.length == 1) {
-                        roles += value.roles[0].description;
-                    } else {
-                        $.each(value.roles, function (k, v) {
-                            roles += v.description + ',';
-                        });
-                    }
-                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td>' + roles + '</td><td data-id="' + (value.department == null ? "" : value.department.id) + '">' + (value.department == null ? "" : value.department.deptName) + '</td><td>' + value.email + '</td><td>' + value.createTime + '</td><td>' + value.creatorName + '</td><td><button class="btn btn-primary form-control edit"data-toggle="modal"data-target="#edit">编辑</button></td></tr>';
+                    var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td data-id="' + (value.department == null ? "" : value.department.id) + '">' + (value.department == null ? "" : value.department.deptName) + '</td><td>' + value.email + '</td><td>' + (value.status == 1 ? "正常参考" : (value.status == 0 ? "请假" : "已完成考试")) + '</td></tr>';
                     $('#main-table').append(tr);
                 });
             });
@@ -106,7 +98,7 @@ $(document).ready(function () {
     function resetTable(data) {
         $('#main-table tr + tr').remove();
         $.each(data.data.page.content, function (key, value) {
-            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td data-id="' + (value.department == null ? "" : value.department.id) + '">' + (value.department == null ? "" : value.department.deptName) + '</td><td>' + value.email + '</td></tr>';
+            var tr = '<tr><td><input type="checkbox" name="sub-checkbox" value="' + value.id + '"></td><td>' + value.username + '</td><td>' + value.userAlias + '</td><td data-id="' + (value.department == null ? "" : value.department.id) + '">' + (value.department == null ? "" : value.department.deptName) + '</td><td>' + value.email + '</td><td>' + (value.status == 1 ? "正常参考" : (value.status == 0 ? "请假" : "已完成考试")) + '</td></tr>';
             $('#main-table').append(tr);
         });
     }
@@ -127,7 +119,7 @@ $(document).ready(function () {
         ];
         if (status != undefined) {
             objArr.push({
-                name: status,
+                name: 'status',
                 value: status
             });
         }
