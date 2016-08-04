@@ -7,6 +7,10 @@
     margin-top: 51px;
 }
 
+#logout{
+	margin-right:50px;
+}
+
 header {
     background: rgb(60, 141, 188);
 }

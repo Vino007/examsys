@@ -13,18 +13,19 @@
         <div class="form-group">
             <div class="form-inline">
                 <input class="form-control input-group" type="text" placeholder="搜索题库">
-                <label class="form-control control-label">类型：<select class="type-based-search">
+                <label class="form-control control-label">类型：</label>
+                <select class="type-based-search" name="type">
                     <option value="">全部</option>
                     <option value="1">单选</option>
                     <option value="2">多选</option>
                     <option value="3">填空</option>
                     <option value="4">判断</option>
-                </select></label>
-                <label class="form-control control-label">是否在线：<select class="is-online">
+                </select>
+                <label class="form-control control-label">是否在线：</label><select class="is-online">
                     <option value="">全部</option>
                     <option value="true">是</option>
                     <option value="false">否</option>
-                </select></label>
+                </select>
                 <button id="search" class="btn btn-primary">搜索题库</button>
             </div>
         </div>

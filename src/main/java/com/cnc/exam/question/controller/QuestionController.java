@@ -175,13 +175,16 @@ public class QuestionController extends BaseController{
 	@ResponseBody
 	@RequiresPermissions("question:update")
 	@RequestMapping(value = "/offline", method = RequestMethod.POST)
-	public Map<String, Object> offlineQuestion(Long id) {
+	public Map<String, Object> offlineQuestion(@RequestParam("id[]") Long[] ids) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		
 		try {
-			questionService.offlineQuestion(id);
-			logsService.save(new LogsEntity(getCurrentUser(), 1, "下线问题",new Timestamp(new Date().getTime())));
+			for(Long id : ids){
+				questionService.offlineQuestion(id);
+				logsService.save(new LogsEntity(getCurrentUser(), 1, "下线问题",new Timestamp(new Date().getTime())));
+			}
+			
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "题目不存在,下线失败");
@@ -203,13 +206,16 @@ public class QuestionController extends BaseController{
 	@ResponseBody
 	@RequiresPermissions("question:update")
 	@RequestMapping(value = "/online", method = RequestMethod.POST)
-	public Map<String, Object> onlineQuestion(Long id) {
+	public Map<String, Object> onlineQuestion(@RequestParam("id[]") Long[] ids) {
 		Map<String, Object> resultMap = new HashMap<>();
 		Map<String, Object> data = new HashMap<>();
 		
 		try {
-			questionService.onlineQuestion(id);
-			logsService.save(new LogsEntity(getCurrentUser(), 1, "上线问题",new Timestamp(new Date().getTime())));
+			for(Long id:ids){
+				questionService.onlineQuestion(id);
+				logsService.save(new LogsEntity(getCurrentUser(), 1, "上线问题",new Timestamp(new Date().getTime())));
+			}
+			
 		} catch (Exception e) {
 			resultMap.put("success", false);
 			resultMap.put("msg", "题目不存在,上线失败");
